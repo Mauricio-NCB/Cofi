@@ -1,0 +1,111 @@
+:root {
+  --color-primary: #a97452;
+  --color-background: #f6ead2;
+  --color-accent: #7f8f5f;
+  --color-card: #b07a54;
+  --color-text: #1f1f1f;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  padding-bottom: 90px; /* espacio para botón fijo */
+}
+
+.navbar {
+  background-color: var(--color-primary);
+}
+
+.navbar a {
+  color: #fff;
+}
+
+.search-box input {
+  border-radius: 30px;
+  padding-left: 48px;
+  padding-right: 18px;
+  min-width: 320px; /* ancho visible en escritorio */
+  height: 46px;
+  font-size: 1rem;
+}
+
+.search-box i {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  color: #6c6c6c;
+}
+
+.activities-section {
+  background-color: var(--color-card);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+/* Botón crear actividad más grande y responsive */
+.fixed-create-btn {
+  position: fixed;
+  bottom: 70px; /* sitúa el botón por encima del footer */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background-color: var(--color-accent);
+  color: #fff;
+  border-radius: 50px;
+  padding: 18px 30px;
+  font-size: 1.25rem;
+  border: none;
+  box-shadow: 0 6px 16px rgba(0,0,0,.25);
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 576px) {
+  .search-box input {
+    min-width: 160px;
+    padding-left: 40px;
+    height: 40px;
+    font-size: 0.95rem;
+  }
+
+  .fixed-create-btn {
+    padding: 12px 20px;
+    font-size: 1rem;
+    bottom: 24px;
+  }
+}
+.hero-section {
+  background-color: #ffffffcc;
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.hero-section .lead {
+  font-size: 1.125rem;
+  color: #4b4b4b;
+}
+
+.activity-tag {
+  font-size: 0.8rem;
+  border-radius: 20px;
+  padding: 2px 10px;
+  display: inline-block;
+}
+
+.fixed-create-btn {
+  position: fixed;
+  bottom: 70px; /* sitúa el botón por encima del footer */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background-color: var(--color-accent);
+  color: #fff;
+  border-radius: 50px;
+  padding: 15px 25px;
+  font-size: 1.1rem;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,.3);
+} 

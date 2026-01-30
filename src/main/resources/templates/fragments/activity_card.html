@@ -1,0 +1,11 @@
+<!-- activity card fragment -->
+<div th:fragment="activityCard(act)">
+  <div class="card">
+    <img th:src="${act.imageUrl}" class="card-img-top" alt="Imagen actividad">
+    <div class="card-body">
+      <span class="activity-tag bg-success text-white" th:text="${act.tag}">Tag</span>
+      <h5 class="mt-2" th:text="${act.title}">Título</h5>
+      <p class="text-muted" th:text="${act.author}">Por Autor</p>
+    </div>
+  </div>
+</div>
