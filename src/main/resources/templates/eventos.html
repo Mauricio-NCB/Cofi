@@ -29,7 +29,7 @@
     </div>
 
     <p>
-      Encuentra actividades según tu código postal:
+      Encuentra eventos según tu código postal:
       <select class="form-select d-inline w-auto ms-2" style="background-color:var(--color-accent); color:white;">
         <option>28001</option>
         <!-- HABRA QUE CAMBIARLO PARA QUE SEA DINÁMICO -->
@@ -37,18 +37,29 @@
       </select>
     </p>
 
-    <!-- ACTIVIDADES -->
+    <!-- EVENTOS -->
     <div class="activities-section mt-4">
-      <h3>Actividades cerca de ti</h3>
+      <h3>Eventos cerca de ti</h3>
 
-      <div class="row mt-3">
-        <div class="col-md-3" th:each="act : ${activities}">
-          <div class="card">
-            <img th:src="${act.imageUrl}" th:alt="${act.title}" class="card-img-top" />
+      <div class="row mt-3" th:if="${#lists.isEmpty(events)}">
+        <div class="col-12">
+          <div class="alert alert-info">No hay eventos disponibles.</div>
+        </div>
+      </div>
+
+      <div class="row mt-3" th:if="${!#lists.isEmpty(events)}">
+        <div class="col-md-4 mb-3" th:each="ev : ${events}">
+          <div class="card h-100">
             <div class="card-body">
-              <span class="activity-tag bg-success text-white" th:text="${act.tag}">Tag</span>
-              <h5 class="mt-2" th:text="${act.title}">Título</h5>
-              <p class="text-muted" th:text="${act.author}">Por Autor</p>
+              <div class="d-flex justify-content-between align-items-start">
+                <h5 class="card-title" th:text="${ev.title}">Título</h5>
+                <span class="badge" th:classappend="${ev.state == 'ongoing' ? ' bg-success' : (ev.state == 'finished' ? ' bg-secondary' : ' bg-danger')}" th:text="${ev.state}">estado</span>
+              </div>
+
+              <p class="card-text text-muted mb-2" th:text="${ev.description.length() > 120 ? #strings.substring(ev.description,0,120) + '...' : ev.description}">Descripción corta</p>
+
+              <p class="mb-1"><strong>Fechas:</strong> <span th:text="${ev.startDate}">2026-01-01</span> — <span th:text="${ev.endDate}">2026-01-02</span></p>
+              <p class="mb-1"><strong>Aforo:</strong> <span th:text="${ev.maxCapacity}">30</span></p>
             </div>
           </div>
         </div>
@@ -60,9 +71,9 @@
   <!-- FOOTER -->
   <div th:replace="~{fragments/footer :: footer}"></div>
 
-  <!-- BOTÓN CREAR ACTIVIDAD -->
-  <button class="fixed-create-btn" onclick="location.href='crear-actividad.html'">
-    + Crear actividad
+  <!-- BOTÓN CREAR EVENTO -->
+  <button class="fixed-create-btn" onclick="location.href='crear-evento.html'">
+    + Crear evento
   </button>
 
   <!-- Bootstrap JS & dependencies -->

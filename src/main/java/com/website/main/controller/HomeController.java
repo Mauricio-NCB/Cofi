@@ -1,16 +1,21 @@
 package com.website.main.controller;
 
-import java.util.Arrays;
-import java.util.List;
 import java.time.Year;
 
-import com.website.main.model.Activity;
+import com.website.main.model.Event;
+import com.website.main.repository.EventRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HomeController {
+
+    private final EventRepository eventRepository;
+
+    public HomeController(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
 
     @GetMapping("/")
     public String root() {
@@ -23,14 +28,8 @@ public class HomeController {
         model.addAttribute("userName", "Mauricio");
         model.addAttribute("year", Year.now().getValue());
 
-        List<Activity> activities = Arrays.asList(
-            new Activity("Salida a la sierra", "Mauricio Calderón", "Senderismo", "https://picsum.photos/300/200?1"),
-            new Activity("Clases de Yoga", "Lucía Pérez", "Yoga", "https://picsum.photos/300/200?2"),
-            new Activity("Cine al aire libre", "Eduardo Gómez", "Cine", "https://picsum.photos/300/200?3"),
-            new Activity("Visita cultural", "Ana Ruiz", "Cultura", "https://picsum.photos/300/200?4")
-        );
-
-        model.addAttribute("activities", activities);
+        Iterable<Event> events = eventRepository.findAll();
+        model.addAttribute("events", events);
         return "eventos";
     }
 
