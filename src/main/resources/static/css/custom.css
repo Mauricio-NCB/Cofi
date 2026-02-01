@@ -109,3 +109,28 @@ body {
   border: none;
   box-shadow: 0 4px 10px rgba(0,0,0,.3);
 } 
+
+.event-card {
+  width: 400px;
+  min-height: 250px;
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.description-container {
+  max-height: 100px;
+  overflow: hidden;
+  position: relative;
+  transition: max-height 0.3s ease;
+}
+
+.description-container.expanded {
+  max-height: none;
+}
+
+.view-more-btn {
+  color: var(--color-primary);
+  font-size: 0.9rem;
+  text-align: left;
+}

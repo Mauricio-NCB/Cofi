@@ -47,25 +47,41 @@
         </div>
       </div>
 
-      <div class="row mt-3" th:if="${!#lists.isEmpty(events)}">
-        <div class="col-md-4 mb-3" th:each="ev : ${events}">
-          <div class="card h-100">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start">
+      <!-- CONTENEDOR DE SCROLL -->
+      <div class="scroll-outer mt-3" th:if="${!#lists.isEmpty(events)}">
+      <div class="d-flex flex-nowrap overflow-auto" style="width: 100%;">
+        <div class="flex-shrink-0 me-3" style="width: 400px;" th:each="ev : ${events}">
+          <div class="card event-card h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-start mb-2">
                 <h5 class="card-title" th:text="${ev.title}">Título</h5>
-                <span class="badge" th:classappend="${ev.state == 'ongoing' ? ' bg-success' : (ev.state == 'finished' ? ' bg-secondary' : ' bg-danger')}" th:text="${ev.state}">estado</span>
+                <span class="badge"
+                      th:classappend="${ev.state == 'ongoing' ? ' bg-success' :
+                                      (ev.state == 'finished' ? ' bg-secondary' : ' bg-danger')}"
+                      th:text="${ev.state}">estado</span>
               </div>
 
-              <p class="card-text text-muted mb-2" th:text="${ev.description.length() > 120 ? #strings.substring(ev.description,0,120) + '...' : ev.description}">Descripción corta</p>
+              <!-- Contenedor de descripción -->
+              <div class="description-container mb-2">
+                <p class="card-text text-muted mb-0" th:text="${ev.description}">
+                  Descripción completa
+                </p>
+              </div>
+              <button class="btn btn-link p-0 mt-auto view-more-btn" style="display:none;">Ver más</button>
 
-              <p class="mb-1"><strong>Fechas:</strong> <span th:text="${ev.startDate}">2026-01-01</span> — <span th:text="${ev.endDate}">2026-01-02</span></p>
-              <p class="mb-1"><strong>Aforo:</strong> <span th:text="${ev.maxCapacity}">30</span></p>
+              <p class="mb-1 mt-2">
+                <strong>Fechas:</strong>
+                <span th:text="${ev.startDate}"></span> — <span th:text="${ev.endDate}"></span>
+              </p>
+
+              <p class="mb-0">
+                <strong>Aforo:</strong> <span th:text="${ev.maxCapacity}"></span>
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 
   <!-- FOOTER -->
@@ -78,5 +94,26 @@
 
   <!-- Bootstrap JS & dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.event-card');
+
+      cards.forEach(card => {
+        const descContainer = card.querySelector('.description-container');
+        const btn = card.querySelector('.view-more-btn');
+
+        // Comparamos altura real con altura visible
+        if (descContainer.scrollHeight > descContainer.clientHeight) {
+          btn.style.display = 'block'; // mostrar botón solo si es necesario
+          btn.addEventListener('click', () => {
+            descContainer.classList.toggle('expanded');
+            btn.textContent = descContainer.classList.contains('expanded') ? 'Ver menos' : 'Ver más';
+          });
+        }
+      });
+    });
+  </script>
+  
 </body>
 </html>
