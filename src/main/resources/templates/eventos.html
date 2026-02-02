@@ -24,7 +24,7 @@
 
       <div class="position-relative search-box">
         <i class="bi bi-search"></i>
-        <input class="form-control" placeholder="Buscar">
+        <input class="form-control" placeholder="Buscar" id="eventSearch">
       </div>
     </div>
 
@@ -111,6 +111,29 @@
             btn.textContent = descContainer.classList.contains('expanded') ? 'Ver menos' : 'Ver más';
           });
         }
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('eventSearch');
+      const eventCards = document.querySelectorAll('.event-card');
+
+      searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase();
+
+        eventCards.forEach(card => {
+          const title = card.querySelector('.card-title').textContent.toLowerCase();
+          const description = card.querySelector('.description-container p')
+                                  .textContent.toLowerCase();
+
+          if (title.includes(query) || description.includes(query)) {
+            card.closest('.flex-shrink-0').style.display = 'block';
+          } else {
+            card.closest('.flex-shrink-0').style.display = 'none';
+          }
+        });
       });
     });
   </script>
