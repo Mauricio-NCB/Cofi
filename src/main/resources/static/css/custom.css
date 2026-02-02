@@ -95,21 +95,6 @@ body {
   display: inline-block;
 }
 
-.fixed-create-btn {
-  position: fixed;
-  bottom: 70px; /* sitúa el botón por encima del footer */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  background-color: var(--color-accent);
-  color: #fff;
-  border-radius: 50px;
-  padding: 15px 25px;
-  font-size: 1.1rem;
-  border: none;
-  box-shadow: 0 4px 10px rgba(0,0,0,.3);
-} 
-
 .event-card {
   width: 400px;
   min-height: 250px;

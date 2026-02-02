@@ -26,7 +26,7 @@ public class Event {
     @Column(name = "max_capacity", nullable = false)
     private Integer maxCapacity;
 
-    // possible values: 'canceled','finished','ongoing'
+    // possible values: 'canceled','finished','ongoing' MODIFICABLE
     private String state;
 
     @Column(name = "chat_id")
