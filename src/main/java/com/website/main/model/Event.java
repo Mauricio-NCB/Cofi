@@ -2,6 +2,7 @@ package com.website.main.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "events")
@@ -12,9 +13,11 @@ public class Event {
     private Integer id;
 
     @Column(name = "start_date", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
     @Column(name = "end_date", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
     @Column(length = 50, nullable = false)
@@ -26,7 +29,7 @@ public class Event {
     @Column(name = "max_capacity", nullable = false)
     private Integer maxCapacity;
 
-    // possible values: 'canceled','finished','ongoing' MODIFICABLE
+    // valores posibles: 'cancelado','terminado','proximo','en_curso'
     private String state;
 
     @Column(name = "chat_id")
