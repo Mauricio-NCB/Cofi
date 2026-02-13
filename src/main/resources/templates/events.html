@@ -31,9 +31,10 @@
     <p>
       Encuentra eventos según tu código postal:
       <select class="form-select d-inline w-auto ms-2" style="background-color:var(--color-accent); color:white;">
-        <option>28001</option>
-        <!-- HABRA QUE CAMBIARLO PARA QUE SEA DINÁMICO -->
-        <option>28002</option>
+        <option th:each="cp : ${#numbers.sequence(28001,28055)}"
+                th:value="${cp}"
+                th:text="${cp}">
+        </option>
       </select>
     </p>
 
@@ -79,6 +80,11 @@
                 </span>
 
               </div>
+
+              <p class="mb-2 text-muted">
+                <strong>Creador:</strong>
+                <span th:text="${ev.user.name}">Nombre</span>
+              </p>
 
               <!-- Contenedor de descripción -->
               <div class="description-container mb-2">

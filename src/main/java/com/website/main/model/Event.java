@@ -35,6 +35,11 @@ public class Event {
     @Column(name = "chat_id")
     private Integer chatId;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+
     public Event() {}
 
     // getters & setters
@@ -61,4 +66,8 @@ public class Event {
 
     public Integer getChatId() { return chatId; }
     public void setChatId(Integer chatId) { this.chatId = chatId; }
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+
 }

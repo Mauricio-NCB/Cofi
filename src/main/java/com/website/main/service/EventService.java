@@ -3,7 +3,9 @@ package com.website.main.service;
 import org.springframework.stereotype.Service;
 
 import com.website.main.model.Event;
+import com.website.main.model.User;
 import com.website.main.repository.EventRepository;
+import com.website.main.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,9 +14,11 @@ import java.util.List;
 public class EventService {
     
     private final EventRepository eventRepository;
+    private final UserRepository userRepository;
 
-    public EventService(EventRepository eventRepository) {
+    public EventService(EventRepository eventRepository, UserRepository userRepository) {
         this.eventRepository = eventRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Event> findAll() {
@@ -23,7 +27,11 @@ public class EventService {
         return eventRepository.findAll();
     }
 
-    public Event save(Event event) {
+    public Event save(Event event, Integer idUsuario) {
+        User user = userRepository.findById(idUsuario)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        event.setUser(user);
 
         LocalDate today = LocalDate.now();
 
@@ -36,7 +44,7 @@ public class EventService {
         else {
             event.setState("terminado");
         }
-
+        
         return eventRepository.save(event);
     }
 

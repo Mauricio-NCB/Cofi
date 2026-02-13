@@ -41,7 +41,7 @@ public class EventController {
     @PostMapping("/crear")
     public String crearEvento(@ModelAttribute Event event) {
         System.out.println("Evento recibido: " + event.getTitle() + ", fechas: " + event.getStartDate() + " - " + event.getEndDate());
-        eventService.save(event);
+        eventService.save(event, 1); // POR AHORA ES 1 PORQUE NO TENEMOS EL LOGIN IMPLEMENTADO, PERO DEBERÍA SER EL ID DEL USUARIO LOGUEADO
         return "redirect:/eventos";
     }
 
