@@ -29,6 +29,9 @@ public class Event {
     @Column(name = "max_capacity", nullable = false)
     private Integer maxCapacity;
 
+    @Column(name = "codepostal", nullable = false)
+    private String codepostal;
+
     // valores posibles: 'cancelado','terminado','proximo','en_curso'
     private String state;
 
@@ -70,4 +73,7 @@ public class Event {
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
 
+    public String getCodepostal() { return codepostal; }
+
+    public void setCodepostal(String codepostal) { this.codepostal = codepostal; }
 }

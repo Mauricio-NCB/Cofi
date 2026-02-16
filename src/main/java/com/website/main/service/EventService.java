@@ -44,7 +44,11 @@ public class EventService {
         else {
             event.setState("terminado");
         }
-        
+
+        if (event.getCodepostal() == null || event.getCodepostal().isBlank()) {
+            throw new RuntimeException("Debe seleccionar un código postal");
+        }
+
         return eventRepository.save(event);
     }
 
@@ -52,4 +56,8 @@ public class EventService {
         return eventRepository.findById(id).orElse(null);
     }
     
+    public List<Event> findByUserId(Integer userId) {
+        return eventRepository.findByUserId(userId);
+    }
+
 }

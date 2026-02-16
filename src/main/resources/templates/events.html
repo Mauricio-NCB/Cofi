@@ -183,6 +183,18 @@
                 <input type="number" th:field="*{maxCapacity}" class="form-control" min="1" required>
               </div>
 
+              <div class="mb-3">
+                  <label class="form-label">Código Postal</label>
+                  <select class="form-select" name="codepostal" required>
+                      <option value="">Seleccione código postal</option>
+                      <option th:each="cp : ${#numbers.sequence(28001,28055)}"
+                              th:value="${cp}"
+                              th:text="${cp}">
+                      </option>
+                  </select>
+              </div>
+
+
               <button type="submit" class="btn btn-primary">Crear evento</button>
           </form>
 
