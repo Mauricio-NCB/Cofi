@@ -3,6 +3,7 @@ package com.website.main.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import java.util.List;
 
 @Entity
 @Table(name = "events")
@@ -29,8 +30,8 @@ public class Event {
     @Column(name = "max_capacity", nullable = false)
     private Integer maxCapacity;
 
-    @Column(name = "codepostal", nullable = false)
-    private String codepostal;
+    @Column(name = "postcode", nullable = false)
+    private String postcode;
 
     // valores posibles: 'cancelado','terminado','proximo','en_curso'
     private String state;
@@ -41,6 +42,14 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToMany
+    @JoinTable(
+        name = "events_categories",
+        joinColumns = @JoinColumn(name = "event_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories;
 
 
     public Event() {}
@@ -73,7 +82,26 @@ public class Event {
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
 
-    public String getCodepostal() { return codepostal; }
+    public String getCodepostal() { return postcode; }
+    public void setCodepostal(String postcode) { this.postcode = postcode; }
 
-    public void setCodepostal(String codepostal) { this.codepostal = codepostal; }
+    public List<Category> getCategories() { return categories;}
+    public void setCategories(List<Category> categories) { this.categories = categories; }
+
+    public String getImageUrl() {
+        if (categories == null) {
+            return "https://picsum.photos/1/200/300?30";
+        }
+
+        switch (categories.get(0).getName()) {
+            case "Ocio":
+                return "https://picsum.photos/id/395/4080/2720";
+            case "Cultura":
+                return "https://picsum.photos/id/367/4928/326";
+            case "Salud":
+                return "https://picsum.photos/id/360/1925/1280";
+            default:
+                return "https://picsum.photos/id/491/5000/4061";
+        }
+    }
 }

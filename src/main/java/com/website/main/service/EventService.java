@@ -60,4 +60,8 @@ public class EventService {
         return eventRepository.findByUserId(userId);
     }
 
+    public List<Event> findByCategoryId(Integer categoryId) {
+        return eventRepository.findByCategoryId(categoryId);
+    }
+
 }

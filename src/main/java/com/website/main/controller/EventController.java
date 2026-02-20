@@ -3,44 +3,56 @@ package com.website.main.controller;
 import java.time.Year;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.IntStream;
 
+import com.website.main.model.Category;
 import com.website.main.model.Event;
+import com.website.main.repository.CategoryRepository;
 import com.website.main.service.EventService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import java.util.Map;
-import java.util.stream.IntStream;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/eventos")
 public class EventController {
 
     private final EventService eventService;
+    private final CategoryRepository categoryRepository;
 
-    public EventController(EventService eventService) {
+    public EventController(EventService eventService,
+                           CategoryRepository categoryRepository) {
         this.eventService = eventService;
+        this.categoryRepository = categoryRepository;
     }
 
+    // LISTADO DE EVENTOS (con filtro opcional por categoría)
     @GetMapping
-    public String eventos(Model model) {
+    public String eventos(@RequestParam(required = false) Integer categoria,
+                          Model model) {
 
         model.addAttribute("siteTitle", "Mi sitio");
         model.addAttribute("userName", "Mauricio");
         model.addAttribute("year", Year.now().getValue());
 
-        List<Event> events = eventService.findAll();
+        List<Event> events;
+
+        if (categoria != null) {
+            events = eventService.findByCategoryId(categoria);
+        } else {
+            events = eventService.findAll();
+        }
+
         model.addAttribute("events", events);
+        model.addAttribute("categorias", categoryRepository.findAll());
         model.addAttribute("event", new Event());
+
         return "events";
     }
 
+    // MOSTRAR FORMULARIO CREAR EVENTO
     @GetMapping("/crear")
     public String mostrarFormulario(Model model) {
 
@@ -49,39 +61,49 @@ public class EventController {
                 .toList();
 
         model.addAttribute("codigosPostales", codigos);
+        model.addAttribute("categorias", categoryRepository.findAll());
         model.addAttribute("event", new Event());
 
         return "crear-evento";
     }
 
-
+    // CREAR EVENTO (ManyToMany categorías)
     @PostMapping("/crear")
-    public String crearEvento(@ModelAttribute Event event) {
+    public String crearEvento(@ModelAttribute Event event,
+                              @RequestParam List<Integer> categories) {
 
-        Integer userId = 1; // luego desde sesión, habrá que cambiarlo para que sea el ID del usuario logueado
+        // Convertimos IDs en entidades Category
+        List<Category> categoriasSeleccionadas =
+                categoryRepository.findAllById(categories);
+
+        event.setCategories(categoriasSeleccionadas);
+
+        Integer userId = 1; // CAMBIAR luego por usuario logueado real
 
         eventService.save(event, userId);
 
         return "redirect:/eventos";
     }
 
-
+    // OBTENER EVENTO POR ID (para modal)
     @GetMapping("/{id}")
     @ResponseBody
     public Event obtenerEvento(@PathVariable Integer id) {
         return eventService.findById(id);
     }
 
+    // CALENDARIO
     @GetMapping("/calendario")
     public String calendario() {
         return "calendario";
     }
 
+    // FULLCALENDAR
     @GetMapping("/api/mis-eventos")
     @ResponseBody
     public List<Map<String, Object>> misEventos() {
 
-        Integer userId = 1; // CAMBIAR PARA QUE SEA EL ID DEL USUARIO LOGUEADO
+        Integer userId = 1; // ⚠ CAMBIAR por usuario logueado real
 
         List<Event> eventos = eventService.findByUserId(userId);
 
