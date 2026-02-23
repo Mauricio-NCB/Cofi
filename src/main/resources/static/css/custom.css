@@ -6,6 +6,45 @@
   --color-text: #1f1f1f;
 }
 
+[data-theme="azul"] {
+    --color-primary: #3B6EA5;
+    --color-background: #e0f0ff;
+    --color-accent: #d6b031;
+    --color-card: #a2c5e7;
+    --color-text: #1f1f1f;
+}
+
+[data-theme="verde"] {
+    --color-primary: #4A7856;
+    --color-background: #e8f5e9;
+    --color-accent: #EB9B4E;
+    --color-card: #619b71;
+    --color-text: #1f1f1f;
+}
+
+[data-theme="morado"] {
+    --color-primary: #A29DBF;
+    --color-background: #f0e4ee;
+    --color-accent: #FBA2A6;
+    --color-card: #b7b4ca;
+    --color-text: #1f1f1f;
+}
+
+/* Tamaño normal */
+[data-font="normal"] {
+    font-size: 16px;
+}
+
+/* Pequeño */
+[data-font="small"] {
+    font-size: 14px;
+}
+
+/* Grande */
+[data-font="large"] {
+    font-size: 18px;
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-text);

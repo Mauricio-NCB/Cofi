@@ -10,6 +10,22 @@
         <li class="nav-item"><a class="nav-link" th:href="@{/eventos/calendario}">Mi calendario</a></li>
         <li class="nav-item"><a class="nav-link" th:href="@{/about}">Sobre nosotros</a></li>
       </ul>
+      
+      <!-- MANTIENE COLORES CON LOCALSTORAGE PERO HAY QUE ALMACENARLO EN BBDD !-->
+      <script>
+          (function () {
+              const theme = localStorage.getItem("theme");
+              const fontSize = localStorage.getItem("fontSize");
+
+              if (theme) {
+                  document.documentElement.setAttribute("data-theme", theme);
+              }
+
+              if (fontSize) {
+                  document.documentElement.setAttribute("data-font", fontSize);
+              }
+          })();
+      </script>
 
       <div class="ms-auto">
         <i class="bi bi-envelope mx-2"></i>
