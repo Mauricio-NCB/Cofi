@@ -187,3 +187,28 @@ body {
     color: #333;
     font-weight: 500;
 }
+
+.post-card {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+}
+
+.post-preview {
+    max-height: 80px;    
+    overflow: hidden;
+    position: relative;
+}
+
+.post-preview::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 30px;
+    width: 100%;
+    background: linear-gradient(to bottom, transparent, white);
+}
