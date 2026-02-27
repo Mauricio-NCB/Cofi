@@ -2,6 +2,7 @@ package com.website.main.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.util.List;
 
@@ -13,13 +14,12 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "date_event", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate startDate;
+    private LocalDate dateEvent;
 
-    @Column(name = "end_date", nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate endDate;
+    @Column(name = "time_event", nullable = false)
+    private LocalTime timeEvent;
 
     @Column(length = 50, nullable = false)
     private String title;
@@ -58,11 +58,11 @@ public class Event {
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
-    public LocalDate getStartDate() { return startDate; }
-    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+    public LocalDate getDateEvent() { return dateEvent; }
+    public void setDateEvent(LocalDate dateEvent) { this.dateEvent = dateEvent; }
 
-    public LocalDate getEndDate() { return endDate; }
-    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+    public LocalTime getTimeEvent() { return timeEvent; }
+    public void setTimeEvent(LocalTime timeEvent) { this.timeEvent = timeEvent; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }

@@ -7,7 +7,7 @@ import com.website.main.model.User;
 import com.website.main.repository.EventRepository;
 import com.website.main.repository.UserRepository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -33,14 +33,17 @@ public class EventService {
 
         event.setUser(user);
 
-        LocalDate today = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime eventDateTime = LocalDateTime.of(event.getDateEvent(), event.getTimeEvent());
 
-        if (today.isBefore(event.getStartDate())) {
+        LocalDateTime endDateTime = eventDateTime.plusHours(2);  //SUPONIENDO QUE LA DURACIÓN DEL EVENTO ES DE 2 HORAS
+
+        if (now.isBefore(eventDateTime)) {
             event.setState("proximo");
-        } 
-        else if (!today.isAfter(event.getEndDate())) {
+        }
+        else if (now.isBefore(endDateTime)) {
             event.setState("en_curso");
-        } 
+        }
         else {
             event.setState("terminado");
         }

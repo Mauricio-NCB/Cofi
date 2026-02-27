@@ -83,10 +83,10 @@
                 data-bs-toggle="modal"
                 data-bs-target="#viewEventModal"
                 th:attr="data-title=${ev.title},
-                          data-desc=${ev.description},
-                          data-start=${ev.startDate},
-                          data-end=${ev.endDate},
-                          data-capacity=${ev.maxCapacity}">
+                         data-desc=${ev.description},
+                         data-date=${ev.dateEvent},
+                         data-time=${ev.timeEvent},
+                         data-capacity=${ev.maxCapacity}">
 
             <img th:src="${ev.imageUrl}" />
 
@@ -120,8 +120,13 @@
               <button class="btn btn-link p-0 mt-auto view-more-btn" style="display:none;">Ver más</button>
 
               <p class="mb-1 mt-2">
-                <strong>Fechas:</strong>
-                <span th:text="${ev.startDate}"></span> — <span th:text="${ev.endDate}"></span>
+                <strong>Fecha:</strong>
+                <span th:text="${#temporals.format(ev.dateEvent, 'dd/MM/yyyy')}"></span>
+              </p>
+
+              <p class="mb-1">
+                <strong>Hora:</strong>
+                <span th:text="${#temporals.format(ev.timeEvent, 'HH:mm')}"></span>
               </p>
 
               <p class="mb-0">
@@ -155,9 +160,12 @@
         <div class="modal-body">
           <p id="modalEventDesc"></p>
 
-          <p><strong>Fechas:</strong>
-            <span id="modalStart"></span> —
-            <span id="modalEnd"></span>
+          <p><strong>Fecha:</strong>
+            <span id="modalDate"></span>
+          </p>
+
+          <p><strong>Hora:</strong>
+            <span id="modalTime"></span>
           </p>
 
           <p><strong>Aforo:</strong>
@@ -194,12 +202,13 @@
 
               <div class="row">
                 <div class="col">
-                  <label class="form-label">Fecha inicio</label>
-                  <input type="date" th:field="*{startDate}" class="form-control" required>
+                  <label class="form-label">Fecha del evento</label>
+                  <input type="date" th:field="*{dateEvent}" class="form-control" required>
                 </div>
+
                 <div class="col">
-                  <label class="form-label">Fecha fin</label>
-                  <input type="date" th:field="*{endDate}" class="form-control" required>
+                  <label class="form-label">Hora del evento</label>
+                  <input type="time" th:field="*{timeEvent}" class="form-control" required>
                 </div>
               </div>
 

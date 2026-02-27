@@ -109,9 +109,13 @@ public class EventController {
 
         return eventos.stream().map(ev -> {
             Map<String, Object> map = new HashMap<>();
+            map.put("id", ev.getId());
             map.put("title", ev.getTitle());
-            map.put("start", ev.getStartDate());
-            map.put("end", ev.getEndDate());
+            map.put("start", ev.getDateEvent().toString() + "T" + ev.getTimeEvent().toString());
+            map.put("description", ev.getDescription());
+            map.put("dateEvent", ev.getDateEvent().toString());
+            map.put("timeEvent", ev.getTimeEvent().toString());
+            map.put("maxCapacity", ev.getMaxCapacity());
             map.put("estado", ev.getState());
             return map;
         }).toList();

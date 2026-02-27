@@ -24,6 +24,35 @@
     <div id="calendar"></div>
 </div>
 
+<div class="modal fade" id="viewEventModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEventTitle"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <p id="modalEventDesc"></p>
+
+        <p><strong>Fecha:</strong>
+          <span id="modalDate"></span>
+        </p>
+
+        <p><strong>Hora:</strong>
+          <span id="modalTime"></span>
+        </p>
+
+        <p><strong>Aforo:</strong>
+          <span id="modalCapacity"></span>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <div th:replace="~{fragments/footer :: footer}"></div>
 

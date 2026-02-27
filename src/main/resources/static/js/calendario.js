@@ -28,7 +28,18 @@ document.addEventListener('DOMContentLoaded', function () {
         },
 
         eventClick: function(info) {
-            alert("Evento: " + info.event.title);
+
+            const event = info.event;
+
+            document.getElementById("modalEventTitle").textContent = event.title;
+            document.getElementById("modalEventDesc").textContent = event.extendedProps.description;
+            const fecha = new Date(event.start);
+            document.getElementById("modalDate").textContent = fecha.toLocaleDateString('es-ES');
+            document.getElementById("modalTime").textContent = fecha.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById("modalCapacity").textContent = event.extendedProps.maxCapacity;
+
+            const modal = new bootstrap.Modal(document.getElementById('viewEventModal'));
+            modal.show();
         }
     });
 

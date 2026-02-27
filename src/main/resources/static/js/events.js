@@ -34,11 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('modalEventDesc').textContent =
       card.getAttribute('data-desc');
 
-    document.getElementById('modalStart').textContent =
-      card.getAttribute('data-start');
+    document.getElementById('modalDate').textContent =
+      card.getAttribute('data-date');
 
-    document.getElementById('modalEnd').textContent =
-      card.getAttribute('data-end');
+    document.getElementById('modalTime').textContent =
+      card.getAttribute('data-time');
 
     document.getElementById('modalCapacity').textContent =
       card.getAttribute('data-capacity');
