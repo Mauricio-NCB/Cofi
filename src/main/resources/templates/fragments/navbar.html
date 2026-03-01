@@ -11,21 +11,13 @@
         <li class="nav-item"><a class="nav-link" th:href="@{/about}">Sobre nosotros</a></li>
       </ul>
       
-      <!-- MANTIENE COLORES CON LOCALSTORAGE PERO HAY QUE ALMACENARLO EN BBDD !-->
-      <script>
-          (function () {
-              const theme = localStorage.getItem("theme");
-              const fontSize = localStorage.getItem("fontSize");
-
-              if (theme) {
-                  document.documentElement.setAttribute("data-theme", theme);
-              }
-
-              if (fontSize) {
-                  document.documentElement.setAttribute("data-font", fontSize);
-              }
+        <script th:inline="javascript">
+          (function(){
+            var uid = /*[[${currentUserId}]]*/ 1;
+            window.currentUserId = uid || 1;
           })();
-      </script>
+        </script>
+          <script th:src="@{/js/theme.js}"></script>
 
       <div class="ms-auto">
         <i class="bi bi-envelope mx-2"></i>
