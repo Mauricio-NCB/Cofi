@@ -5,10 +5,46 @@
       <span class="navbar-brand" th:text="${siteTitle}">Título página</span>
 
       <ul class="navbar-nav ms-4">
-        <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
-        <li class="nav-item"><a class="nav-link" th:href="@{/comunidad}">Comunidad</a></li>
-        <li class="nav-item"><a class="nav-link" th:href="@{/eventos/calendario}">Mi calendario</a></li>
-        <li class="nav-item"><a class="nav-link" th:href="@{/about}">Sobre nosotros</a></li>
+        <li class="nav-item">
+            <a class="nav-link"
+              th:href="@{/}"
+              th:classappend="${currentPage == 'home'} ? 'active'">
+              Inicio
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link"
+              th:href="@{/eventos}"
+              th:classappend="${currentPage == 'eventos'} ? 'active'">
+              Eventos
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link"
+              th:href="@{/eventos/calendario}"
+              th:classappend="${currentPage == 'calendario'} ? 'active'">
+              Calendario
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link"
+              th:href="@{/comunidad}"
+              th:classappend="${currentPage == 'comunidad'} ? 'active'">
+              Comunidad
+            </a>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link"
+            th:href="@{/about}"
+            th:classappend="${currentPage == 'about'} ? 'active'">
+            Sobre nosotros
+          </a>
+        </li>
+
       </ul>
       
         <script th:inline="javascript">

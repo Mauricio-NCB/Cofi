@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sobre nosotros</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/custom.css}">
+</head>
+
+<body>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container mt-5">
+
+    <h1 class="mb-4">Sobre este proyecto</h1>
+
+    <p>
+        Esta plataforma ha sido desarrollada como parte de un 
+        <strong>Trabajo de Fin de Grado (TFG)</strong> con el objetivo de
+        explorar el desarrollo de aplicaciones web modernas utilizando
+        tecnologías como <strong>Spring Boot, Thymeleaf y Bootstrap</strong>.
+    </p>
+
+    <p>
+        La finalidad de esta aplicación es ofrecer un espacio donde los usuarios
+        puedan descubrir actividades, consultar eventos en un calendario y
+        compartir publicaciones dentro de una comunidad.
+    </p>
+
+    <h3 class="mt-4">Objetivo del proyecto</h3>
+
+    <p>
+        El objetivo principal es aplicar conocimientos adquiridos durante el grado
+        en áreas como:
+    </p>
+
+    <ul>
+        <li>Desarrollo backend con Spring Boot</li>
+        <li>Diseño de interfaces web con HTML, CSS y Bootstrap</li>
+        <li>Gestión de datos mediante bases de datos</li>
+        <li>Arquitectura MVC en aplicaciones web</li>
+        <li>Desarrollo de una aplicación web usando metodología ágil</li>
+    </ul>
+
+    <h3 class="mt-4">Aviso</h3>
+
+    <p>
+        Este proyecto tiene un propósito exclusivamente académico y 
+        <strong>no tiene fines comerciales ni ánimo de lucro</strong>.
+        Los contenidos mostrados en la plataforma son de carácter demostrativo.
+    </p>
+
+</div>
+
+<!-- FOOTER -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

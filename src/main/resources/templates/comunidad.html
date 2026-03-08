@@ -6,22 +6,6 @@
     <meta charset="UTF-8">
     <title>Mi Comunidad</title>
 
-    <!-- Aplicar tema antes de render -->
-    <script>
-        (function () {
-            const theme = localStorage.getItem("theme");
-            const fontSize = localStorage.getItem("fontSize");
-
-            if (theme) {
-                document.documentElement.setAttribute("data-theme", theme);
-            }
-
-            if (fontSize) {
-                document.documentElement.setAttribute("data-font", fontSize);
-            }
-        })();
-    </script>
-
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
           rel="stylesheet">
@@ -55,12 +39,41 @@
                           placeholder="¿Qué quieres compartir?"
                           required></textarea>
 
+                <input type="text"
+                       name="tags"
+                       class="form-control mb-2"
+                       placeholder="Tags (máx 3) separados por coma">
+
                 <div class="text-end">
                     <button type="submit" class="btn btn-primary">
                         Publicar
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <form method="get" action="/comunidad" class="mb-4">
+        <input type="text" name="tag" placeholder="Buscar por tag"
+            class="form-control">
+    </form>
+
+    <div th:if="${selectedTag != null}" class="alert alert-info">
+        Mostrando publicaciones con tag:
+        <strong th:text="${selectedTag}"></strong>
+
+        <a href="/comunidad" class="ms-3">Quitar filtro</a>
+    </div>
+
+    <div class="card p-3 mb-4">
+    <h5>Tags populares</h5>
+
+    <div th:each="tag : ${popularTags}">
+            <a th:href="@{/comunidad(tag=${tag[0]})}"
+            class="badge bg-primary me-1">
+                <span th:text="${tag[0]}"></span>
+                (<span th:text="${tag[1]}"></span>)
+            </a>
         </div>
     </div>
 
@@ -136,6 +149,14 @@
 
                 <p id="modalContent"></p>
 
+            </div>
+
+            <div class="mt-2" th:if="${post != null && !#lists.isEmpty(post.tags)}">
+                <a th:each="tag : ${post.tags}"
+                   th:href="@{/comunidad(tag=${tag.name})}"
+                   class="badge bg-secondary me-1"
+                   th:text="${tag.name}">
+                </a>
             </div>
 
         </div>

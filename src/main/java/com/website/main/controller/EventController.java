@@ -36,6 +36,7 @@ public class EventController {
         model.addAttribute("siteTitle", "Mi sitio");
         model.addAttribute("userName", "Mauricio");
         model.addAttribute("year", Year.now().getValue());
+        model.addAttribute("currentPage", "eventos");
 
         List<Event> events;
 
@@ -44,7 +45,8 @@ public class EventController {
         } else {
             events = eventService.findAll();
         }
-
+        
+        model.addAttribute("categoriaSeleccionada", categoria);
         model.addAttribute("events", events);
         model.addAttribute("categorias", categoryRepository.findAll());
         model.addAttribute("event", new Event());
@@ -94,7 +96,8 @@ public class EventController {
 
     // CALENDARIO
     @GetMapping("/calendario")
-    public String calendario() {
+    public String calendario(Model model) {
+        model.addAttribute("currentPage", "calendario");
         return "calendario";
     }
 

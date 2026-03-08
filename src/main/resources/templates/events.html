@@ -55,15 +55,22 @@
       </select>
     </p>
 
-    <p class="mb-1 text-muted">
+    <div class="mb-4">
+
         <strong>Categorías:</strong>
-        <div th:if="${ev != null}">
-        <span th:each="cat : ${ev.categories}"
-              th:text="${cat.name}"
-              class="badge bg-primary me-1">
-        </span>
-        </div> 
-    </p>
+
+        <a th:href="@{/eventos}"
+          class="badge bg-secondary me-1">
+            Todas
+        </a>
+
+        <a th:each="cat : ${categorias}"
+          th:href="@{/eventos(categoria=${cat.id})}"
+          th:text="${cat.name}"
+          th:class="'badge me-1 ' + (${categoriaSeleccionada} == ${cat.id} ? 'bg-dark' : 'bg-primary')">
+        </a>
+
+    </div>
 
     <!-- EVENTOS -->
     <div class="activities-section mt-4">
@@ -132,6 +139,23 @@
               <p class="mb-0">
                 <strong>Aforo:</strong> <span th:text="${ev.maxCapacity}"></span>
               </p>
+
+              <div class="mt-2">
+
+                <strong>Categoría:</strong>
+
+                <span th:if="${#lists.isEmpty(ev.categories)}" class="text-muted">
+                    Sin categoría
+                </span>
+
+                <a th:each="cat : ${ev.categories}"
+                  th:text="${cat.name}"
+                  class="badge bg-primary me-1 text-decoration-none">
+                </a>
+
+              </div>
+
+              
             </div>
           </div>
         </div>

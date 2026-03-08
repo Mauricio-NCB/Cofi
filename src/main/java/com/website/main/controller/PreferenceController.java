@@ -17,7 +17,7 @@ public class PreferenceController {
 
     @GetMapping
     public Preference get(@RequestParam(required = false) Integer userId) {
-        if (userId == null) userId = 1; // fallback
+        if (userId == null) userId = 1;
         return service.getOrCreateByUserId(userId);
     }
 
