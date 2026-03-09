@@ -45,6 +45,14 @@
           </a>
         </li>
 
+        <li class="nav-item">
+            <a class="nav-link"
+              th:href="@{/chat}"
+              th:classappend="${currentPage == 'chat'} ? 'active'">
+              Chatea con otras personas (Prueba)
+            </a>
+        </li>
+
       </ul>
       
         <script th:inline="javascript">
