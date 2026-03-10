@@ -33,7 +33,6 @@ public class EventController {
     public String eventos(@RequestParam(required = false) Integer categoria,
                           Model model) {
 
-        model.addAttribute("siteTitle", "Mi sitio");
         model.addAttribute("userName", "Mauricio");
         model.addAttribute("year", Year.now().getValue());
         model.addAttribute("currentPage", "eventos");
