@@ -17,18 +17,19 @@ public class ChatService {
     }
 
     public Chat createChat(List<Integer> participantIds) {
+        
         // Aquí iría la lógica para crear un nuevo chat con los participantes dados
         // Por ejemplo, podrías crear un nuevo chat y guardarlo en la base de datos
         // Chat chat = new Chat();
         // chat.setParticipantIds(participantIds);
         // return chatRepository.save(chat);
+
         return null; // Placeholder
     }
 
     public List<Chat> viewChatsFromUser(Integer userId) {
         // Aquí iría la lógica para obtener los chats en los que participa el usuario
-        // return chatRepository.findByParticipantIdsContaining(userId);
-        return null; // Placeholder
+        return chatRepository.findByUsersId(userId);
     }
 
     public Chat viewChat(Integer chatId) {
@@ -37,7 +38,7 @@ public class ChatService {
         return null; // Placeholder
     }
 
-    public void exitChat(Integer chatId, Integer userId) {
+    public boolean exitChat(Integer chatId, Integer userId) {
         // Aquí iría la lógica para que un usuario salga de un chat
         // Por ejemplo, podrías eliminar al usuario de la lista de participantes del chat
         // Chat chat = chatRepository.findById(chatId).orElse(null);
@@ -45,6 +46,8 @@ public class ChatService {
         //     chat.getParticipantIds().remove(userId);
         //     chatRepository.save(chat);
         // }
+
+        return false; // Placeholder
     }
 
 }

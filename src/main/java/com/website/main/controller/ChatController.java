@@ -7,9 +7,12 @@ import org.springframework.ui.Model;
 
 import com.website.main.service.ChatService;
 import com.website.main.service.MessageService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
-@RequestMapping("/chats")
+@RequestMapping("/chat")
 public class ChatController {
     
     private final ChatService chatService;
@@ -19,6 +22,17 @@ public class ChatController {
         this.chatService = chatService;
         this.messageService = messageService;
     }
+
+    @GetMapping
+    public String viewChats(Model model) {
+        // Aquí iría la lógica para obtener los chats
+        model.addAttribute("username", "Mauricio");
+        model.addAttribute("currentPage", "chat");
+        model.addAttribute("chats", chatService.viewChatsFromUser(1)); // POSTERIOR CAMBIAR POR USUARIO REAL
+
+        return "chat";
+    }
+    
 
     @GetMapping("/{chatId}")
     public String viewChat(@PathVariable Integer chatId, Model model) {
