@@ -18,4 +18,9 @@ public class HomeController {
         model.addAttribute("currentPage", "about");
         return "about";
     }
+
+    @GetMapping("/terminos")
+    public String terminos() {
+        return "terminos";
+    }
 }
