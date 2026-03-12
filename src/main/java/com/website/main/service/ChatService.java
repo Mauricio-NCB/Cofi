@@ -16,12 +16,6 @@ public class ChatService {
         this.chatRepository = chatRepository;
     }
 
-    public Chat findById(Integer chatId) {
-        // Aquí iría la lógica para obtener un chat específico por su ID
-        // return chatRepository.findById(chatId).orElse(null);
-        return chatRepository.findById(chatId).orElse(null); // Placeholder
-    }
-
     public Chat createChat(List<Integer> participantIds) {
         
         // Aquí iría la lógica para crear un nuevo chat con los participantes dados
@@ -36,6 +30,12 @@ public class ChatService {
     public List<Chat> viewChatsFromUser(Integer userId) {
         // Aquí iría la lógica para obtener los chats en los que participa el usuario
         return chatRepository.findByUsersId(userId);
+    }
+
+    public Chat viewChat(Integer chatId) {
+        // Aquí iría la lógica para obtener un chat específico por su ID
+        // return chatRepository.findById(chatId).orElse(null);
+        return null; // Placeholder
     }
 
     public boolean exitChat(Integer chatId, Integer userId) {
