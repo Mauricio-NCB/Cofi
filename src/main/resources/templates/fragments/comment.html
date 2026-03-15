@@ -1,0 +1,45 @@
+<div th:fragment="commentTree(comment, postId, level)">
+
+<div class="border rounded p-2 mb-2"
+     th:style="'margin-left:' + (${level} * 20) + 'px'">
+
+    <small class="text-muted">
+        <span th:text="${comment.user.name}">Usuario</span>
+        -
+        <span th:text="${#temporals.format(comment.dateSent,'dd/MM/yyyy  HH:mm')}"></span>
+    </small>
+
+    <p class="mb-1" th:text="${comment.content}"></p>
+
+    <button class="btn btn-link btn-sm p-0"
+            onclick="mostrarRespuesta(this)">
+        Responder
+    </button>
+
+    <form th:action="@{/comunidad/comentario}" method="post"
+          class="respuesta-form mt-2 d-none">
+
+        <input type="hidden" name="postId" th:value="${postId}">
+        <input type="hidden" name="parentId" th:value="${comment.id}">
+
+        <textarea name="content"
+                  class="form-control mb-2"
+                  placeholder="Escribe una respuesta..."
+                  required></textarea>
+
+        <button class="btn btn-primary btn-sm">
+            Responder
+        </button>
+
+    </form>
+
+</div>
+
+<!-- RESPUESTAS -->
+<div th:each="resp : ${comment.responses}">
+
+<div th:replace="fragments/comment :: commentTree(${resp}, ${postId}, ${level + 1})"></div>
+
+</div>
+
+</div>

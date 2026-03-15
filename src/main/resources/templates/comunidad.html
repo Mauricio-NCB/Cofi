@@ -89,6 +89,7 @@
                  th:attr="data-title=${post.title},
                           data-content=${post.content},
                           data-author=${post.user.name},
+                          data-id=${post.id},
                           data-date=${#temporals.format(post.datePosted, 'dd/MM/yyyy HH:mm')}">
 
                 <!-- Imagen aleatoria -->
@@ -124,6 +125,7 @@
 <!-- Theme JS -->
 <script th:src="@{/js/theme.js}"></script>
 <script th:src="@{/js/comunidad.js}"></script>
+<script th:src="@{/js/comentario.js}"></script>
 
 <!-- Modal publicación -->
 <div class="modal fade" id="postModal" tabindex="-1">
@@ -159,9 +161,28 @@
                 </a>
             </div>
 
+            <div class="mt-3">
+                <h6>Comentarios</h6>
+                <div id="commentsSection"></div>
+            </div>
+
+            <form th:action="@{/comunidad/comentario}" method="post">
+
+                <input type="hidden" name="postId" id="modalPostId">
+
+                <textarea name="content"
+                        class="form-control mb-2"
+                        placeholder="Escribe un comentario..."
+                        required></textarea>
+
+                <button class="btn btn-primary btn-sm">
+                Comentar
+                </button>
+
+            </form>
+
         </div>
     </div>
 </div>
-
 </body>
 </html>

@@ -3,10 +3,15 @@ package com.website.main.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.website.main.model.Comment;
+import com.website.main.model.User;
+
 import org.springframework.stereotype.Controller;
+import com.website.main.service.CommentService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import com.website.main.model.Post;
 import com.website.main.model.Tag;
 import com.website.main.repository.TagRepository;
 import com.website.main.service.PostService;
@@ -16,11 +21,14 @@ import com.website.main.service.PostService;
 public class PostController {
 
     private final PostService postService;
+    private final CommentService commentService;
     private final TagRepository tagRepository;
 
     public PostController(PostService postService,
+                          CommentService commentService,
                           TagRepository tagRepository) {
         this.postService = postService;
+        this.commentService = commentService;
         this.tagRepository = tagRepository;
     }
 
@@ -28,13 +36,20 @@ public class PostController {
     public String comunidad(@RequestParam(required = false) String tag,
                             Model model) {
 
+        List<Post> posts;
+
         if (tag != null && !tag.isBlank()) {
-            model.addAttribute("posts", postService.findByTag(tag));
+            posts = postService.findByTag(tag);
             model.addAttribute("selectedTag", tag);
         } else {
-            model.addAttribute("posts", postService.findAllVisible());
+            posts = postService.findAllVisible();
         }
 
+        // CARGAR COMENTARIOS PARA CADA POST
+        for (Post p : posts) {
+            p.setComments(commentService.getCommentsTree(p.getId()));
+        }
+        model.addAttribute("posts", posts);
         model.addAttribute("popularTags", tagRepository.findPopularTags());
         model.addAttribute("currentPage", "comunidad");
 
@@ -80,5 +95,36 @@ public class PostController {
         postService.create(title, content, userId, tagList);
 
         return "redirect:/comunidad";
+    }
+
+    @PostMapping("/comentario")
+    @ResponseBody
+    public void crearComentario(@RequestParam Integer postId,
+                                @RequestParam String content,
+                                @RequestParam(required = false) Integer parentId){
+
+        Comment comment = new Comment();
+
+        comment.setContent(content);
+
+        Post post = postService.findById(postId);
+        comment.setPost(post);
+
+        User user = new User();
+        user.setId(1);
+        comment.setUser(user);
+
+        if(parentId != null){
+            Comment parent = commentService.findById(parentId);
+            comment.setParent(parent);
+        }
+
+        commentService.save(comment);
+    }
+
+    @GetMapping("/comentarios/{postId}")
+    @ResponseBody
+    public List<Comment> getComentarios(@PathVariable Integer postId) {
+        return commentService.getCommentsTree(postId);
     }
 }

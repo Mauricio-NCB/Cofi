@@ -20,6 +20,10 @@ public class PostService {
         this.userRepository = userRepository;
     }
 
+    public Post findById(Integer id){
+        return postRepository.findById(id).orElseThrow();
+    }
+
     public List<Post> findByTag(String tag) {
         return postRepository.findByTags_NameAndVisibleTrue(tag);
     }

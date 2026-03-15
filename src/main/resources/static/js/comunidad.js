@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    const postModal = document.getElementById('postModal');
+    const postModal = document.getElementById("postModal");
 
-    postModal.addEventListener('show.bs.modal', function (event) {
+    postModal.addEventListener("show.bs.modal", function (event) {
 
         const card = event.relatedTarget;
 
@@ -13,13 +13,18 @@ document.addEventListener("DOMContentLoaded", function () {
         const author = card.dataset.author || "";
         const date = card.dataset.date || "";
         const image = card.querySelector("img")?.src || "";
+        const postId = card.dataset.id || "";
 
-        document.getElementById('modalTitle').textContent = title;
-        document.getElementById('modalContent').textContent = content;
-        document.getElementById('modalAuthor').textContent = author;
-        document.getElementById('modalDate').textContent = date;
-        document.getElementById('modalImage').src = image;
+        document.getElementById("modalTitle").textContent = title;
+        document.getElementById("modalContent").textContent = content;
+        document.getElementById("modalAuthor").textContent = author;
+        document.getElementById("modalDate").textContent = date;
+        document.getElementById("modalImage").src = image;
 
+        document.getElementById("modalPostId").value = postId;
+
+        cargarComentarios(postId);
+        console.log("post abierto: ", postId);
     });
 
 });
