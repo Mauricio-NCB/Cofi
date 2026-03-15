@@ -1,10 +1,39 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+  const socket = new SockJS('/ws');
+  const stompClient = Stomp.over(socket);
+
+  let stompSubscription = null;
+  let currentChatId = null;
+
+  stompClient.connect({}, () => {
+    console.log('Conectado a WebSocket');
+  });
+
+  function suscribeToChat(chatId) {
+
+    // Desuscribirse del chat anterior si existe
+    if(stompSubscription) {
+      console.log('Desuscribiendo del chat ' + currentChatId);
+      stompSubscription.unsubscribe();
+      stompSubscription = null;
+    }
+
+    currentChatId = chatId;
+    console.log('Suscribiendo al chat ' + chatId);
+
+    stompSubscription = stompClient.subscribe(`/topic/chat.${chatId}`, (message) => {
+      const msg = JSON.parse(message.body);
+      appendMessage(msg);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+  }
+
   const chatModal = document.getElementById('chatModal');
   const chatMessages = document.getElementById('chatMessages');
   const messageForm = document.getElementById('messageForm');
   const messageInput = document.getElementById('messageInput');
 
-  let currentChatId = null;
   const currentUserId = 1; // Cambiar cuando haya usuario real
 
   async function loadMessages(chatId) {
@@ -30,6 +59,16 @@ document.addEventListener('DOMContentLoaded', () => {
     currentChatId = trigger.getAttribute('data-id');
     document.getElementById('chatModalLabel').textContent = 'Chat Nº ' + currentChatId;
     loadMessages(currentChatId);
+    suscribeToChat(currentChatId);
+  });
+
+  chatModal.addEventListener('hidden.bs.modal', () => {
+    if(stompSubscription) {
+      console.log('Desuscribiendo del chat ' + currentChatId);
+      stompSubscription.unsubscribe();
+      stompSubscription = null;
+      currentChatId = null;
+    }
   });
 
   messageForm.addEventListener('submit', async (event) => {
@@ -45,9 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!res.ok) return;
 
-    const msg = await res.json();
-    appendMessage(msg);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    //const msg = await res.json();
+    //appendMessage(msg);
+    //chatMessages.scrollTop = chatMessages.scrollHeight;
+    
     messageInput.value = '';
   });
 });

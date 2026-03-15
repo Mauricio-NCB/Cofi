@@ -3,17 +3,23 @@ package com.website.main.service;
 import org.springframework.stereotype.Service;
 
 import com.website.main.model.Chat;
+import com.website.main.model.User;
+import com.website.main.repository.UserRepository;
 import com.website.main.repository.ChatRepository;
 
+
 import java.util.List;
+
 
 @Service
 public class ChatService {
     
     private final ChatRepository chatRepository;
+    private final UserRepository userRepository;
     
-    public ChatService(ChatRepository chatRepository) {
+    public ChatService(ChatRepository chatRepository, UserRepository userRepository) {
         this.chatRepository = chatRepository;
+        this.userRepository = userRepository;
     }
 
     public Chat findById(Integer chatId) {
@@ -26,6 +32,8 @@ public class ChatService {
         
         // Aquí iría la lógica para crear un nuevo chat con los participantes dados
         // Por ejemplo, podrías crear un nuevo chat y guardarlo en la base de datos
+        User user = userRepository.findById(participantIds.get(0))
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         // Chat chat = new Chat();
         // chat.setParticipantIds(participantIds);
         // return chatRepository.save(chat);
