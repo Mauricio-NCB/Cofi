@@ -35,7 +35,12 @@
 
             <h5 class="chat-id"
               th:text="'Chat Nº ' + ${chat.Id}"></h5>
-          
+
+            <!-- Botón para eliminar -->
+            <form th:action="@{'/chat/' + ${chat.id} + '/delete'}" method="post" style="display: inline;">
+              <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este chat?')">Eliminar</button>
+            </form>
+
           </div>
       </div>
 
@@ -103,7 +108,7 @@
 
         <div class="modal-body">
           <!-- Formulario para crear un nuevo chat -->
-          <form th:action="@{/chats/create}" method="post">
+          <form th:action="@{/chat/crear}" method="post">
             
             <div class="mb-3">
               <label for="chatType" class="form-label">Tipo de Chat</label>

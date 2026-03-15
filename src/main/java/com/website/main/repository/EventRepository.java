@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findByUserId(Integer userId);
+    
     @Query("SELECT e FROM Event e JOIN e.categories c WHERE c.id = :categoryId")
     List<Event> findByCategoryId(@Param("categoryId") Integer categoryId);
 }

@@ -13,6 +13,7 @@ import com.website.main.service.MessageService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -74,5 +75,25 @@ public class ChatController {
         Message messageCreated = messageService.sendMessage(chatId, content, userId);
 
         return MessageDTO.fromEntity(messageCreated);
+    }
+
+    @PostMapping("/crear")
+    public String createChat(@RequestParam String type, @RequestParam String participants) {
+        // Aquí iría la lógica para crear un nuevo chat
+        Integer userId = 1; // POSTERIOR CAMBIAR POR USUARIO REAL
+        List<String> participantNames = Arrays.asList(participants.split("\\s,\\s*")); // Separado por comas
+
+        chatService.createChat(type, participantNames, userId);
+
+        return "redirect:/chat";
+    }
+
+    @PostMapping("/{chatId}/delete")
+    public String deleteChat(@PathVariable Integer chatId) {
+        // Aquí iría la lógica para eliminar un chat
+        Integer userId = 1; // POSTERIOR CAMBIAR POR USUARIO REAL
+
+        chatService.deleteChat(chatId, userId);
+        return "redirect:/chat";
     }
 }
