@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import com.website.main.model.Message;
+import com.website.main.dto.MessageDTO;
 import com.website.main.model.Chat;
 import com.website.main.model.User;
 
@@ -22,12 +24,16 @@ public class MessageService {
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
 
+    private final SimpMessagingTemplate messagingTemplate;
+
     public MessageService(MessageRepository messageRepository,
                 ChatRepository chatRepository,
-                UserRepository userRepository) {
+                UserRepository userRepository,
+                SimpMessagingTemplate messagingTemplate) {
         this.messageRepository = messageRepository;
         this.chatRepository = chatRepository;
         this.userRepository = userRepository;
+        this.messagingTemplate = messagingTemplate;
     }
 
     public Message sendMessage(Integer chatId, String content, Integer userId) {
@@ -42,7 +48,12 @@ public class MessageService {
         message.setChat(chat);
         message.setDateSent(LocalDateTime.now());
 
-        return messageRepository.save(message); // Return the created message
+        Message savedMessage = messageRepository.save(message);
+
+        // Enviar el mensaje a través de WebSocket
+        messagingTemplate.convertAndSend("/topic/chat." + chatId, MessageDTO.fromEntity(savedMessage));
+
+        return savedMessage;
     }
 
     public List<Message> viewMessagesFromChat(Integer chatId) {

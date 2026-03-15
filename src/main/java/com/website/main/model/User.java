@@ -14,19 +14,19 @@ public class User {
     @Column(name = "rol_admin", nullable = false)
     private Integer rolAdmin;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(length = 10)
+    @Column(name = "postcode", length = 10)
     private String postcode;
 
-    @Column(length = 50)
+    @Column(name = "state", length = 50)
     private String state;
 
-    @Column(nullable = false)
+    @Column(name = "notified", nullable = false)
     private Boolean notified;
 
-    @Column(nullable = false)
+    @Column(name = "verified", nullable = false)
     private Boolean verified;
 
     public User() {}
