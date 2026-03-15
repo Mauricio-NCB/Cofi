@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 
 import com.website.main.model.Chat;
 import com.website.main.model.Message;
+import com.website.main.dto.MessageDTO;
 import com.website.main.service.ChatService;
 import com.website.main.service.MessageService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,16 +52,27 @@ public class ChatController {
 
         return "chat";
     }
-    
+
+    @GetMapping("/{chatId}/messages")
+    @ResponseBody
+    public List<MessageDTO> viewMessages(@PathVariable Integer chatId) {
+        
+        List<MessageDTO> messages = messageService.viewMessagesFromChat(chatId)
+                .stream().map(MessageDTO::fromEntity).toList();
+
+        return messages;
+    }
+
     // Implementacion para enviar mensajes via JS
-    @PostMapping("/{chatId}/messages")
-    public String sendMessage(@PathVariable Integer chatId, @RequestParam String content, 
+    @PostMapping("/{chatId}/messages/ajax")
+    @ResponseBody
+    public MessageDTO sendMessage(@PathVariable Integer chatId, @RequestParam String content, 
         @RequestParam Integer userId) {
         
         // Aquí iría la lógica para enviar un mensaje al chat
         // chatService.sendMessage(chatId, content);
-        messageService.sendMessage(chatId, content, userId);
+        Message messageCreated = messageService.sendMessage(chatId, content, userId);
 
-        return "redirect:/chat/" + chatId;
+        return MessageDTO.fromEntity(messageCreated);
     }
 }
