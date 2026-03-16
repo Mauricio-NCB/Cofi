@@ -27,4 +27,35 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("post abierto: ", postId);
     });
 
+    // ====== BUSCADOR POSTS ======
+    const searchInput = document.getElementById("postSearch");
+
+    if (searchInput) {
+        const postCards = document.querySelectorAll(".post-card");
+
+        searchInput.addEventListener("input", function () {
+
+            const query = this.value.toLowerCase().trim();
+
+            postCards.forEach(card => {
+
+                const title = card.querySelector(".card-title").textContent.toLowerCase();
+                const content = card.querySelector(".card-text").textContent.toLowerCase();
+                const wrapper = card.closest(".col-md-4");
+
+                if (title.includes(query) || content.includes(query)) {
+
+                    wrapper.style.display = "block";
+
+                } else {
+
+                    wrapper.style.display = "none";
+
+                }
+
+            });
+
+        });
+    }
+
 });
