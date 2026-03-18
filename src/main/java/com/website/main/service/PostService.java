@@ -3,8 +3,10 @@ package com.website.main.service;
 import org.springframework.stereotype.Service;
 import com.website.main.model.Post;
 import com.website.main.model.User;
+import com.website.main.model.Picture;
 import com.website.main.repository.PostRepository;
 import com.website.main.repository.UserRepository;
+import com.website.main.repository.PictureRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import com.website.main.model.Tag;
@@ -14,10 +16,12 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PictureRepository pictureRepository;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, PictureRepository pictureRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.pictureRepository = pictureRepository;
     }
 
     public Post findById(Integer id){
@@ -32,7 +36,7 @@ public class PostService {
         return postRepository.findAllVisibleWithTags();
     }
 
-    public Post create(String title, String content, Integer userId,  List<Tag> tags) {
+    public Post create(String title, String content, Integer userId,  List<Tag> tags, String imageUrl) {
 
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -51,6 +55,14 @@ public class PostService {
             }
         }
 
-        return postRepository.save(post);
+        Post savedPost = postRepository.save(post);
+
+        // Guardar la imagen si se proporciona
+        if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+            Picture picture = new Picture(imageUrl.trim(), savedPost);
+            pictureRepository.save(picture);
+        }
+
+        return savedPost;
     }
 }

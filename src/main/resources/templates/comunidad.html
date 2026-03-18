@@ -38,11 +38,25 @@
     <div class="card shadow-sm mb-5">
         <div class="card-body">
             <form th:action="@{/comunidad/crear}" method="post">
+
+                <div th:if="${param.error} == 'url'" class="alert alert-danger">
+                    La URL de la imagen debe comenzar con <code>http://</code> o <code>https://</code>.
+                </div>
+                <div th:if="${param.error} == 'url_long'" class="alert alert-danger">
+                    La URL de la imagen es demasiado larga (máx 100 caracteres).
+                </div>
+
                 <input type="text"
                        name="title"
                        class="form-control mb-2"
                        placeholder="Título del post"
                        required>
+
+                <input type="text"
+                       name="imageUrl"
+                       class="form-control mb-2"
+                       placeholder="URL de la imagen (máx 100 caracteres)"
+                       maxlength="100">
 
                 <textarea name="content"
                           class="form-control mb-3"
@@ -101,10 +115,11 @@
                           data-content=${post.content},
                           data-author=${post.user.name},
                           data-id=${post.id},
+                          data-image=${post.pictures != null && !post.pictures.isEmpty() ? post.pictures.get(0).url : 'https://picsum.photos/400/250?random=' + post.id},
                           data-date=${#temporals.format(post.datePosted, 'dd/MM/yyyy HH:mm')}">
 
-                <!-- Imagen aleatoria -->
-                <img th:src="'https://picsum.photos/400/250?random=' + ${post.id}"
+                <!-- Imagen del usuario o aleatoria por defecto -->
+                <img th:src="${post.pictures != null && !post.pictures.isEmpty() ? post.pictures.get(0).url : 'https://picsum.photos/400/250?random=' + post.id}"
                      class="card-img-top"
                      alt="Imagen publicación">
 

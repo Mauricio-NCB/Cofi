@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const content = card.dataset.content || "";
         const author = card.dataset.author || "";
         const date = card.dataset.date || "";
-        const image = card.querySelector("img")?.src || "";
+        const image = card.dataset.image || "";
         const postId = card.dataset.id || "";
 
         document.getElementById("modalTitle").textContent = title;

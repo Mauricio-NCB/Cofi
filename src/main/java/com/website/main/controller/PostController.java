@@ -59,7 +59,19 @@ public class PostController {
     @PostMapping("/crear")
     public String crearPost(@RequestParam String title,
                             @RequestParam String content,
-                            @RequestParam(required = false) String tags) {
+                            @RequestParam(required = false) String tags,
+                            @RequestParam(required = false) String imageUrl) {
+
+        // Validar URL si se proporciona
+        if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+            String trimmed = imageUrl.trim();
+            if (trimmed.length() > 100) {
+                return "redirect:/comunidad?error=url_long";
+            }
+            if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://")) {
+                return "redirect:/comunidad?error=url";
+            }
+        }
 
         Integer userId = 1; // Temporal hasta login real
 
@@ -92,7 +104,7 @@ public class PostController {
             }
         }
 
-        postService.create(title, content, userId, tagList);
+        postService.create(title, content, userId, tagList, imageUrl);
 
         return "redirect:/comunidad";
     }
