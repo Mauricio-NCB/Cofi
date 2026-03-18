@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 
 import com.website.main.model.Category;
 import com.website.main.model.Event;
-import com.website.main.repository.CategoryRepository;
+import com.website.main.service.CategoryService;
 import com.website.main.service.EventService;
 
 import org.springframework.stereotype.Controller;
@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.*;
 public class EventController {
 
     private final EventService eventService;
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
     public EventController(EventService eventService,
-                           CategoryRepository categoryRepository) {
+                           CategoryService categoryService) {
         this.eventService = eventService;
-        this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
     }
 
     // LISTADO DE EVENTOS (con filtro opcional por categoría)
@@ -47,7 +47,7 @@ public class EventController {
         
         model.addAttribute("categoriaSeleccionada", categoria);
         model.addAttribute("events", events);
-        model.addAttribute("categorias", categoryRepository.findAll());
+        model.addAttribute("categorias", categoryService.findAll());
         model.addAttribute("event", new Event());
 
         return "events";
@@ -62,7 +62,7 @@ public class EventController {
                 .toList();
 
         model.addAttribute("codigosPostales", codigos);
-        model.addAttribute("categorias", categoryRepository.findAll());
+        model.addAttribute("categorias", categoryService.findAll());
         model.addAttribute("event", new Event());
 
         return "crear-evento";
@@ -75,7 +75,7 @@ public class EventController {
 
         // Convertimos IDs en entidades Category
         List<Category> categoriasSeleccionadas =
-                categoryRepository.findAllById(categories);
+                categoryService.findAllById(categories);
 
         event.setCategories(categoriasSeleccionadas);
 

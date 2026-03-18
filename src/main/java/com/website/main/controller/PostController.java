@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.website.main.model.Post;
 import com.website.main.model.Tag;
-import com.website.main.repository.TagRepository;
+import com.website.main.service.TagService;
 import com.website.main.service.PostService;
 
 @Controller
@@ -22,14 +22,14 @@ public class PostController {
 
     private final PostService postService;
     private final CommentService commentService;
-    private final TagRepository tagRepository;
+    private final TagService tagService;
 
     public PostController(PostService postService,
                           CommentService commentService,
-                          TagRepository tagRepository) {
+                          TagService tagService) {
         this.postService = postService;
         this.commentService = commentService;
-        this.tagRepository = tagRepository;
+        this.tagService = tagService;
     }
 
     @GetMapping
@@ -50,7 +50,7 @@ public class PostController {
             p.setComments(commentService.getCommentsTree(p.getId()));
         }
         model.addAttribute("posts", posts);
-        model.addAttribute("popularTags", tagRepository.findPopularTags());
+        model.addAttribute("popularTags", tagService.findPopularTags());
         model.addAttribute("currentPage", "comunidad");
 
         return "comunidad";
@@ -91,14 +91,7 @@ public class PostController {
                 String normalizedName = name.trim().toLowerCase();
 
                 if (!name.isEmpty()) {
-
-                    Tag tag = tagRepository.findByName(name)
-                            .orElseGet(() -> {
-                                Tag newTag = new Tag();
-                                newTag.setName(normalizedName);
-                                return tagRepository.save(newTag);
-                            });
-
+                    Tag tag = tagService.findOrCreate(normalizedName);   
                     tagList.add(tag);
                 }
             }
