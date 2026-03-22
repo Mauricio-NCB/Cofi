@@ -2,6 +2,7 @@ package com.website.main.service;
 
 import org.springframework.stereotype.Service;
 
+import com.website.main.dto.ChatResponseDTO;
 import com.website.main.model.Chat;
 import com.website.main.model.User;
 import com.website.main.repository.UserRepository;
@@ -29,7 +30,7 @@ public class ChatService {
         return chatRepository.findById(chatId).orElse(null); // Placeholder
     }
 
-    public Chat createChat(String type, List<String> participantNames, Integer creatorId) {
+    public ChatResponseDTO createChat(String type, List<String> participantNames, Integer creatorId) {
         
         // Aquí iría la lógica para crear un nuevo chat con los participantes dados
         // Por ejemplo, podrías crear un nuevo chat y guardarlo en la base de datos
@@ -53,7 +54,14 @@ public class ChatService {
 
         Chat savedChat = chatRepository.save(chat);
 
-        return savedChat;
+        ChatResponseDTO responseDTO = new ChatResponseDTO();
+        responseDTO.setId(savedChat.getId());
+        responseDTO.setType(savedChat.getType());
+        responseDTO.setParticipantNames(savedChat.getUsers().stream()
+                    .map(User::getName).toList());
+
+
+        return responseDTO;
     }
 
     public void deleteChat(Integer chatId, Integer userId) {
@@ -71,8 +79,17 @@ public class ChatService {
         }
     }
 
-    public List<Chat> viewChatsFromUser(Integer userId) {
+    public List<ChatResponseDTO> viewChatsFromUser(Integer userId) {
         // Aquí iría la lógica para obtener los chats en los que participa el usuario
-        return chatRepository.findByUsersId(userId);
+        return chatRepository.findByUsersId(userId).stream()
+                .map(chat -> {
+                    ChatResponseDTO dto = new ChatResponseDTO();
+                    dto.setId(chat.getId());
+                    dto.setType(chat.getType());
+                    dto.setParticipantNames(chat.getUsers().stream()
+                            .map(User::getName).toList());
+                    return dto;
+                })
+                .toList();
     }
 }
