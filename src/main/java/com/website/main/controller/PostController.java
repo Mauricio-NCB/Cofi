@@ -1,18 +1,17 @@
 package com.website.main.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.website.main.model.Comment;
-import com.website.main.model.User;
+import com.website.main.dto.CommentResponseDTO;
+import com.website.main.dto.CommentCreateDTO;
+import com.website.main.dto.PostResponseDTO;
+import com.website.main.dto.PostCreateDTO;
 
 import org.springframework.stereotype.Controller;
 import com.website.main.service.CommentService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.website.main.model.Post;
-import com.website.main.model.Tag;
 import com.website.main.service.TagService;
 import com.website.main.service.PostService;
 
@@ -36,7 +35,7 @@ public class PostController {
     public String comunidad(@RequestParam(required = false) String tag,
                             Model model) {
 
-        List<Post> posts;
+        List<PostResponseDTO> posts;
 
         if (tag != null && !tag.isBlank()) {
             posts = postService.findByTag(tag);
@@ -45,10 +44,6 @@ public class PostController {
             posts = postService.findAllVisible();
         }
 
-        // CARGAR COMENTARIOS PARA CADA POST
-        for (Post p : posts) {
-            p.setComments(commentService.getCommentsTree(p.getId()));
-        }
         model.addAttribute("posts", posts);
         model.addAttribute("popularTags", tagService.findPopularTags());
         model.addAttribute("currentPage", "comunidad");
@@ -57,79 +52,35 @@ public class PostController {
     }
 
     @PostMapping("/crear")
-    public String crearPost(@RequestParam String title,
-                            @RequestParam String content,
-                            @RequestParam(required = false) String tags,
-                            @RequestParam(required = false) String imageUrl) {
+    public String crearPost(@ModelAttribute PostCreateDTO postDTO) {
 
-        // Validar URL si se proporciona
-        if (imageUrl != null && !imageUrl.trim().isEmpty()) {
-            String trimmed = imageUrl.trim();
-            if (trimmed.length() > 100) {
-                return "redirect:/comunidad?error=url_long";
-            }
-            if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://")) {
+        // Validar URL si se proporciona en la request
+        if (postDTO.getPictureUrl() != null && !postDTO.getPictureUrl().trim().isEmpty()) {
+            String trimmed = postDTO.getPictureUrl().trim();
+            
+            if (trimmed.length() > 100) return "redirect:/comunidad?error=url_long";
+            if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://"))
                 return "redirect:/comunidad?error=url";
-            }
         }
 
         Integer userId = 1; // Temporal hasta login real
 
-        List<Tag> tagList = new ArrayList<>();
-
-        if (tags != null && !tags.trim().isEmpty()) {
-
-            String[] tagNames = tags.split(",");
-
-            if (tagNames.length > 3) {
-                throw new RuntimeException("Máximo 3 tags permitidos");
-            }
-
-            for (String name : tagNames) {
-
-                name = name.trim().toLowerCase();
-                String normalizedName = name.trim().toLowerCase();
-
-                if (!name.isEmpty()) {
-                    Tag tag = tagService.findOrCreate(normalizedName);   
-                    tagList.add(tag);
-                }
-            }
-        }
-
-        postService.create(title, content, userId, tagList, imageUrl);
+        postService.create(postDTO, userId);
 
         return "redirect:/comunidad";
     }
 
     @PostMapping("/comentario")
     @ResponseBody
-    public void crearComentario(@RequestParam Integer postId,
-                                @RequestParam String content,
-                                @RequestParam(required = false) Integer parentId){
+    public void crearComentario(@RequestBody CommentCreateDTO comment) {
 
-        Comment comment = new Comment();
-
-        comment.setContent(content);
-
-        Post post = postService.findById(postId);
-        comment.setPost(post);
-
-        User user = new User();
-        user.setId(1);
-        comment.setUser(user);
-
-        if(parentId != null){
-            Comment parent = commentService.findById(parentId);
-            comment.setParent(parent);
-        }
-
-        commentService.save(comment);
+        Integer userId = 1; // Temporal hasta login real
+        commentService.create(comment, userId);
     }
 
     @GetMapping("/comentarios/{postId}")
     @ResponseBody
-    public List<Comment> getComentarios(@PathVariable Integer postId) {
+    public List<CommentResponseDTO> getComentarios(@PathVariable Integer postId) {
         return commentService.getCommentsTree(postId);
     }
 }

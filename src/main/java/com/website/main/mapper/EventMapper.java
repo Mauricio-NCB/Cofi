@@ -8,6 +8,9 @@ import com.website.main.dto.EventCalendarDTO;
 public class EventMapper {
     
     public EventResponseDTO toDTO(Event event) {
+
+        if (event == null) return null;
+
         EventResponseDTO dto = new EventResponseDTO();
         dto.setId(event.getId());
         dto.setDateEvent(event.getDateEvent());
