@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
-import com.website.main.model.Chat;
 import com.website.main.model.Message;
+import com.website.main.dto.ChatResponseDTO;
 import com.website.main.dto.MessageDTO;
 import com.website.main.service.ChatService;
 import com.website.main.service.MessageService;
@@ -43,7 +43,7 @@ public class ChatController {
     @GetMapping("/{chatId}")
     public String viewChat(@PathVariable Integer chatId, Model model) {
         // Aquí iría la lógica para obtener el chat y sus mensajes
-        Chat chat = chatService.findById(chatId);
+        ChatResponseDTO chat = chatService.findById(chatId);
         List<Message> messages = messageService.viewMessagesFromChat(chatId);
 
         model.addAttribute("chat", chat);
