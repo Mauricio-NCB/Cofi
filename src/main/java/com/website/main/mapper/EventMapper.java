@@ -2,9 +2,13 @@ package com.website.main.mapper;
 
 import com.website.main.model.Event;
 import com.website.main.model.Category;
+
+import org.springframework.stereotype.Component;
+
 import com.website.main.dto.Event.EventCalendarDTO;
 import com.website.main.dto.Event.EventResponseDTO;
 
+@Component
 public class EventMapper {
     
     public EventResponseDTO toDTO(Event event) {

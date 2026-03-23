@@ -2,9 +2,13 @@ package com.website.main.mapper;
 
 import com.website.main.model.Post;
 import com.website.main.model.Tag;
+
+import org.springframework.stereotype.Component;
+
 import com.website.main.dto.Post.PostResponseDTO;
 import com.website.main.model.Picture;
 
+@Component
 public class PostMapper {
     
     public PostResponseDTO toDTO(Post post) {

@@ -1,13 +1,11 @@
 package com.website.main.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.website.main.dto.Comment.CommentResponseDTO;
 import com.website.main.model.Comment;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
+@Component
 public class CommentMapper {
     
     public CommentResponseDTO toDTO(Comment comment) {

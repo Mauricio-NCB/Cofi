@@ -1,8 +1,11 @@
 package com.website.main.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.website.main.dto.Preference.PreferenceResponseDTO;
 import com.website.main.model.Preference;
 
+@Component
 public class PreferenceMapper {
     
     public PreferenceResponseDTO toDTO(Preference preference) {
