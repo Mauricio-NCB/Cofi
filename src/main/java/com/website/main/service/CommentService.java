@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import com.website.main.model.Comment;
 import com.website.main.model.Post;
 import com.website.main.model.User;
-import com.website.main.dto.CommentCreateDTO;
-import com.website.main.dto.CommentResponseDTO;
+import com.website.main.dto.Comment.CommentCreateDTO;
+import com.website.main.dto.Comment.CommentResponseDTO;
 import com.website.main.mapper.CommentMapper;
 import com.website.main.repository.CommentRepository;
 

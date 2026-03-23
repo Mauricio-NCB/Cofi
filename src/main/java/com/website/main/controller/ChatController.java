@@ -5,10 +5,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
-import com.website.main.dto.ChatResponseDTO;
-import com.website.main.dto.MessageCreateDTO;
-import com.website.main.dto.MessageResponseDTO;
-
+import com.website.main.dto.Chat.ChatResponseDTO;
+import com.website.main.dto.Message.MessageCreateDTO;
+import com.website.main.dto.Message.MessageResponseDTO;
 import com.website.main.service.ChatService;
 import com.website.main.service.MessageService;
 

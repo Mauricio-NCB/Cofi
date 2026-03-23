@@ -1,4 +1,4 @@
-package com.website.main.dto;
+package com.website.main.dto.Event;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

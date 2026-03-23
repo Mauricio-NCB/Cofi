@@ -1,7 +1,9 @@
-package com.website.main.dto;
+package com.website.main.dto.Post;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.website.main.dto.Comment.CommentResponseDTO;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,7 @@
 package com.website.main.mapper;
 
+import com.website.main.dto.Comment.CommentResponseDTO;
 import com.website.main.model.Comment;
-import com.website.main.dto.CommentResponseDTO;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +11,9 @@ import lombok.Setter;
 public class CommentMapper {
     
     public CommentResponseDTO toDTO(Comment comment) {
+
+        if (comment == null) return null;
+
         CommentResponseDTO dto = new CommentResponseDTO();
         dto.setId(comment.getId());
         dto.setContent(comment.getContent());

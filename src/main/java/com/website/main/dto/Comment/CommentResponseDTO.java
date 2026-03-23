@@ -1,4 +1,4 @@
-package com.website.main.dto;
+package com.website.main.dto.Comment;
 
 import java.util.List;
 import java.time.LocalDateTime;

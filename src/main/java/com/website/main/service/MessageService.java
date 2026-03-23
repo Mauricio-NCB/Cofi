@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import com.website.main.model.Message;
-import com.website.main.dto.MessageCreateDTO;
-import com.website.main.dto.MessageResponseDTO;
+import com.website.main.dto.Message.MessageCreateDTO;
+import com.website.main.dto.Message.MessageResponseDTO;
 import com.website.main.mapper.MessageMapper;
 import com.website.main.model.Chat;
 import com.website.main.model.User;

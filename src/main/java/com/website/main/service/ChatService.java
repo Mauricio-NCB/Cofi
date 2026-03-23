@@ -2,11 +2,11 @@ package com.website.main.service;
 
 import org.springframework.stereotype.Service;
 
-import com.website.main.dto.ChatResponseDTO;
 import com.website.main.model.Chat;
 import com.website.main.model.User;
 import com.website.main.repository.UserRepository;
 import com.website.main.repository.ChatRepository;
+import com.website.main.dto.Chat.ChatResponseDTO;
 import com.website.main.mapper.ChatMapper;
 
 import java.util.List;

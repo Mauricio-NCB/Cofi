@@ -2,10 +2,10 @@ package com.website.main.controller;
 
 import java.util.List;
 
-import com.website.main.dto.CommentResponseDTO;
-import com.website.main.dto.CommentCreateDTO;
-import com.website.main.dto.PostResponseDTO;
-import com.website.main.dto.PostCreateDTO;
+import com.website.main.dto.Comment.CommentCreateDTO;
+import com.website.main.dto.Comment.CommentResponseDTO;
+import com.website.main.dto.Post.PostCreateDTO;
+import com.website.main.dto.Post.PostResponseDTO;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

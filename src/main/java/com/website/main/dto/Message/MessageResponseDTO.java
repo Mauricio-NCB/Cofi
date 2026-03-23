@@ -1,4 +1,4 @@
-package com.website.main.dto;
+package com.website.main.dto.Message;
 
 import lombok.Getter;
 import lombok.Setter;

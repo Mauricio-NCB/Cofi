@@ -2,8 +2,8 @@ package com.website.main.mapper;
 
 import com.website.main.model.Event;
 import com.website.main.model.Category;
-import com.website.main.dto.EventResponseDTO;
-import com.website.main.dto.EventCalendarDTO;
+import com.website.main.dto.Event.EventCalendarDTO;
+import com.website.main.dto.Event.EventResponseDTO;
 
 public class EventMapper {
     

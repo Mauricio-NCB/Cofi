@@ -1,6 +1,7 @@
 package com.website.main.controller;
 
-import com.website.main.model.Preference;
+import com.website.main.dto.Preference.PreferenceResponseDTO;
+import com.website.main.dto.Preference.PreferenceUpdateDTO;
 import com.website.main.service.PreferenceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,20 +17,17 @@ public class PreferenceController {
     }
 
     @GetMapping
-    public Preference get(@RequestParam(required = false) Integer userId) {
+    public PreferenceResponseDTO get(@RequestParam(required = false) Integer userId) {
         if (userId == null) userId = 1;
         return service.getOrCreateByUserId(userId);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public Preference update(@RequestParam(required = false) Integer userId, @RequestBody Preference body) {
-        if (userId == null) userId = body.getUserId() != null ? body.getUserId() : 1;
-        Preference pref = service.getOrCreateByUserId(userId);
-        if (body.getTextSizeLevel() != null) pref.setTextSizeLevel(body.getTextSizeLevel());
-        if (body.getButtonSizeLevel() != null) pref.setButtonSizeLevel(body.getButtonSizeLevel());
-        if (body.getMenuMainColor() != null) pref.setMenuMainColor(body.getMenuMainColor());
-        if (body.getMenuSecondaryColor() != null) pref.setMenuSecondaryColor(body.getMenuSecondaryColor());
-        return service.save(pref);
+    public PreferenceResponseDTO update(@RequestParam(required = false) Integer userId, @RequestBody PreferenceUpdateDTO preferenceDTO) {
+        
+        if (userId == null) userId = 1;
+
+        return service.update(userId, preferenceDTO);
     }
 }

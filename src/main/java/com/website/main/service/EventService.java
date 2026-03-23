@@ -7,9 +7,9 @@ import com.website.main.model.User;
 import com.website.main.model.Category;
 import com.website.main.repository.EventRepository;
 import com.website.main.repository.UserRepository;
-import com.website.main.dto.EventCalendarDTO;
-import com.website.main.dto.EventCreateDTO;
-import com.website.main.dto.EventResponseDTO;
+import com.website.main.dto.Event.EventCalendarDTO;
+import com.website.main.dto.Event.EventCreateDTO;
+import com.website.main.dto.Event.EventResponseDTO;
 import com.website.main.mapper.EventMapper;
 
 import java.time.LocalDateTime;

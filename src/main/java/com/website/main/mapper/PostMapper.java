@@ -1,13 +1,14 @@
 package com.website.main.mapper;
 
-import com.website.main.dto.PostResponseDTO;
 import com.website.main.model.Post;
 import com.website.main.model.Tag;
+import com.website.main.dto.Post.PostResponseDTO;
 import com.website.main.model.Picture;
 
 public class PostMapper {
     
     public PostResponseDTO toDTO(Post post) {
+        
         if (post == null) return null;
         
         PostResponseDTO dto = new PostResponseDTO();

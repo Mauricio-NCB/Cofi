@@ -1,8 +1,8 @@
 package com.website.main.mapper;
 
+import com.website.main.dto.Chat.ChatResponseDTO;
 import com.website.main.model.Chat;
 import com.website.main.model.User;
-import com.website.main.dto.ChatResponseDTO;
 
 public class ChatMapper {
     
