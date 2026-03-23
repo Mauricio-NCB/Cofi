@@ -26,11 +26,13 @@ public class EventMapper {
         dto.setState(event.getState());
         dto.setChatId(event.getChatId());
         dto.setCreatorId(event.getUser().getId());
+        dto.setCreatorName(event.getUser().getName());
         dto.setCategoryNames(
             event.getCategories().stream()
                 .map(Category::getName)
                 .toList()
         );
+        dto.setImageUrl(event.getImageUrl());
 
         return dto;
     }

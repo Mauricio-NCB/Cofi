@@ -78,7 +78,7 @@ public class EventService {
     }
 
     public List<EventResponseDTO> findByCategoryId(Integer categoryId) {
-        return eventRepository.findByCategoryId(categoryId).stream()
+        return eventRepository.findByCategories_Id(categoryId).stream()
                 .map(eventMapper::toDTO)
                 .toList();
     }

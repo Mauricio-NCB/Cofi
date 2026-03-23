@@ -21,6 +21,7 @@ public class EventResponseDTO {
     private String state;
     private Integer chatId;
     private Integer creatorId;
+    private String creatorName;
     private List<String> categoryNames;
-
+    private String imageUrl;
 }
