@@ -8,12 +8,12 @@ import com.website.main.dto.PostResponseDTO;
 import com.website.main.dto.PostCreateDTO;
 
 import org.springframework.stereotype.Controller;
-import com.website.main.service.CommentService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.website.main.service.TagService;
 import com.website.main.service.PostService;
+import com.website.main.service.CommentService;
 
 @Controller
 @RequestMapping("/comunidad")
