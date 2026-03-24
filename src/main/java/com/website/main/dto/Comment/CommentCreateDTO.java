@@ -9,5 +9,5 @@ public class CommentCreateDTO {
     
     private Integer postId;
     private String content;
-    private Integer replyId; // Para respuestas 
+    private Integer parentId; // Para respuestas 
 }

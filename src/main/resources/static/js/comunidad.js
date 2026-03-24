@@ -14,12 +14,28 @@ document.addEventListener("DOMContentLoaded", function () {
         const date = card.dataset.date || "";
         const image = card.dataset.image || "";
         const postId = card.dataset.id || "";
+        const tags = card.dataset.tags || "";
 
         document.getElementById("modalTitle").textContent = title;
         document.getElementById("modalContent").textContent = content;
         document.getElementById("modalAuthor").textContent = author;
         document.getElementById("modalDate").textContent = date;
         document.getElementById("modalImage").src = image;
+        
+        const tagsContainer = document.getElementById("modalTags");
+        tagsContainer.innerHTML = "";
+
+        if (tags) {
+            tags.split(",").forEach(tag => {
+                if (tag.trim()) {
+                    const badge = document.createElement("a");
+                    badge.href = `/comunidad?tag=${tag.trim()}`;
+                    badge.className = "badge bg-secondary me-1";
+                    badge.textContent = tag.trim();
+                    tagsContainer.appendChild(badge);
+                }
+            });
+        }
 
         document.getElementById("modalPostId").value = postId;
 

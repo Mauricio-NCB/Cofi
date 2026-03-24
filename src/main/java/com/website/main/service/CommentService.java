@@ -50,6 +50,13 @@ public class CommentService {
         user.setId(userId);
         newComment.setUser(user);
 
+        // Setear el comentario padre si existe
+        if(comment.getParentId() != null) {
+            Comment parent = new Comment();
+            parent.setId(comment.getParentId());
+            newComment.setParent(parent);
+        }
+
         Comment savedComment = commentRepository.save(newComment);
 
         return commentMapper.toDTO(savedComment);
