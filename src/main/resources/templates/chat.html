@@ -29,12 +29,12 @@
       <div class="card h-100 mb-3 chat-card"
           data-bs-toggle="modal"
           data-bs-target="#chatModal"
-          th:attr="data-id=${chat.Id}">
+          th:attr="data-id=${chat.id}">
 
           <div class="chat-card-body d-flex align-items-center">
 
             <h5 class="chat-id"
-              th:text="'Chat Nº ' + ${chat.Id}"></h5>
+              th:text="'Chat Nº ' + ${chat.id}"></h5>
 
             <!-- Botón para eliminar -->
             <form th:action="@{'/chat/' + ${chat.id} + '/delete'}" method="post" style="display: inline;">

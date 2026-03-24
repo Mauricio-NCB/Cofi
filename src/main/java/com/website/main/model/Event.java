@@ -1,11 +1,18 @@
 package com.website.main.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "events")
 public class Event {
@@ -50,43 +57,6 @@ public class Event {
         inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<Category> categories;
-
-
-    public Event() {}
-
-    // getters & setters
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
-    public LocalDate getDateEvent() { return dateEvent; }
-    public void setDateEvent(LocalDate dateEvent) { this.dateEvent = dateEvent; }
-
-    public LocalTime getTimeEvent() { return timeEvent; }
-    public void setTimeEvent(LocalTime timeEvent) { this.timeEvent = timeEvent; }
-
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-
-    public Integer getMaxCapacity() { return maxCapacity; }
-    public void setMaxCapacity(Integer maxCapacity) { this.maxCapacity = maxCapacity; }
-
-    public String getState() { return state; }
-    public void setState(String state) { this.state = state; }
-
-    public Integer getChatId() { return chatId; }
-    public void setChatId(Integer chatId) { this.chatId = chatId; }
-
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-
-    public String getCodepostal() { return postcode; }
-    public void setCodepostal(String postcode) { this.postcode = postcode; }
-
-    public List<Category> getCategories() { return categories;}
-    public void setCategories(List<Category> categories) { this.categories = categories; }
 
     public String getImageUrl() {
         if (categories == null) {

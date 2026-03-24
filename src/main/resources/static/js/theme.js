@@ -29,7 +29,7 @@ function changeTheme(theme, userId = window.currentUserId || 1) {
     if (theme === 'azul') code = 1;
     else if (theme === 'verde') code = 2;
     else if (theme === 'morado') code = 3;
-    const body = { userId: userId, menuMainColor: code };
+    const body = { menuMainColor: code };
     fetch(`/api/preferences?userId=${userId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)}).catch(()=>{});
 }
 
@@ -40,6 +40,6 @@ function changeFontSize(size, userId = window.currentUserId || 1) {
     else if (size === 'normal') { level = 1; sizeToken = 'normal'; }
     else if (size === 'large') { level = 2; sizeToken = 'large'; }
     document.documentElement.setAttribute("data-font", sizeToken);
-    const body = { userId: userId, textSizeLevel: Number(level) };
+    const body = { textSizeLevel: Number(level) };
     fetch(`/api/preferences?userId=${userId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)}).catch(()=>{});
 }

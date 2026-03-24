@@ -1,15 +1,15 @@
 package com.website.main.controller;
 
 import java.time.Year;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.IntStream;
 
 import com.website.main.model.Category;
-import com.website.main.model.Event;
 import com.website.main.service.CategoryService;
 import com.website.main.service.EventService;
+import com.website.main.dto.Event.EventCalendarDTO;
+import com.website.main.dto.Event.EventCreateDTO;
+import com.website.main.dto.Event.EventResponseDTO;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +37,7 @@ public class EventController {
         model.addAttribute("year", Year.now().getValue());
         model.addAttribute("currentPage", "eventos");
 
-        List<Event> events;
+        List<EventResponseDTO> events;
 
         if (categoria != null) {
             events = eventService.findByCategoryId(categoria);
@@ -48,7 +48,7 @@ public class EventController {
         model.addAttribute("categoriaSeleccionada", categoria);
         model.addAttribute("events", events);
         model.addAttribute("categorias", categoryService.findAll());
-        model.addAttribute("event", new Event());
+        model.addAttribute("event", new EventCreateDTO());
 
         return "events";
     }
@@ -63,25 +63,23 @@ public class EventController {
 
         model.addAttribute("codigosPostales", codigos);
         model.addAttribute("categorias", categoryService.findAll());
-        model.addAttribute("event", new Event());
+        model.addAttribute("event", new EventCreateDTO());
 
         return "crear-evento";
     }
 
     // CREAR EVENTO (ManyToMany categorías)
     @PostMapping("/crear")
-    public String crearEvento(@ModelAttribute Event event,
+    public String crearEvento(@ModelAttribute EventCreateDTO event,
                               @RequestParam List<Integer> categories) {
 
         // Convertimos IDs en entidades Category
         List<Category> categoriasSeleccionadas =
                 categoryService.findAllById(categories);
 
-        event.setCategories(categoriasSeleccionadas);
-
         Integer userId = 1; // CAMBIAR luego por usuario logueado real
 
-        eventService.save(event, userId);
+        eventService.save(event, categoriasSeleccionadas, userId);
 
         return "redirect:/eventos";
     }
@@ -89,7 +87,7 @@ public class EventController {
     // OBTENER EVENTO POR ID (para modal)
     @GetMapping("/{id}")
     @ResponseBody
-    public Event obtenerEvento(@PathVariable Integer id) {
+    public EventResponseDTO obtenerEvento(@PathVariable Integer id) {
         return eventService.findById(id);
     }
 
@@ -100,26 +98,13 @@ public class EventController {
         return "calendario";
     }
 
-    // FULLCALENDAR
+    // FULL CALENDAR
     @GetMapping("/api/mis-eventos")
     @ResponseBody
-    public List<Map<String, Object>> misEventos() {
+    public List<EventCalendarDTO> misEventos() {
 
         Integer userId = 1; // ⚠ CAMBIAR por usuario logueado real
 
-        List<Event> eventos = eventService.findByUserId(userId);
-
-        return eventos.stream().map(ev -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", ev.getId());
-            map.put("title", ev.getTitle());
-            map.put("start", ev.getDateEvent().toString() + "T" + ev.getTimeEvent().toString());
-            map.put("description", ev.getDescription());
-            map.put("dateEvent", ev.getDateEvent().toString());
-            map.put("timeEvent", ev.getTimeEvent().toString());
-            map.put("maxCapacity", ev.getMaxCapacity());
-            map.put("estado", ev.getState());
-            return map;
-        }).toList();
+        return eventService.findByUserIdForCalendar(userId);
     }
 }
