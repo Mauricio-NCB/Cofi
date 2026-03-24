@@ -34,8 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const messageForm = document.getElementById('messageForm');
   const messageInput = document.getElementById('messageInput');
 
-  const currentUserId = 1; // Cambiar cuando haya usuario real
-
   async function loadMessages(chatId) {
     chatMessages.innerHTML = '';
     const res = await fetch(`/chat/${chatId}/messages`);
@@ -78,16 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const res = await fetch(`/chat/${currentChatId}/messages/ajax`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ content, userId: currentUserId })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content })
     });
 
     if (!res.ok) return;
 
-    //const msg = await res.json();
-    //appendMessage(msg);
-    //chatMessages.scrollTop = chatMessages.scrollHeight;
-    
     messageInput.value = '';
   });
 });

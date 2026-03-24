@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(){
 
-    const form = document.querySelector("#postModal form");
+    const form = document.getElementById("commentForm");
 
     if(!form) return;
 
@@ -9,9 +9,7 @@ document.addEventListener("DOMContentLoaded", function(){
         e.preventDefault();
 
         const postId = document.getElementById("modalPostId").value;
-        console.log("postId al enviar:", postId);
         const content = document.getElementById("commentContent").value;
-        console.log("content al enviar:", content);
 
         await fetch("/comunidad/comentario", {
             method: "POST",
