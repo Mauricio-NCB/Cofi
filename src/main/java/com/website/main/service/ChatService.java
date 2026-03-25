@@ -46,7 +46,8 @@ public class ChatService {
         participants.add(creator);
 
         for (String nameParticipant : participantNames) {
-            User participant = userRepository.findByName(nameParticipant.trim());
+            User participant = userRepository.findByName(nameParticipant.trim())
+                        .orElseThrow(() -> new RuntimeException("Usuario no encontrado") );
             
             if (participant != null && !participants.contains(participant)) {
                 participants.add(participant);

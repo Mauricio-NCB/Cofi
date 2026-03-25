@@ -28,6 +28,9 @@ public class User {
     @Column(name = "lastname", nullable = false, length = 100)
     private String lastname;
 
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @Column(name = "refresh_token", length = 512)
     private String refreshToken;
 
