@@ -1,9 +1,16 @@
 package com.website.main.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "categories")
 public class Category {
 
@@ -14,26 +21,10 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String name;
 
-    public Category() {}
+    @ManyToMany(mappedBy = "categories")
+    private List<Event> events;
 
     public Category(String name) {
         this.name = name;
     }
-
-    @ManyToMany(mappedBy = "categories")
-    private List<Event> events;
-
-    public List<Event> getEvents() {
-        return events;
-    }
-
-    public void setEvents(List<Event> events) {
-        this.events = events;
-    }
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
 }
