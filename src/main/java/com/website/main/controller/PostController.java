@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.website.main.model.Post;
 import com.website.main.model.Reaction;
 import com.website.main.model.PostReaction;
 import com.website.main.model.CommentReaction;
@@ -22,8 +21,6 @@ import com.website.main.service.PostService;
 import com.website.main.service.PostReactionService;
 import com.website.main.service.ReactionService;
 import com.website.main.service.AchievementService;
-import com.website.main.service.TagService;
-import com.website.main.service.PostService;
 import com.website.main.service.CommentService;
 
 @Controller

@@ -61,8 +61,8 @@ public class CommentService {
 
         Comment savedComment = commentRepository.save(newComment);
 
-        if (comment.getUser() != null) {
-            achievementService.unlockAchievement(comment.getUser().getId(), AchievementType.FIRST_COMMENT);
+        if (comment.getParentId() != null) {
+            achievementService.unlockAchievement(comment.getParentId(), AchievementType.FIRST_COMMENT);
         }
 
         return commentMapper.toDTO(savedComment);
