@@ -37,7 +37,7 @@ public class Comment {
     private Comment parent;
 
     @OneToMany(mappedBy = "parent")
-    private List<Comment> responses;
+    private List<Comment> replies;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

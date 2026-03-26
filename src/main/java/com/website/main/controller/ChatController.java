@@ -5,11 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
-import com.website.main.model.Chat;
-import com.website.main.model.Message;
-import com.website.main.dto.MessageDTO;
+import com.website.main.dto.Chat.ChatResponseDTO;
+import com.website.main.dto.Message.MessageCreateDTO;
+import com.website.main.dto.Message.MessageResponseDTO;
 import com.website.main.service.ChatService;
 import com.website.main.service.MessageService;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -43,8 +44,8 @@ public class ChatController {
     @GetMapping("/{chatId}")
     public String viewChat(@PathVariable Integer chatId, Model model) {
         // Aquí iría la lógica para obtener el chat y sus mensajes
-        Chat chat = chatService.findById(chatId);
-        List<Message> messages = messageService.viewMessagesFromChat(chatId);
+        ChatResponseDTO chat = chatService.findById(chatId);
+        List<MessageResponseDTO> messages = messageService.viewMessagesFromChat(chatId);
 
         model.addAttribute("chat", chat);
         model.addAttribute("messages", messages);
@@ -56,25 +57,20 @@ public class ChatController {
 
     @GetMapping("/{chatId}/messages")
     @ResponseBody
-    public List<MessageDTO> viewMessages(@PathVariable Integer chatId) {
-        
-        List<MessageDTO> messages = messageService.viewMessagesFromChat(chatId)
-                .stream().map(MessageDTO::fromEntity).toList();
+    public List<MessageResponseDTO> viewMessages(@PathVariable Integer chatId) {
 
-        return messages;
+        return messageService.viewMessagesFromChat(chatId);
     }
 
     // Implementacion para enviar mensajes via JS
     @PostMapping("/{chatId}/messages/ajax")
     @ResponseBody
-    public MessageDTO sendMessage(@PathVariable Integer chatId, @RequestParam String content, 
-        @RequestParam Integer userId) {
+    public MessageResponseDTO sendMessage(@PathVariable Integer chatId, @RequestBody MessageCreateDTO messageDTO) {
         
         // Aquí iría la lógica para enviar un mensaje al chat
         // chatService.sendMessage(chatId, content);
-        Message messageCreated = messageService.sendMessage(chatId, content, userId);
 
-        return MessageDTO.fromEntity(messageCreated);
+        return messageService.sendMessage(chatId, messageDTO);
     }
 
     @PostMapping("/crear")

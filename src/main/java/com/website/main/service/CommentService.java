@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.website.main.model.Comment;
 import com.website.main.model.Achievement.AchievementType;
+import com.website.main.model.Post;
+import com.website.main.model.User;
+import com.website.main.dto.Comment.CommentCreateDTO;
+import com.website.main.dto.Comment.CommentResponseDTO;
+import com.website.main.mapper.CommentMapper;
 import com.website.main.repository.CommentRepository;
 
 @Service
@@ -17,28 +22,53 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final AchievementService achievementService;
+    private final CommentMapper commentMapper;
 
-    public CommentService(CommentRepository commentRepository, AchievementService achievementService){
+    public CommentService(CommentRepository commentRepository, AchievementService achievementService, CommentMapper commentMapper){
         this.commentRepository = commentRepository;
         this.achievementService = achievementService;
+        this.commentMapper = commentMapper;
     }
 
-    public Comment findById(Integer id){
-        return commentRepository.findById(id).orElseThrow();
+    public CommentResponseDTO findById(Integer id){
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Comentario no encontrado"));
+
+        return commentMapper.toDTO(comment);
     }
 
-    public void save(Comment comment){
-        comment.setDateSent(LocalDateTime.now());
-        comment.setVisible(true);
-        commentRepository.save(comment);
-        
-        // Desbloquear logro de primer comentario
+    public CommentResponseDTO create(CommentCreateDTO comment, Integer userId) {
+
+        Comment newComment = new Comment();
+        newComment.setContent(comment.getContent());
+        newComment.setDateSent(LocalDateTime.now());
+        newComment.setVisible(true);
+
+        Post post = new Post();
+        post.setId(comment.getPostId());
+        newComment.setPost(post);
+
+        User user = new User();
+        user.setId(userId);
+        newComment.setUser(user);
+
+        // Setear el comentario padre si existe
+        if(comment.getParentId() != null) {
+            Comment parent = new Comment();
+            parent.setId(comment.getParentId());
+            newComment.setParent(parent);
+        }
+
+        Comment savedComment = commentRepository.save(newComment);
+
         if (comment.getUser() != null) {
             achievementService.unlockAchievement(comment.getUser().getId(), AchievementType.FIRST_COMMENT);
         }
+
+        return commentMapper.toDTO(savedComment);
     }
 
-    public List<Comment> getCommentsTree(Integer postId){
+    public List<CommentResponseDTO> getCommentsTree(Integer postId){
 
         List<Comment> all = commentRepository.findAllByPost(postId);
 
@@ -47,7 +77,7 @@ public class CommentService {
 
         for(Comment c : all){
             map.put(c.getId(), c);
-            c.setResponses(new ArrayList<>());
+            c.setReplies(new ArrayList<>());
         }
 
         for(Comment c : all){
@@ -59,13 +89,15 @@ public class CommentService {
                 Comment parent = map.get(c.getParent().getId());
 
                 if(parent != null){
-                    parent.getResponses().add(c);
+                    parent.getReplies().add(c);
                 }
 
             }
         }
 
-        return roots;
+        return roots.stream()
+                .map(commentMapper::toDTO)
+                .toList();
     }
 
 }

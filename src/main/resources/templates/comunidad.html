@@ -110,13 +110,14 @@
             <div class="card h-100 shadow-sm post-card"
                  th:attr="data-title=${post.title},
                           data-content=${post.content},
-                          data-author=${post.user.name},
+                          data-author=${post.authorName},
                           data-id=${post.id},
-                          data-image=${post.pictures != null && !post.pictures.isEmpty() ? post.pictures.get(0).url : 'https://picsum.photos/400/250?random=' + post.id},
+                          data-tags=${post.tagNames != null ? #strings.arrayJoin(post.tagNames.toArray(), ',') : ''},
+                          data-image=${post.pictureUrls != null && !post.pictureUrls.isEmpty() ? post.pictureUrls.get(0) : 'https://picsum.photos/400/250?random=' + post.id},
                           data-date=${#temporals.format(post.datePosted, 'dd/MM/yyyy HH:mm')}">
 
                 <!-- Imagen del usuario o aleatoria por defecto -->
-                <img th:src="${post.pictures != null && !post.pictures.isEmpty() ? post.pictures.get(0).url : 'https://picsum.photos/400/250?random=' + post.id}"
+                <img th:src="${post.pictureUrls != null && !post.pictureUrls.isEmpty() ? post.pictureUrls.get(0) : 'https://picsum.photos/400/250?random=' + post.id}"
                      class="card-img-top"
                      alt="Imagen publicación">
 
@@ -180,35 +181,32 @@
 
                 <p id="modalContent"></p>
 
+
+                <div class="mt-2" id="modalTags"></div>
+
+                <div class="mt-3">
+                    <h6>Comentarios</h6>
+                    <div id="commentsSection"></div>
+                </div>
+
+                <form id="commentForm">
+                    <div class="mb-3">
+                        <div class="post-group">
+                            <input type="hidden" id="modalPostId">
+                            <textarea id="commentContent" class="form-control mb-2"
+                                    placeholder="Escribe un comentario..." required></textarea>
+
+                        </div>
+                        
+                        <div class="button-group">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                Comentar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
             </div>
-
-            <div class="mt-2" th:if="${post != null && !#lists.isEmpty(post.tags)}">
-                <a th:each="tag : ${post.tags}"
-                   th:href="@{/comunidad(tag=${tag.name})}"
-                   class="badge bg-secondary me-1"
-                   th:text="${tag.name}">
-                </a>
-            </div>
-
-            <div class="mt-3">
-                <h6>Comentarios</h6>
-                <div id="commentsSection"></div>
-            </div>
-
-            <form th:action="@{/comunidad/comentario}" method="post">
-
-                <input type="hidden" name="postId" id="modalPostId">
-
-                <textarea name="content"
-                        class="form-control mb-2"
-                        placeholder="Escribe un comentario..."
-                        required></textarea>
-
-                <button class="btn btn-primary btn-sm">
-                Comentar
-                </button>
-
-            </form>
 
         </div>
     </div>

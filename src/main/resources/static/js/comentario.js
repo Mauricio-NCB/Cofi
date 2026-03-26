@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(){
 
-    const form = document.querySelector("#postModal form");
+    const form = document.getElementById("commentForm");
 
     if(!form) return;
 
@@ -8,19 +8,17 @@ document.addEventListener("DOMContentLoaded", function(){
 
         e.preventDefault();
 
-        const formData = new FormData(form);
-
-        const postId = formData.get("postId");
+        const postId = document.getElementById("modalPostId").value;
+        const content = document.getElementById("commentContent").value;
 
         await fetch("/comunidad/comentario", {
             method: "POST",
-            body: formData
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ postId: parseInt(postId), content: content, parentId: null })
         });
 
         form.reset();
-
         cargarComentarios(postId);
-
     });
 
 });
@@ -64,10 +62,11 @@ function renderComment(comment, level = 0){
     const div = document.createElement("div");
 
     div.style.marginLeft = (level * 25) + "px";
+
     div.className = "border rounded p-2 mb-2";
 
     div.innerHTML = `
-        <strong>${comment.user.name}</strong>
+        <strong>${comment.authorName}</strong>
         <span class="text-muted small">
             ${formatearFecha(comment.dateSent)}
         </span>
@@ -89,7 +88,7 @@ function renderComment(comment, level = 0){
             </button>
         </div>
     `;
-
+    
     const btnResponder = div.querySelector(".responder-btn");
     const replyForm = div.querySelector(".reply-form");
 
@@ -107,14 +106,10 @@ function renderComment(comment, level = 0){
 
         const postId = document.getElementById("modalPostId").value;
 
-        const formData = new FormData();
-        formData.append("postId", postId);
-        formData.append("content", content);
-        formData.append("parentId", comment.id);
-
         await fetch("/comunidad/comentario", {
             method: "POST",
-            body: formData
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ postId: parseInt(postId), content: content, parentId: comment.id })
         });
 
         textarea.value = "";
@@ -122,9 +117,9 @@ function renderComment(comment, level = 0){
         cargarComentarios(postId);
     });
 
-    if(comment.responses && comment.responses.length > 0){
+    if(comment.replies && comment.replies.length > 0){
 
-        comment.responses.forEach(r => {
+        comment.replies.forEach(r => {  
 
             const reply = renderComment(r, level + 1);
 
