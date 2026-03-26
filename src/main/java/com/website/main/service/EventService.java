@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.website.main.model.Event;
 import com.website.main.model.User;
+import com.website.main.model.Achievement.AchievementType;
 import com.website.main.repository.EventRepository;
 import com.website.main.repository.UserRepository;
 
@@ -15,10 +16,12 @@ public class EventService {
     
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final AchievementService achievementService;
 
-    public EventService(EventRepository eventRepository, UserRepository userRepository) {
+    public EventService(EventRepository eventRepository, UserRepository userRepository, AchievementService achievementService) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.achievementService = achievementService;
     }
 
     public List<Event> findAll() {
@@ -52,7 +55,12 @@ public class EventService {
             throw new RuntimeException("Debe seleccionar un código postal");
         }
 
-        return eventRepository.save(event);
+        Event savedEvent = eventRepository.save(event);
+        
+        // Desbloquear logro de primer evento
+        achievementService.unlockAchievement(idUsuario, AchievementType.FIRST_EVENT);
+
+        return savedEvent;
     }
 
     public Event findById(Integer id) {

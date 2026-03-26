@@ -9,15 +9,18 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.website.main.model.Comment;
+import com.website.main.model.Achievement.AchievementType;
 import com.website.main.repository.CommentRepository;
 
 @Service
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final AchievementService achievementService;
 
-    public CommentService(CommentRepository commentRepository){
+    public CommentService(CommentRepository commentRepository, AchievementService achievementService){
         this.commentRepository = commentRepository;
+        this.achievementService = achievementService;
     }
 
     public Comment findById(Integer id){
@@ -28,6 +31,11 @@ public class CommentService {
         comment.setDateSent(LocalDateTime.now());
         comment.setVisible(true);
         commentRepository.save(comment);
+        
+        // Desbloquear logro de primer comentario
+        if (comment.getUser() != null) {
+            achievementService.unlockAchievement(comment.getUser().getId(), AchievementType.FIRST_COMMENT);
+        }
     }
 
     public List<Comment> getCommentsTree(Integer postId){

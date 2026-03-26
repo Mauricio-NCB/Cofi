@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import com.website.main.model.Post;
 import com.website.main.model.User;
 import com.website.main.model.Picture;
+import com.website.main.model.Achievement.AchievementType;
 import com.website.main.repository.PostRepository;
 import com.website.main.repository.UserRepository;
 import com.website.main.repository.PictureRepository;
@@ -17,11 +18,13 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PictureRepository pictureRepository;
+    private final AchievementService achievementService;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository, PictureRepository pictureRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, PictureRepository pictureRepository, AchievementService achievementService) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.pictureRepository = pictureRepository;
+        this.achievementService = achievementService;
     }
 
     public Post findById(Integer id){
@@ -62,6 +65,9 @@ public class PostService {
             Picture picture = new Picture(imageUrl.trim(), savedPost);
             pictureRepository.save(picture);
         }
+
+        // Desbloquear logro de primer post
+        achievementService.unlockAchievement(userId, AchievementType.FIRST_POST);
 
         return savedPost;
     }

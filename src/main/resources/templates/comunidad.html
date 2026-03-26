@@ -105,12 +105,9 @@
     <!-- GRID DE PUBLICACIONES -->
     <div class="row g-4">
 
-        <div class="col-md-4"
-             th:each="post : ${posts}">
+        <div class="col-md-4" th:each="post : ${posts}">
 
             <div class="card h-100 shadow-sm post-card"
-                 data-bs-toggle="modal"
-                 data-bs-target="#postModal"
                  th:attr="data-title=${post.title},
                           data-content=${post.content},
                           data-author=${post.user.name},
@@ -132,6 +129,12 @@
                        th:text="${#strings.length(post.content) > 240} 
                                 ? ${#strings.substring(post.content,0,240)} + '...' 
                                 : ${post.content}"></p>
+                    
+                    <div class="mt-auto">
+
+                        <div class="reactions-container mt-2" th:attr="id='reactions-post-' + ${post.id}"></div>
+
+                    </div>
 
                 </div>
 

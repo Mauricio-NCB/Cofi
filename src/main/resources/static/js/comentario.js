@@ -74,6 +74,8 @@ function renderComment(comment, level = 0){
 
         <p>${comment.content}</p>
 
+        <div class="reactions-container mt-1 mb-2" id="reactions-comment-${comment.id}"></div>
+
         <button class="btn btn-sm btn-link responder-btn">
             Responder
         </button>
@@ -132,5 +134,72 @@ function renderComment(comment, level = 0){
 
     }
 
+    // Cargar reacciones del comentario - obtener el contenedor del div que se acaba de crear
+    const reactionsContainer = div.querySelector(`#reactions-comment-${comment.id}`);
+    loadCommentReactions(comment.id, reactionsContainer);
+
     return div;
+}
+
+async function loadCommentReactions(commentId, container = null){
+    if (!container) {
+        container = document.getElementById(`reactions-comment-${commentId}`);
+    }
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    const allReactions = await fetch('/comunidad/reacciones/disponibles').then(r => r.json());
+    const commentReactions = await fetch(`/comunidad/reacciones/comment/${commentId}`).then(r => r.json());
+    const unlockedReactions = await fetch('/comunidad/reacciones/desbloqueadas').then(r => r.json());
+
+    allReactions.forEach(r => {
+        const btn = document.createElement('button');
+        btn.classList.add('btn','btn-sm','me-1','reaction-btn');
+        btn.type = 'button';
+
+        btn.innerHTML = r.emojiUnicode || `<i class="${r.iconCss}"></i>`;
+
+        const count = commentReactions.filter(cr => cr.reaction.id === r.id).length;
+        const counterSpan = document.createElement('span');
+        counterSpan.textContent = ` ${count}`;
+        btn.appendChild(counterSpan);
+
+        // Marcar si el usuario actual ya reaccionó (id=1 temporal)
+        const userReacted = commentReactions.some(cr => cr.reaction.id === r.id && cr.user.id === 1);
+        if(userReacted) btn.classList.add('active');
+
+        // Verificar si la reacción está desbloqueada
+        const isUnlocked = !r.exclusive || unlockedReactions.includes(r.id);
+        if (!isUnlocked) {
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+            btn.title = 'Reacción bloqueada - Completa un logro para desbloquearla';
+        }
+
+        btn.addEventListener('click', e => {
+            e.stopPropagation();
+            if (!isUnlocked) {
+                alert('Esta reacción está bloqueada. Completa un logro para desbloquearla.');
+                return;
+            }
+            reactToComment(commentId, r.id);
+        });
+
+        container.appendChild(btn);
+    });
+}
+
+function reactToComment(commentId, reactionId){
+    fetch('/comunidad/react/comment', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({commentId, reactionId})
+    }).then(res => res.json()).then(data => {
+        if (data.status === 'error') {
+            alert('Error: ' + data.message);
+        } else {
+            loadCommentReactions(commentId);
+        }
+    });
 }
