@@ -7,21 +7,21 @@ import com.website.main.dto.Comment.CommentCreateDTO;
 import com.website.main.dto.Comment.CommentResponseDTO;
 import com.website.main.dto.Post.PostCreateDTO;
 import com.website.main.dto.Post.PostResponseDTO;
+import com.website.main.dto.Reaction.ReactionResponseDTO;
+import com.website.main.dto.Reaction.PostReactionResponseDTO;
+import com.website.main.dto.Reaction.CommentReactionResponseDTO;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.website.main.model.Reaction;
-import com.website.main.model.PostReaction;
-import com.website.main.model.CommentReaction;
 import com.website.main.service.CommentReactionService;
 import com.website.main.service.TagService;
 import com.website.main.service.PostService;
 import com.website.main.service.PostReactionService;
-import com.website.main.service.ReactionService;
 import com.website.main.service.AchievementService;
 import com.website.main.service.CommentService;
+import com.website.main.service.ReactionService;
 
 @Controller
 @RequestMapping("/comunidad")
@@ -30,24 +30,24 @@ public class PostController {
     private final PostService postService;
     private final CommentService commentService;
     private final TagService tagService;
-    private final ReactionService reactionService;
     private final PostReactionService postReactionService;
     private final CommentReactionService commentReactionService;
     private final AchievementService achievementService;
+    private final ReactionService reactionService;
 
     public PostController(PostService postService,
                           CommentService commentService,
                           TagService tagService,
-                          ReactionService reactionService,
                           PostReactionService postReactionService,
                           CommentReactionService commentReactionService,
-                          AchievementService achievementService) {
+                          AchievementService achievementService,
+                          ReactionService reactionService) {
         this.postService = postService;
         this.commentService = commentService;
         this.tagService = tagService;
-        this.reactionService = reactionService;
         this.postReactionService = postReactionService;
         this.commentReactionService = commentReactionService;
+        this.reactionService = reactionService;
         this.achievementService = achievementService;
     }
 
@@ -121,14 +121,16 @@ public class PostController {
 
     @GetMapping("/reacciones/disponibles")
     @ResponseBody
-    public List<Reaction> getAllReactions() {
-        return reactionService.findAll();
+    public List<ReactionResponseDTO> getAllReactions() {
+        Integer userId = 1; // temporal hasta login real
+        return reactionService.getAllReactionsWithUnlocked(userId);
     }
 
     @GetMapping("/reacciones/{postId}")
     @ResponseBody
-    public List<PostReaction> getReactions(@PathVariable Integer postId) {
-        return postReactionService.getReactionsByPost(postId);
+    public List<PostReactionResponseDTO> getReactions(@PathVariable Integer postId) {
+        Integer userId = 1; // temporal hasta login real
+        return reactionService.getPostReactionsWithDetails(postId, userId);
     }
 
     @PostMapping("/react/comment")
@@ -148,8 +150,9 @@ public class PostController {
 
     @GetMapping("/reacciones/comment/{commentId}")
     @ResponseBody
-    public List<CommentReaction> getCommentReactions(@PathVariable Integer commentId) {
-        return commentReactionService.getReactionsByComment(commentId);
+    public List<CommentReactionResponseDTO> getCommentReactions(@PathVariable Integer commentId) {
+        Integer userId = 1; // temporal hasta login real
+        return reactionService.getCommentReactionsWithDetails(commentId, userId);
     }
 
     @GetMapping("/reacciones/desbloqueadas")

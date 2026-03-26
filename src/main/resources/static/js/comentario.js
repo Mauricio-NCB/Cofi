@@ -145,8 +145,13 @@ async function loadCommentReactions(commentId, container = null){
     container.innerHTML = '';
 
     const allReactions = await fetch('/comunidad/reacciones/disponibles').then(r => r.json());
-    const commentReactions = await fetch(`/comunidad/reacciones/comment/${commentId}`).then(r => r.json());
-    const unlockedReactions = await fetch('/comunidad/reacciones/desbloqueadas').then(r => r.json());
+    const commentReactionsData = await fetch(`/comunidad/reacciones/comment/${commentId}`).then(r => r.json());
+
+    // Crear un mapa de reacciones por ID para búsqueda rápida
+    const reactionMap = {};
+    commentReactionsData.forEach(reaction => {
+        reactionMap[reaction.reaction.id] = reaction;
+    });
 
     allReactions.forEach(r => {
         const btn = document.createElement('button');
@@ -155,21 +160,26 @@ async function loadCommentReactions(commentId, container = null){
 
         btn.innerHTML = r.emojiUnicode || `<i class="${r.iconCss}"></i>`;
 
-        const count = commentReactions.filter(cr => cr.reaction.id === r.id).length;
+        const reactionData = reactionMap[r.id];
+        const count = reactionData ? reactionData.count : 0;
         const counterSpan = document.createElement('span');
         counterSpan.textContent = ` ${count}`;
         btn.appendChild(counterSpan);
 
-        // Marcar si el usuario actual ya reaccionó (id=1 temporal)
-        const userReacted = commentReactions.some(cr => cr.reaction.id === r.id && cr.user.id === 1);
-        if(userReacted) btn.classList.add('active');
+        // Marcar si el usuario actual ya reaccionó
+        if(reactionData && reactionData.userReacted) {
+            btn.classList.add('active');
+        }
 
         // Verificar si la reacción está desbloqueada
-        const isUnlocked = !r.exclusive || unlockedReactions.includes(r.id);
+        const isUnlocked = r.unlocked;
         if (!isUnlocked) {
             btn.disabled = true;
-            btn.classList.add('opacity-50');
-            btn.title = 'Reacción bloqueada - Completa un logro para desbloquearla';
+            btn.classList.add('locked-reaction');
+            const badge = document.createElement('span');
+            badge.classList.add('badge', 'bg-danger', 'ms-1');
+            badge.textContent = 'BLOQUEADO';
+            btn.appendChild(badge);
         }
 
         btn.addEventListener('click', e => {

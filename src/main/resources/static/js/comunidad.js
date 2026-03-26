@@ -57,8 +57,13 @@ async function loadPostReactions(postId){
     container.innerHTML = '';
 
     const allReactions = await fetch('/comunidad/reacciones/disponibles').then(r => r.json());
-    const postReactions = await fetch(`/comunidad/reacciones/${postId}`).then(r => r.json());
-    const unlockedReactions = await fetch('/comunidad/reacciones/desbloqueadas').then(r => r.json());
+    const postReactionsData = await fetch(`/comunidad/reacciones/${postId}`).then(r => r.json());
+
+    // Crear un mapa de reacciones por ID para búsqueda rápida
+    const reactionMap = {};
+    postReactionsData.forEach(reaction => {
+        reactionMap[reaction.reaction.id] = reaction;
+    });
 
     allReactions.forEach(r => {
         const btn = document.createElement('button');
@@ -67,17 +72,19 @@ async function loadPostReactions(postId){
 
         btn.innerHTML = r.emojiUnicode || `<i class="${r.iconCss}"></i>`;
 
-        const count = postReactions.filter(pr => pr.reaction.id === r.id).length;
+        const reactionData = reactionMap[r.id];
+        const count = reactionData ? reactionData.count : 0;
         const counterSpan = document.createElement('span');
         counterSpan.textContent = ` ${count}`;
         btn.appendChild(counterSpan);
 
-        // Marcar si el usuario actual ya reaccionó (id=1 temporal)
-        const userReacted = postReactions.some(pr => pr.reaction.id === r.id && pr.user.id === 1);
-        if(userReacted) btn.classList.add('active');
+        // Marcar si el usuario actual ya reaccionó
+        if(reactionData && reactionData.userReacted) {
+            btn.classList.add('active');
+        }
 
         // Verificar si la reacción está desbloqueada
-        const isUnlocked = !r.exclusive || unlockedReactions.includes(r.id);
+        const isUnlocked = r.unlocked;
         if (!isUnlocked) {
             btn.disabled = true;
             btn.classList.add('locked-reaction');
@@ -107,7 +114,7 @@ function reactToPost(postId, reactionId){
         body: JSON.stringify({postId, reactionId})
     }).then(res => res.json()).then(data => {
         if (data.status === 'error') {
-            alert('Error: ' + data.message);
+            alert('Error: ' + data.message());
         } else {
             loadPostReactions(postId);
         }
