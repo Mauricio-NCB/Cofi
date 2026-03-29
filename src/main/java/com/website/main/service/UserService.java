@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.website.main.security.JwtService;
 
 import com.website.main.model.User;
-import com.website.main.dto.AuthResponseDTO;
+import com.website.main.dto.User.AuthResponseDTO;
 import com.website.main.dto.User.UserLoginDTO;
 import com.website.main.dto.User.UserRegisterDTO;
 import com.website.main.dto.User.UserResponseDTO;

@@ -13,6 +13,12 @@ public class HomeController {
         return "index";
     }
 
+    @GetMapping("/inicio")
+    public String inicio(Model model) {
+        model.addAttribute("currentPage", "home");
+        return "inicio";
+    }
+
     @GetMapping("/about")
     public String about(Model model) {
         model.addAttribute("currentPage", "about");

@@ -12,6 +12,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.website.main.security.JwtFilter;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 
 @Configuration
 @EnableWebSecurity
@@ -29,9 +31,21 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/", "/auth/**", "/css/**", "/js/**", "/images/**")
+                    "/", "/inicio",
+                    "/eventos", "/eventos/**",
+                    "/comunidad", "/comunidad/**",
+                    "/about", "/terminos", 
+                    "/auth/login", "/auth/register",
+                    "/css/**", "/js/**", "/images/**")
                 .permitAll()
+                .requestMatchers("/chat", "/chat/**").authenticated()
+                .requestMatchers("/panel", "/panel/**").authenticated()
                 .anyRequest().authenticated())
+                .exceptionHandling(ex -> ex
+                    .authenticationEntryPoint((request, response, authException) -> {
+                        response.sendRedirect("/auth/login");
+                    })
+                )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

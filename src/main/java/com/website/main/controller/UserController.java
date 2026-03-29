@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.website.main.dto.AuthResponseDTO;
+import com.website.main.dto.User.AuthResponseDTO;
 import com.website.main.dto.User.UserLoginDTO;
 import com.website.main.dto.User.UserRegisterDTO;
 import com.website.main.dto.User.UserResponseDTO;

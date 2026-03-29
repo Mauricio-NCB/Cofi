@@ -11,6 +11,7 @@ import com.website.main.dto.Event.EventCalendarDTO;
 import com.website.main.dto.Event.EventCreateDTO;
 import com.website.main.dto.Event.EventResponseDTO;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -77,7 +78,10 @@ public class EventController {
         List<Category> categoriasSeleccionadas =
                 categoryService.findAllById(categories);
 
-        Integer userId = 1; // CAMBIAR luego por usuario logueado real
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
 
         eventService.save(event, categoriasSeleccionadas, userId);
 
@@ -103,7 +107,10 @@ public class EventController {
     @ResponseBody
     public List<EventCalendarDTO> misEventos() {
 
-        Integer userId = 1; // ⚠ CAMBIAR por usuario logueado real
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
 
         return eventService.findByUserIdForCalendar(userId);
     }

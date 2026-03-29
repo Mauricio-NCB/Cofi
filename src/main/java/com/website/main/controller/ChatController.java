@@ -1,7 +1,7 @@
 package com.website.main.controller;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
@@ -10,9 +10,6 @@ import com.website.main.dto.Message.MessageCreateDTO;
 import com.website.main.dto.Message.MessageResponseDTO;
 import com.website.main.service.ChatService;
 import com.website.main.service.MessageService;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Arrays;
 import java.util.List;
@@ -68,15 +65,17 @@ public class ChatController {
     public MessageResponseDTO sendMessage(@PathVariable Integer chatId, @RequestBody MessageCreateDTO messageDTO) {
         
         // Aquí iría la lógica para enviar un mensaje al chat
-        // chatService.sendMessage(chatId, content);
-
         return messageService.sendMessage(chatId, messageDTO);
     }
 
     @PostMapping("/crear")
     public String createChat(@RequestParam String type, @RequestParam String participants) {
         // Aquí iría la lógica para crear un nuevo chat
-        Integer userId = 1; // POSTERIOR CAMBIAR POR USUARIO REAL
+        
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
         List<String> participantNames = Arrays.asList(participants.split("\\s,\\s*")); // Separado por comas
 
         chatService.createChat(type, participantNames, userId);
@@ -87,7 +86,10 @@ public class ChatController {
     @PostMapping("/{chatId}/delete")
     public String deleteChat(@PathVariable Integer chatId) {
         // Aquí iría la lógica para eliminar un chat
-        Integer userId = 1; // POSTERIOR CAMBIAR POR USUARIO REAL
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
 
         chatService.deleteChat(chatId, userId);
         return "redirect:/chat";

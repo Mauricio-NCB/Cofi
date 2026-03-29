@@ -4,6 +4,7 @@
     <div class="container-fluid">
       <span class="navbar-brand">Mi Sitio</span>
 
+      <!-- Botones de navegación -->
       <ul class="navbar-nav ms-4">
         <li class="nav-item">
             <a class="nav-link"
@@ -46,28 +47,94 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link"
-              th:href="@{/chat}"
-              th:classappend="${currentPage == 'chat'} ? 'active'">
-              Chatea con otras personas (Prueba)
-            </a>
+          <a class="nav-link"
+            th:href="@{/chat}"
+            th:classappend="${currentPage == 'chat'} ? 'active'">
+            Chat
+          </a>
         </li>
 
       </ul>
-      
-        <script th:inline="javascript">
-          (function(){
-            var uid = /*[[${currentUserId}]]*/ 1;
-            window.currentUserId = uid || 1;
-          })();
-        </script>
-          <script th:src="@{/js/theme.js}"></script>
 
-      <div class="ms-auto">
-        <i class="bi bi-envelope mx-2"></i>
-        <i class="bi bi-person mx-2"></i>
-        <i class="bi bi-box-arrow-right mx-2"></i>
+      <script th:src="@{/js/theme.js}"></script>
+
+
+      <!-- Botones de autenticación -->
+      <div class="ms-auto" id="navGuest">
+        <a th:href="@{/auth/login}" class="btn btn-outline-primary me-2">Iniciar sesión</a>
+        <a th:href="@{/auth/register}" class="btn btn-primary">Registrarse</a>
       </div>
+
+      <!-- Botones si hay usuario logueado -->
+      <div class="ms-auto d-none" id="navUser">
+        <span class="me-3" id="navUserName"></span>
+        <i class="bi bi-envelope mx-2" id="messagesBtn"
+            style="cursor:pointer" title="Mensajes"></i>
+
+        <i class="bi bi-person mx-2" id = "userPanelBtn"
+            style="cursor:pointer" title="Panel de usuario"></i>
+        
+        <i class="bi bi-box-arrow-right mx-2" id="logoutBtn" 
+           style="cursor:pointer" title="Cerrar sesión"></i>
+      </div>
+
+      <script>
+        (function() {
+            const token = localStorage.getItem("accessToken");
+            console.log("Token en navbar:", token);
+            const userStr = localStorage.getItem("user");
+            console.log("User en navbar:", userStr);
+
+            if (token && userStr) {
+                const user = JSON.parse(userStr);
+
+                // mostrar links de navegación
+                //document.getElementById("navLinks").style.display = "flex";
+
+                // mostrar zona de usuario, ocultar zona de invitado
+                document.getElementById("navGuest").classList.add("d-none");
+                document.getElementById("navUser").classList.remove("d-none");
+
+                // mostrar nombre del usuario
+                document.getElementById("navUserName").textContent = 
+                    user.name + " " + user.lastname;
+
+                // mensajes
+                document.getElementById("messagesBtn").addEventListener("click", () => {
+                    window.location.href = "/chat";
+                });
+
+                // panel de usuario
+                document.getElementById("userPanelBtn").addEventListener("click", () => {
+                    window.location.href = "/panel";
+                });
+
+                // logout
+                document.getElementById("logoutBtn").addEventListener("click", async () => {
+                    const refreshToken = localStorage.getItem("refreshToken");
+                    await fetch(`/auth/logout?refreshToken=${refreshToken}`, { 
+                        method: "POST",
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
+                    localStorage.clear();
+                    window.location.href = "/auth/login";
+                });
+
+            } else {
+                // no logueado, redirigir si la página lo requiere
+                const publicPaths = ["/", "/inicio",
+                                    "/eventos", "/eventos/",
+                                    "/comunidad", "/comunidad/", 
+                                    "/auth/login", "/auth/register", 
+                                    "/about", "/terminos"];
+                const isPublic = publicPaths.some(p => window.location.pathname.startsWith(p));
+
+                if (!isPublic) {
+                    window.location.href = "/auth/login";
+                }
+            }
+        })();
+      </script>
     </div>
   </nav>
 </div>

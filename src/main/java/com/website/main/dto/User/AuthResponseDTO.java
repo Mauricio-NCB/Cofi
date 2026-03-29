@@ -1,6 +1,4 @@
-package com.website.main.dto;
-
-import com.website.main.dto.User.UserResponseDTO;
+package com.website.main.dto.User;
 
 import lombok.Getter;
 import lombok.Setter;
