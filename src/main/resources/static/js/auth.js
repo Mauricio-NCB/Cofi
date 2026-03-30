@@ -22,12 +22,15 @@ window.fetch = async function(url, options = {}) {
                 const data = await refreshRes.json();
                 localStorage.setItem("accessToken", data.accessToken);
                 localStorage.setItem("refreshToken", data.refreshToken);
+
+                document.cookie = `accessToken=${data.accessToken}; path=/; SameSite=Strict`;
                 // reintentar la petición original con el nuevo token
                 options.headers["Authorization"] = `Bearer ${data.accessToken}`;
                 response = await originalFetch(url, options);
             } else {
                 // refresh token expirado, redirigir al login
                 localStorage.clear();
+                document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
                 window.location.href = "/auth/login";
             }
         }
@@ -39,6 +42,6 @@ window.fetch = async function(url, options = {}) {
 const userStr = localStorage.getItem("user");
 if (userStr) {
     const user = JSON.parse(userStr);
-    const el = document.getElementById("userName");
-    if (el) el.textContent = user.name + " " + user.lastname;
+    const userName = document.getElementById("userName");
+    if (userName) userName.textContent = user.name + " " + user.lastname;
 }

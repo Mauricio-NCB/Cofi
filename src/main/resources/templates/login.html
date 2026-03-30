@@ -31,10 +31,12 @@
             });
             if (res.ok) {
                 const data = await res.json();
-                
+
                 localStorage.setItem("accessToken", data.accessToken);
                 localStorage.setItem("refreshToken", data.refreshToken);
                 localStorage.setItem("user", JSON.stringify(data.user));
+
+                document.cookie = `accessToken=${data.accessToken}; path=/; SameSite=Strict`;
                 
                 window.location.href = "/";
   

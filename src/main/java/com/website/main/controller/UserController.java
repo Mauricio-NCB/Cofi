@@ -13,6 +13,7 @@ import com.website.main.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
@@ -47,11 +48,6 @@ public class UserController {
     public AuthResponseDTO login(@RequestBody UserLoginDTO userDTO) {
 
         return userService.login(userDTO);
-    }
-
-    @GetMapping("/panel")
-    public String panelPage() {
-        return "panel";
     }
 
     @ResponseBody

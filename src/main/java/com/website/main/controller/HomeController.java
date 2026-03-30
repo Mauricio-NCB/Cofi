@@ -18,6 +18,12 @@ public class HomeController {
         model.addAttribute("currentPage", "home");
         return "inicio";
     }
+    
+    @GetMapping("/panel")
+    public String panelPage(Model model) {
+        model.addAttribute("currentPage", "panel");
+        return "panel";
+    }
 
     @GetMapping("/about")
     public String about(Model model) {
