@@ -33,6 +33,7 @@ public class SecurityConfig {
                     "/comunidad", "/comunidad/**",
                     "/about", "/terminos", 
                     "/auth/login", "/auth/register",
+                    "/api/categories", "/api/categories/**",
                     "/css/**", "/js/**", "/images/**")
                 .permitAll()
                 .requestMatchers("/chat", "/chat/**").authenticated()

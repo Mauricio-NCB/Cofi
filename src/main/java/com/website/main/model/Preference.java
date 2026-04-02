@@ -6,8 +6,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "preferences")
 public class Preference {
 
@@ -30,27 +36,7 @@ public class Preference {
     @Column(name = "user_id", nullable = false)
     private Integer userId;
 
-    public Preference() {}
-
     public Preference(Integer userId) {
         this.userId = userId;
     }
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-
-    public Integer getTextSizeLevel() { return textSizeLevel; }
-    public void setTextSizeLevel(Integer textSizeLevel) { this.textSizeLevel = textSizeLevel; }
-
-    public Integer getButtonSizeLevel() { return buttonSizeLevel; }
-    public void setButtonSizeLevel(Integer buttonSizeLevel) { this.buttonSizeLevel = buttonSizeLevel; }
-
-    public Integer getMenuMainColor() { return menuMainColor; }
-    public void setMenuMainColor(Integer menuMainColor) { this.menuMainColor = menuMainColor; }
-
-    public Integer getMenuSecondaryColor() { return menuSecondaryColor; }
-    public void setMenuSecondaryColor(Integer menuSecondaryColor) { this.menuSecondaryColor = menuSecondaryColor; }
-
-    public Integer getUserId() { return userId; }
-    public void setUserId(Integer userId) { this.userId = userId; }
 }

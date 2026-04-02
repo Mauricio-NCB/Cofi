@@ -7,6 +7,7 @@ import java.util.stream.IntStream;
 import com.website.main.model.Category;
 import com.website.main.service.CategoryService;
 import com.website.main.service.EventService;
+import com.website.main.dto.Category.CategoryResponseDTO;
 import com.website.main.dto.Event.EventCalendarDTO;
 import com.website.main.dto.Event.EventCreateDTO;
 import com.website.main.dto.Event.EventResponseDTO;
@@ -75,7 +76,7 @@ public class EventController {
                               @RequestParam List<Integer> categories) {
 
         // Convertimos IDs en entidades Category
-        List<Category> categoriasSeleccionadas =
+        List<CategoryResponseDTO> categoriasSeleccionadas =
                 categoryService.findAllById(categories);
 
         Integer userId = (Integer) SecurityContextHolder

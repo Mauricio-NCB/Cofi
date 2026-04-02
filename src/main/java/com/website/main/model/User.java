@@ -52,5 +52,13 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private List<Chat> chats;
 
+    @ManyToMany
+    @JoinTable(
+        name = "users_categories",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> preferedCategories;
+
 }
 

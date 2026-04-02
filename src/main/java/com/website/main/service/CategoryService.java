@@ -1,6 +1,8 @@
 package com.website.main.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
+
+import com.website.main.dto.Category.CategoryResponseDTO;
 import com.website.main.model.Category;
 import com.website.main.repository.CategoryRepository;
 
@@ -13,11 +15,28 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
+    public List<CategoryResponseDTO> findAll() {
+        List<Category> categories = categoryRepository.findAll();
+        
+        return categories.stream()
+                .map(category -> {
+                    CategoryResponseDTO dto = new CategoryResponseDTO();
+                    dto.setId(category.getId());
+                    dto.setName(category.getName());
+                    return dto;
+                })
+                .toList();
     }
 
-    public List<Category> findAllById(List<Integer> ids) {
-        return categoryRepository.findAllById(ids);
+    public List<CategoryResponseDTO> findAllById(List<Integer> ids) {
+        List<Category> categories = categoryRepository.findAllById(ids);
+        return categories.stream()
+                .map(category -> {
+                    CategoryResponseDTO dto = new CategoryResponseDTO();
+                    dto.setId(category.getId());
+                    dto.setName(category.getName());
+                    return dto;
+                })
+                .toList();
     }
 }

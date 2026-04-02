@@ -24,6 +24,9 @@ public class Category {
     @ManyToMany(mappedBy = "categories")
     private List<Event> events;
 
+    @ManyToMany(mappedBy = "preferedCategories")
+    private List<User> users;
+
     public Category(String name) {
         this.name = name;
     }
