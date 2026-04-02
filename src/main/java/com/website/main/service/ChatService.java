@@ -6,7 +6,9 @@ import com.website.main.model.Chat;
 import com.website.main.model.User;
 import com.website.main.repository.UserRepository;
 import com.website.main.repository.ChatRepository;
+import com.website.main.dto.Chat.ChatCreateDTO;
 import com.website.main.dto.Chat.ChatResponseDTO;
+import com.website.main.dto.User.UserParticipantDTO;
 import com.website.main.mapper.ChatMapper;
 
 import java.util.List;
@@ -35,26 +37,27 @@ public class ChatService {
         return chatMapper.toDTO(chat);
     }
 
-    public ChatResponseDTO createChat(String type, List<String> participantNames, Integer creatorId) {
+    public ChatResponseDTO createChat(ChatCreateDTO chatDTO, Integer creatorId) {
         
         // Aquí iría la lógica para crear un nuevo chat con los participantes dados
         // Por ejemplo, podrías crear un nuevo chat y guardarlo en la base de datos
         User creator = userRepository.findById(creatorId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Creador de chat no encontrado"));
         
         List<User> participants = new ArrayList<>();
         participants.add(creator);
 
-        for (String nameParticipant : participantNames) {
-            User participant = userRepository.findByName(nameParticipant.trim());
+        for (UserParticipantDTO participantDTO : chatDTO.getParticipants()) {
+            User newParticipant = userRepository.findByNameAndLastname(participantDTO.getName(), participantDTO.getLastName())
+                        .orElseThrow(() -> new RuntimeException("Participante" + participantDTO.getName() + " " + participantDTO.getLastName() + " no encontrado") );
             
-            if (participant != null && !participants.contains(participant)) {
-                participants.add(participant);
+            if (newParticipant != null && !participants.contains(newParticipant)) {
+                participants.add(newParticipant);
             }
         }
 
         Chat chat = new Chat();
-        chat.setType(type); 
+        chat.setType(chatDTO.getType()); 
         chat.setUsers(participants);
 
         Chat savedChat = chatRepository.save(chat);
@@ -80,10 +83,6 @@ public class ChatService {
     public List<ChatResponseDTO> viewChatsFromUser(Integer userId) {
         // Aquí iría la lógica para obtener los chats en los que participa el usuario
         List<Chat> chats = chatRepository.findByUsersId(userId);
-        
-        if (chats.isEmpty()) {
-            throw new RuntimeException("No se encontraron chats para el usuario");
-        }
         
         return chats.stream().map(chatMapper::toDTO).toList();
     }

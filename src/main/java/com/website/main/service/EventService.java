@@ -8,6 +8,7 @@ import com.website.main.model.Achievement.AchievementType;
 import com.website.main.model.Category;
 import com.website.main.repository.EventRepository;
 import com.website.main.repository.UserRepository;
+import com.website.main.dto.Category.CategoryResponseDTO;
 import com.website.main.dto.Event.EventCalendarDTO;
 import com.website.main.dto.Event.EventCreateDTO;
 import com.website.main.dto.Event.EventResponseDTO;
@@ -39,7 +40,7 @@ public class EventService {
                 .toList();
     }
 
-    public EventResponseDTO save(EventCreateDTO event, List<Category> categories, Integer idUsuario) {
+    public EventResponseDTO save(EventCreateDTO event, List<CategoryResponseDTO> categoriesDTO, Integer idUsuario) {
         User user = userRepository.findById(idUsuario)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
@@ -51,6 +52,16 @@ public class EventService {
         newEvent.setMaxCapacity(event.getMaxCapacity());
         newEvent.setPostcode(event.getPostcode());
         newEvent.setUser(user);
+
+        List<Category> categories = categoriesDTO.stream()
+                .map(dto -> {
+                    Category category = new Category();
+                    category.setId(dto.getId());
+                    category.setName(dto.getName());
+                    return category;
+                })
+                .toList();
+
         newEvent.setCategories(categories);
 
         LocalDateTime now = LocalDateTime.now();

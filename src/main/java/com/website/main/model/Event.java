@@ -58,6 +58,14 @@ public class Event {
     )
     private List<Category> categories;
 
+    @ManyToMany
+    @JoinTable(
+        name = "users_events",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
+    private List<User> participants;
+
     public String getImageUrl() {
         if (categories == null) {
             return "https://picsum.photos/1/200/300?30";

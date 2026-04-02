@@ -11,6 +11,7 @@ import com.website.main.dto.Reaction.ReactionResponseDTO;
 import com.website.main.dto.Reaction.PostReactionResponseDTO;
 import com.website.main.dto.Reaction.CommentReactionResponseDTO;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -83,7 +84,10 @@ public class PostController {
                 return "redirect:/comunidad?error=url";
         }
 
-        Integer userId = 1; // Temporal hasta login real
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
 
         postService.create(postDTO, userId);
 
@@ -94,7 +98,10 @@ public class PostController {
     @ResponseBody
     public void crearComentario(@RequestBody CommentCreateDTO comment) {
 
-        Integer userId = 1; // Temporal hasta login real
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
         commentService.create(comment, userId);
     }
 

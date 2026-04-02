@@ -1,8 +1,16 @@
 package com.website.main.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "users")
 public class User {
 
@@ -17,6 +25,15 @@ public class User {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @Column(name = "lastname", nullable = false, length = 100)
+    private String lastname;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Column(name = "refresh_token", length = 512)
+    private String refreshToken;
+
     @Column(name = "postcode", length = 10)
     private String postcode;
 
@@ -29,69 +46,19 @@ public class User {
     @Column(name = "verified", nullable = false)
     private Boolean verified;
 
-    public User() {}
+    @ManyToMany(mappedBy = "participants")
+    private List<Event> events;
 
-    // GETTERS Y SETTERS
+    @ManyToMany(mappedBy = "users")
+    private List<Chat> chats;
 
-    public Integer getId() {
-        return id;
-    }
+    @ManyToMany
+    @JoinTable(
+        name = "users_categories",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> preferedCategories;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getRolAdmin() {
-        return rolAdmin;
-    }
-
-    public void setRolAdmin(Integer rolAdmin) {
-        this.rolAdmin = rolAdmin;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPostcode() {
-        return postcode;
-    }
-
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public Boolean getNotified() {
-        return notified;
-    }
-
-    public void setNotified(Boolean notified) {
-        this.notified = notified;
-    }
-
-    public Boolean getVerified() {
-        return verified;
-    }
-
-    public void setVerified(Boolean verified) {
-        this.verified = verified;
-    }
-
-    // MÉTODO AUXILIAR OPCIONAL
-    public boolean isAdmin() {
-        return this.rolAdmin != null && this.rolAdmin == 1;
-    }
 }
 

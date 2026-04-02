@@ -40,12 +40,12 @@ public class MessageService {
         this.messageMapper = messageMapper;
     }
 
-    public MessageResponseDTO sendMessage(Integer chatId, MessageCreateDTO messageDTO) {
+    public MessageResponseDTO sendMessage(Integer chatId, Integer userId, MessageCreateDTO messageDTO) {
         // Aquí iría la lógica para enviar un mensaje al chat
         // Por ejemplo, podrías crear un nuevo mensaje y guardarlo en la base de datos
         Chat chat = chatRepository.findById(chatId)
             .orElseThrow(() -> new RuntimeException("Chat no encontrado"));
-        User user = userRepository.findById(1)
+        User user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         
         Message message = new Message();

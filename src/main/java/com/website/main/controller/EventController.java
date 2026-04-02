@@ -7,10 +7,12 @@ import java.util.stream.IntStream;
 import com.website.main.model.Category;
 import com.website.main.service.CategoryService;
 import com.website.main.service.EventService;
+import com.website.main.dto.Category.CategoryResponseDTO;
 import com.website.main.dto.Event.EventCalendarDTO;
 import com.website.main.dto.Event.EventCreateDTO;
 import com.website.main.dto.Event.EventResponseDTO;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -74,10 +76,13 @@ public class EventController {
                               @RequestParam List<Integer> categories) {
 
         // Convertimos IDs en entidades Category
-        List<Category> categoriasSeleccionadas =
+        List<CategoryResponseDTO> categoriasSeleccionadas =
                 categoryService.findAllById(categories);
 
-        Integer userId = 1; // CAMBIAR luego por usuario logueado real
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
 
         eventService.save(event, categoriasSeleccionadas, userId);
 
@@ -103,7 +108,10 @@ public class EventController {
     @ResponseBody
     public List<EventCalendarDTO> misEventos() {
 
-        Integer userId = 1; // ⚠ CAMBIAR por usuario logueado real
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
 
         return eventService.findByUserIdForCalendar(userId);
     }

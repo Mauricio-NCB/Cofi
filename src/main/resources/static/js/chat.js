@@ -52,6 +52,51 @@ document.addEventListener('DOMContentLoaded', () => {
     chatMessages.appendChild(div);
   }
 
+  window.addParticipant = function() {
+    const div = document.createElement('div');
+    div.className = 'participant-row mb-2';
+    div.innerHTML = `
+      <input type="text" class="form-control participant-name" placeholder="Nombre" required>
+      <input type="text" class="form-control participant-lastname mt-1" placeholder="Apellido" required>
+      <button type="button" class="btn btn-danger mt-1 remove-participant">Eliminar</button>
+    `;
+    document.getElementById('participantsList').appendChild(div);
+  }
+
+  window.createChat = async function() {
+    const rows = document.querySelectorAll('.participant-row');
+    const participants = [];
+
+    rows.forEach(row => {
+      const name = row.querySelector('.participant-name').value.trim();
+      const lastName = row.querySelector('.participant-lastname').value.trim();
+      if (name && lastName) {
+        participants.push({ name, lastName });
+      }
+    });
+
+    if (participants.length == 0) {
+      alert('Agrega al menos un participante');
+      return;
+    }
+
+    const res = await fetch('/chat/crear', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        type: document.getElementById('chatType').value,
+        participants: participants
+       })
+    });
+
+    if (res.ok) {
+      window.location.href = '/chat';
+    } else {
+      alert('Error al crear el chat');    
+    }
+
+  }
+
   chatModal.addEventListener('show.bs.modal', (event) => {
     const trigger = event.relatedTarget;
     currentChatId = trigger.getAttribute('data-id');
