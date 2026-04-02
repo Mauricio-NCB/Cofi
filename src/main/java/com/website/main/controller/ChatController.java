@@ -1,17 +1,18 @@
 package com.website.main.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
+import com.website.main.dto.Chat.ChatCreateDTO;
 import com.website.main.dto.Chat.ChatResponseDTO;
 import com.website.main.dto.Message.MessageCreateDTO;
 import com.website.main.dto.Message.MessageResponseDTO;
 import com.website.main.service.ChatService;
 import com.website.main.service.MessageService;
 
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -30,9 +31,14 @@ public class ChatController {
     @GetMapping
     public String viewChats(Model model) {
         // Aquí iría la lógica para obtener los chats
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
         model.addAttribute("username", "Mauricio");
         model.addAttribute("currentPage", "chat");
-        model.addAttribute("chats", chatService.viewChatsFromUser(1)); // POSTERIOR CAMBIAR POR USUARIO REAL
+        model.addAttribute("chats", chatService.viewChatsFromUser(userId));
 
         return "chat";
     }
@@ -69,18 +75,17 @@ public class ChatController {
     }
 
     @PostMapping("/crear")
-    public String createChat(@RequestParam String type, @RequestParam String participants) {
-        // Aquí iría la lógica para crear un nuevo chat
-        
+    @ResponseBody
+    public ResponseEntity<Void> createChat(@RequestBody ChatCreateDTO chatDTO) {
+
         Integer userId = (Integer) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getPrincipal();
-        List<String> participantNames = Arrays.asList(participants.split("\\s,\\s*")); // Separado por comas
 
-        chatService.createChat(type, participantNames, userId);
+        chatService.createChat(chatDTO, userId);
 
-        return "redirect:/chat";
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{chatId}/delete")

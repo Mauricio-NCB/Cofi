@@ -108,21 +108,25 @@
 
         <div class="modal-body">
           <!-- Formulario para crear un nuevo chat -->
-          <form th:action="@{/chat/crear}" method="post">
-            
-            <div class="mb-3">
-              <label for="chatType" class="form-label">Tipo de Chat</label>
-              <input type="text" class="form-control" id="chatType" name="type" placeholder="Ej: group" required>
-            </div>
-            
-            <div class="mb-3">
-              <label for="participants" class="form-label">Participantes (nombres separados por comas)</label>
-              <input type="text" class="form-control" id="participants" name="participants" placeholder="Ej: Juan, María, Pedro" required>
-            </div>
-            
-            <button type="submit" class="btn btn-primary">Crear</button>
-          
-          </form>
+          <div id="participantsList">
+              <div class="participant-row d-flex mb-2">
+                  <input type="text" class="form-control me-2 participant-name" placeholder="Nombre">
+                  <input type="text" class="form-control participant-lastname" placeholder="Apellido">
+              </div>
+          </div>
+
+          <button type="button" class="btn btn-secondary mb-2" onclick="addParticipant()">
+              + Añadir participante
+          </button>
+
+          <select class="form-select mb-2" id="chatType">
+              <option value="grupo">Grupo</option>
+              <option value="privado">Privado</option>
+          </select>
+
+          <button type="button" class="btn btn-primary" onclick="createChat()">
+              Crear chat
+          </button>
         </div>
       
       </div>

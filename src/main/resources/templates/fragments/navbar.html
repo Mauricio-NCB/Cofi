@@ -46,14 +46,6 @@
           </a>
         </li>
 
-        <li class="nav-item">
-          <a class="nav-link"
-            th:href="@{/chat}"
-            th:classappend="${currentPage == 'chat'} ? 'active'">
-            Chat
-          </a>
-        </li>
-
       </ul>
 
       <script th:src="@{/js/theme.js}"></script>
@@ -81,9 +73,7 @@
       <script>
         (function() {
             const token = localStorage.getItem("accessToken");
-            console.log("Token en navbar:", token);
             const userStr = localStorage.getItem("user");
-            console.log("User en navbar:", userStr);
 
             if (token && userStr) {
                 const user = JSON.parse(userStr);
