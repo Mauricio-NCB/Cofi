@@ -70,8 +70,12 @@ public class ChatController {
     @ResponseBody
     public MessageResponseDTO sendMessage(@PathVariable Integer chatId, @RequestBody MessageCreateDTO messageDTO) {
         
-        // Aquí iría la lógica para enviar un mensaje al chat
-        return messageService.sendMessage(chatId, messageDTO);
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        return messageService.sendMessage(chatId, userId, messageDTO);
     }
 
     @PostMapping("/crear")
