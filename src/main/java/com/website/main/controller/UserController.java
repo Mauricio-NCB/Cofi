@@ -3,17 +3,20 @@ package com.website.main.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.website.main.dto.User.AuthResponseDTO;
 import com.website.main.dto.User.UserLoginDTO;
 import com.website.main.dto.User.UserRegisterDTO;
 import com.website.main.dto.User.UserResponseDTO;
 import com.website.main.service.UserService;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
@@ -55,6 +58,18 @@ public class UserController {
     public AuthResponseDTO refresh(@RequestParam String refreshToken) {
         
         return userService.refreshToken(refreshToken);
+    }
+
+    @ResponseBody
+    @PostMapping("/update-categories")
+    public void updateUserCategories(@RequestBody List<String> categoryNames) {
+
+        Integer userId = (Integer) SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal();
+
+        userService.updateUserCategories(userId, categoryNames);
     }
 
     @ResponseBody

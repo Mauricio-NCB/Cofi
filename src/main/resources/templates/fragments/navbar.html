@@ -24,14 +24,6 @@
 
         <li class="nav-item">
             <a class="nav-link"
-              th:href="@{/eventos/calendario}"
-              th:classappend="${currentPage == 'calendario'} ? 'active'">
-              Calendario
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link"
               th:href="@{/comunidad}"
               th:classappend="${currentPage == 'comunidad'} ? 'active'">
               Comunidad
@@ -50,7 +42,6 @@
 
       <script th:src="@{/js/theme.js}"></script>
 
-
       <!-- Botones de autenticación -->
       <div class="ms-auto" id="navGuest">
         <a th:href="@{/auth/login}" class="btn btn-outline-primary me-2">Iniciar sesión</a>
@@ -59,7 +50,12 @@
 
       <!-- Botones si hay usuario logueado -->
       <div class="ms-auto d-none" id="navUser">
+
         <span class="me-3" id="navUserName"></span>
+        
+        <i class="bi bi-calendar3 mx-2" id="calendarBtn"
+            style="cursor:pointer" title="Calendario"></i>
+
         <i class="bi bi-envelope mx-2" id="messagesBtn"
             style="cursor:pointer" title="Mensajes"></i>
 
@@ -89,6 +85,11 @@
                 document.getElementById("navUserName").textContent = 
                     user.name + " " + user.lastname;
 
+                // calendario
+                document.getElementById("calendarBtn").addEventListener("click", () => {
+                    window.location.href = "/eventos/calendario";
+                });
+
                 // mensajes
                 document.getElementById("messagesBtn").addEventListener("click", () => {
                     window.location.href = "/chat";
@@ -114,9 +115,10 @@
             } else {
                 // no logueado, redirigir si la página lo requiere
                 const publicPaths = ["/", "/inicio",
-                                    "/eventos", "/eventos/",
-                                    "/comunidad", "/comunidad/", 
+                                    "/eventos",
+                                    "/comunidad",
                                     "/auth/login", "/auth/register", 
+                                    "api/categories",
                                     "/about", "/terminos"];
                 const isPublic = publicPaths.some(p => window.location.pathname.startsWith(p));
 

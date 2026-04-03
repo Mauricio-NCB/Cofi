@@ -29,11 +29,11 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/", "/inicio",
-                    "/eventos", "/eventos/**",
-                    "/comunidad", "/comunidad/**",
+                    "/eventos",
+                    "/comunidad",
                     "/about", "/terminos", 
                     "/auth/login", "/auth/register",
-                    "/api/categories", "/api/categories/**",
+                    "/api/categories",
                     "/css/**", "/js/**", "/images/**")
                 .permitAll()
                 .requestMatchers("/chat", "/chat/**").authenticated()

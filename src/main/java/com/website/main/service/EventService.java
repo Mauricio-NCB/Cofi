@@ -26,7 +26,8 @@ public class EventService {
     private final EventMapper eventMapper;
     
 
-    public EventService(EventRepository eventRepository, UserRepository userRepository, AchievementService achievementService, EventMapper eventMapper) {
+    public EventService(EventRepository eventRepository, UserRepository userRepository, 
+            AchievementService achievementService, EventMapper eventMapper) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.achievementService = achievementService;
