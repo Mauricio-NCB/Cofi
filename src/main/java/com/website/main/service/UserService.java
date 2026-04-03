@@ -122,5 +122,9 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public User findById(Integer userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
 
 }

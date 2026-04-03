@@ -44,4 +44,44 @@ document.addEventListener('DOMContentLoaded', () => {
       card.getAttribute('data-capacity');
   });
 
+  /* ====== UNIRSE A UN EVENTO ====== */
+  const joinButtons = document.querySelectorAll('.join-event-btn');
+  
+  joinButtons.forEach(button => {
+    button.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      
+      const eventId = button.getAttribute('data-event-id');
+      const originalText = button.textContent;
+      
+      try {
+        button.disabled = true;
+        button.textContent = 'Uniéndose...';
+        
+        const response = await fetch(`/eventos/${eventId}/unirse`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+          alert(result.message);
+          location.reload();
+        } else {
+          alert('Error: ' + result.message);
+          button.disabled = false;
+          button.textContent = originalText;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error al unirse al evento');
+        button.disabled = false;
+        button.textContent = originalText;
+      }
+    });
+  });
+
 });

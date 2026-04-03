@@ -12,6 +12,10 @@ import com.website.main.dto.Event.EventResponseDTO;
 public class EventMapper {
     
     public EventResponseDTO toDTO(Event event) {
+        return toDTOWithUserId(event, null);
+    }
+
+    public EventResponseDTO toDTOWithUserId(Event event, Integer userId) {
 
         if (event == null) return null;
 
@@ -22,6 +26,20 @@ public class EventMapper {
         dto.setTitle(event.getTitle());
         dto.setDescription(event.getDescription());
         dto.setMaxCapacity(event.getMaxCapacity());
+        
+        // Calcular plazas disponibles
+        Integer participantCount = event.getParticipants() != null ? event.getParticipants().size() : 0;
+        Integer availableSpots = event.getMaxCapacity() - participantCount;
+        dto.setAvailableSpots(Math.max(0, availableSpots)); // No mostrar números negativos
+        
+        // Verificar si el usuario actual participa en el evento
+        Boolean isUserParticipant = false;
+        if (userId != null && event.getParticipants() != null) {
+            isUserParticipant = event.getParticipants().stream()
+                    .anyMatch(p -> p.getId().equals(userId));
+        }
+        dto.setIsUserParticipant(isUserParticipant);
+        
         dto.setPostcode(event.getPostcode());
         dto.setState(event.getState());
         dto.setChatId(event.getChatId());

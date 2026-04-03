@@ -96,8 +96,8 @@ public class PostService {
         Post savedPost = postRepository.save(post);
 
         // Guardar la imagen si se proporciona
-        if (postDTO.getPictureUrl() != null && !postDTO.getPictureUrl().trim().isEmpty()) {
-            Picture picture = new Picture(postDTO.getPictureUrl().trim(), savedPost);
+        if (postDTO.getImageUrl() != null && !postDTO.getImageUrl().trim().isEmpty()) {
+            Picture picture = new Picture(postDTO.getImageUrl().trim(), savedPost);
             pictureRepository.save(picture);
         }
 

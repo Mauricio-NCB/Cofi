@@ -76,8 +76,8 @@ public class PostController {
     public String crearPost(@ModelAttribute PostCreateDTO postDTO) {
 
         // Validar URL si se proporciona en la request
-        if (postDTO.getPictureUrl() != null && !postDTO.getPictureUrl().trim().isEmpty()) {
-            String trimmed = postDTO.getPictureUrl().trim();
+        if (postDTO.getImageUrl() != null && !postDTO.getImageUrl().trim().isEmpty()) {
+            String trimmed = postDTO.getImageUrl().trim();
             
             if (trimmed.length() > 100) return "redirect:/comunidad?error=url_long";
             if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://"))
@@ -116,7 +116,10 @@ public class PostController {
     public Map<String, String> reactToPost(@RequestBody Map<String, Integer> body) {
         Integer postId = body.get("postId");
         Integer reactionId = body.get("reactionId");
-        Integer userId = 1; // temporal hasta login real
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
 
         try {
             postReactionService.toggleReaction(userId, postId, reactionId);
@@ -129,14 +132,20 @@ public class PostController {
     @GetMapping("/reacciones/disponibles")
     @ResponseBody
     public List<ReactionResponseDTO> getAllReactions() {
-        Integer userId = 1; // temporal hasta login real
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
         return reactionService.getAllReactionsWithUnlocked(userId);
     }
 
     @GetMapping("/reacciones/{postId}")
     @ResponseBody
     public List<PostReactionResponseDTO> getReactions(@PathVariable Integer postId) {
-        Integer userId = 1; // temporal hasta login real
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
         return reactionService.getPostReactionsWithDetails(postId, userId);
     }
 
@@ -145,7 +154,10 @@ public class PostController {
     public Map<String, String> reactToComment(@RequestBody Map<String, Integer> body) {
         Integer commentId = body.get("commentId");
         Integer reactionId = body.get("reactionId");
-        Integer userId = 1; // temporal hasta login real
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
 
         try {
             commentReactionService.toggleReaction(userId, commentId, reactionId);
@@ -158,14 +170,20 @@ public class PostController {
     @GetMapping("/reacciones/comment/{commentId}")
     @ResponseBody
     public List<CommentReactionResponseDTO> getCommentReactions(@PathVariable Integer commentId) {
-        Integer userId = 1; // temporal hasta login real
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
         return reactionService.getCommentReactionsWithDetails(commentId, userId);
     }
 
     @GetMapping("/reacciones/desbloqueadas")
     @ResponseBody
     public List<Integer> getUnlockedReactions() {
-        Integer userId = 1; // temporal hasta login real
+        Integer userId = (Integer) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
         return achievementService.getUnlockedReactionIds(userId);
     }
 }

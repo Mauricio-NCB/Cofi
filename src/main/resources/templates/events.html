@@ -28,23 +28,6 @@
       </div>
     </div>
 
-    <div class="card p-3 mt-3">
-        <h5>Personalizar diseño</h5>
-
-        <p>Color del tema:</p>
-        <button onclick="changeTheme('')" class="btn btn-sm btn-secondary">Marrón</button>
-        <button onclick="changeTheme('azul')" class="btn btn-sm btn-primary">Azul</button>
-        <button onclick="changeTheme('verde')" class="btn btn-sm btn-success">Verde</button>
-        <button onclick="changeTheme('morado')" class="btn btn-sm btn-purple">Morado</button>
-
-        <hr>
-
-        <p>Tamaño de letra:</p>
-        <button onclick="changeFontSize('small')" class="btn btn-sm btn-outline-dark">Pequeña</button>
-        <button onclick="changeFontSize('normal')" class="btn btn-sm btn-outline-dark">Normal</button>
-        <button onclick="changeFontSize('large')" class="btn btn-sm btn-outline-dark">Grande</button>
-    </div>
-
     <p>
       Encuentra eventos según tu código postal:
       <select class="form-select d-inline w-auto ms-2" style="background-color:var(--color-accent); color:white;">
@@ -137,7 +120,7 @@
               </p>
 
               <p class="mb-0">
-                <strong>Aforo:</strong> <span th:text="${ev.maxCapacity}"></span>
+                <strong>Plazas Disponibles :</strong> <span th:text="${ev.availableSpots}"></span> / <span th:text="${ev.maxCapacity}"></span>
               </p>
 
               <div class="mt-2">
@@ -155,6 +138,114 @@
 
               </div>
 
+              <!-- BOTÓN UNIRSE AL EVENTO -->
+              <div class="mt-3" th:if="${isAuthenticated && !ev.isUserParticipant && ev.availableSpots > 0}">
+                <button class="btn btn-success btn-sm join-event-btn"
+                        th:data-event-id="${ev.id}"
+                        data-bs-toggle="tooltip"
+                        title="Únete a este evento">
+                  Unirse al evento
+                </button>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENTOS EN TU ÁREA (solo si usuario tiene postcode que debería tener) -->
+    <div class="activities-section mt-5" th:if="${isAuthenticated && userPostcode != null && !#lists.isEmpty(eventsNearby)}">
+      <h3>Eventos en tu área (<span th:text="${userPostcode}"></span>)</h3>
+
+      <div class="row mt-3" th:if="${#lists.isEmpty(eventsNearby)}">
+        <div class="col-12">
+          <div class="alert alert-info">No hay eventos en tu código postal.</div>
+        </div>
+      </div>
+
+      <!-- CONTENEDOR DE SCROLL -->
+      <div class="scroll-outer mt-3" th:if="${!#lists.isEmpty(eventsNearby)}">
+      <div class="d-flex flex-nowrap overflow-auto" style="width: 100%;">
+        <div class="flex-shrink-0 me-3" style="width: 400px;" th:each="ev : ${eventsNearby}">
+          <div class="card event-card h-100"
+                data-bs-toggle="modal"
+                data-bs-target="#viewEventModal"
+                th:attr="data-title=${ev.title},
+                         data-desc=${ev.description},
+                         data-date=${ev.dateEvent},
+                         data-time=${ev.timeEvent},
+                         data-capacity=${ev.maxCapacity}">
+
+            <img th:src="${ev.imageUrl}" />
+
+            <div class="card-body d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h5 class="card-title" th:text="${ev.title}">Título</h5>
+                <span class="badge"
+                      th:classappend="${ev.state == 'en_curso' ? ' bg-success' :
+                                      (ev.state == 'terminado' ? ' bg-secondary' :
+                                      (ev.state == 'cancelado' ? ' bg-danger' :
+                                      ' bg-warning'))}"
+                      th:text="${ev.state == 'en_curso' ? 'En curso' :
+                                (ev.state == 'terminado' ? 'Terminado' :
+                                (ev.state == 'cancelado' ? 'Cancelado' :
+                                'Próximo'))}">
+                </span>
+
+              </div>
+
+              <p class="mb-2 text-muted">
+                <strong>Creador:</strong>
+                <span th:text="${ev.creatorName}">Nombre</span>
+              </p>
+
+              <!-- Contenedor de descripción -->
+              <div class="description-container mb-2">
+                <p class="card-text text-muted mb-0" th:text="${ev.description}">
+                  Descripción completa
+                </p>
+              </div>
+              <button class="btn btn-link p-0 mt-auto view-more-btn" style="display:none;">Ver más</button>
+
+              <p class="mb-1 mt-2">
+                <strong>Fecha:</strong>
+                <span th:text="${#temporals.format(ev.dateEvent, 'dd/MM/yyyy')}"></span>
+              </p>
+
+              <p class="mb-1">
+                <strong>Hora:</strong>
+                <span th:text="${#temporals.format(ev.timeEvent, 'HH:mm')}"></span>
+              </p>
+
+              <p class="mb-0">
+                <strong>Plazas Disponibles :</strong> <span th:text="${ev.availableSpots}"></span> / <span th:text="${ev.maxCapacity}"></span>
+              </p>
+
+              <div class="mt-2">
+
+                <strong>Categoría:</strong>
+
+                <span th:if="${#lists.isEmpty(ev.categoryNames)}" class="text-muted">
+                    Sin categoría
+                </span>
+
+                <a th:each="category : ${ev.categoryNames}"
+                  th:text="${category}"
+                  class="badge bg-primary me-1 text-decoration-none">
+                </a>
+
+              </div>
+
+              <!-- BOTÓN UNIRSE AL EVENTO -->
+              <div class="mt-3" th:if="${isAuthenticated && !ev.isUserParticipant && ev.availableSpots > 0}">
+                <button class="btn btn-success btn-sm join-event-btn"
+                        th:data-event-id="${ev.id}"
+                        data-bs-toggle="tooltip"
+                        title="Únete a este evento">
+                  Unirse al evento
+                </button>
+              </div>
               
             </div>
           </div>

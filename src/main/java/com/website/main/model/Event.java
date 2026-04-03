@@ -61,8 +61,8 @@ public class Event {
     @ManyToMany
     @JoinTable(
         name = "users_events",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "event_id")
+        joinColumns = @JoinColumn(name = "event_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> participants;
 
@@ -78,6 +78,10 @@ public class Event {
                 return "https://picsum.photos/id/367/4928/326";
             case "Salud":
                 return "https://picsum.photos/id/360/1925/1280";
+            case "Deportes":
+                return "https://picsum.photos/id/541/5000/3181";
+            case "Tecnología":
+                return "https://picsum.photos/id/8/5000/3333";
             default:
                 return "https://picsum.photos/id/491/5000/4061";
         }

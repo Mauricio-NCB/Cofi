@@ -10,4 +10,6 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findByUserId(Integer userId);
     
     List<Event> findByCategories_Id(Integer categoryId);
+
+    List<Event> findByPostcode(String postcode);
 }

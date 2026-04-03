@@ -10,6 +10,6 @@ public class PostCreateDTO {
     private String title;
     private String content;
     private String tags; // Coma-separated tags
-    private String pictureUrl;
+    private String imageUrl;
     
 }

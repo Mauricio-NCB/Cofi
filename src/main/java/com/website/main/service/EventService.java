@@ -36,7 +36,13 @@ public class EventService {
     public List<EventResponseDTO> findAll() {
         // Logica de negocio adicional: en este caso, no requiere
         return eventRepository.findAll().stream()
-                .map(eventMapper::toDTO)
+                .map(event -> eventMapper.toDTOWithUserId(event, null))
+                .toList();
+    }
+
+    public List<EventResponseDTO> findAllWithUserInfo(Integer userId) {
+        return eventRepository.findAll().stream()
+                .map(event -> eventMapper.toDTOWithUserId(event, userId))
                 .toList();
     }
 
@@ -96,13 +102,56 @@ public class EventService {
 
     public List<EventResponseDTO> findByCategoryId(Integer categoryId) {
         return eventRepository.findByCategories_Id(categoryId).stream()
-                .map(eventMapper::toDTO)
+                .map(event -> eventMapper.toDTOWithUserId(event, null))
+                .toList();
+    }
+
+    public List<EventResponseDTO> findByCategoryIdWithUserInfo(Integer categoryId, Integer userId) {
+        return eventRepository.findByCategories_Id(categoryId).stream()
+                .map(event -> eventMapper.toDTOWithUserId(event, userId))
                 .toList();
     }
 
     public List<EventCalendarDTO> findByUserIdForCalendar(Integer userId) {
         return eventRepository.findByUserId(userId).stream()
                 .map(eventMapper::toCalendarDTO)
+                .toList();
+    }
+
+    public EventResponseDTO joinEvent(Integer eventId, Integer userId) throws Exception {
+        Event event = eventRepository.findById(eventId)
+            .orElseThrow(() -> new Exception("Evento no encontrado"));
+        
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new Exception("Usuario no encontrado"));
+
+        // Validar que hay plazas disponibles
+        int participantCount = event.getParticipants() != null ? event.getParticipants().size() : 0;
+        if (participantCount >= event.getMaxCapacity()) {
+            throw new Exception("No hay plazas disponibles en este evento");
+        }
+
+        // Validar que el usuario no esté ya en el evento
+        if (event.getParticipants().stream().anyMatch(p -> p.getId().equals(userId))) {
+            throw new Exception("Ya estás registrado en este evento");
+        }
+
+        // Agregar el usuario a los participantes del evento
+        event.getParticipants().add(user);
+        eventRepository.save(event);
+
+        return eventMapper.toDTO(event);
+    }
+
+    public List<EventResponseDTO> findByPostcode(String postcode) {
+        return eventRepository.findByPostcode(postcode).stream()
+                .map(event -> eventMapper.toDTOWithUserId(event, null))
+                .toList();
+    }
+
+    public List<EventResponseDTO> findByPostcodeWithUserInfo(String postcode, Integer userId) {
+        return eventRepository.findByPostcode(postcode).stream()
+                .map(event -> eventMapper.toDTOWithUserId(event, userId))
                 .toList();
     }
 
