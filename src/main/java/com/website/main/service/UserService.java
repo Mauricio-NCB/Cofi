@@ -64,9 +64,7 @@ public class UserService {
                 categories.add(category);
             }
             
-            List<Category> savedCategories = categoryRepository.saveAll(categories);
-
-            user.setPreferedCategories(savedCategories);
+            user.setPreferedCategories(categories);
         }
 
         User registeredUser = userRepository.save(user);
@@ -94,6 +92,23 @@ public class UserService {
         authResponseDTO.setUser(userMapper.toDTO(user));
 
         return authResponseDTO;
+    }
+
+    public void updateUserCategories(Integer userId, List<String> categoryNames) {
+        User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        List<Category> categories = new ArrayList<>();
+
+        for (String categoryName : categoryNames) {
+            Category category = categoryRepository.findByName(categoryName)
+                    .orElseThrow(() -> new RuntimeException("Categoría " + categoryName + " no encontrada"));
+            
+            categories.add(category);
+        }
+
+        user.setPreferedCategories(categories);
+        userRepository.save(user);
     }
 
     public AuthResponseDTO refreshToken(String refreshToken) {

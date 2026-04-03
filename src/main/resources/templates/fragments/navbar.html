@@ -115,10 +115,10 @@
             } else {
                 // no logueado, redirigir si la página lo requiere
                 const publicPaths = ["/", "/inicio",
-                                    "/eventos", "/eventos/",
-                                    "/comunidad", "/comunidad/", 
+                                    "/eventos",
+                                    "/comunidad",
                                     "/auth/login", "/auth/register", 
-                                    "api/categories", "api/categories/",
+                                    "api/categories",
                                     "/about", "/terminos"];
                 const isPublic = publicPaths.some(p => window.location.pathname.startsWith(p));
 
