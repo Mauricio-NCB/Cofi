@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import com.website.main.model.Category;
 import com.website.main.service.CategoryService;
 import com.website.main.service.EventService;
 import com.website.main.service.UserService;
