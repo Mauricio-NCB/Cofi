@@ -26,4 +26,5 @@ public class EventResponseDTO {
     private List<String> categoryNames;
     private String imageUrl;
     private Boolean isUserParticipant; // true si el usuario actual participa en el evento
+    private Boolean isUserCreator;     // true si el usuario actual es el creador
 }

@@ -143,6 +143,24 @@ public class EventController {
             return Map.of("status", "error", "message", e.getMessage());
         }
     }
+    
+    // SALIR DE UN EVENTO
+    @PostMapping("/{id}/salir")
+    @ResponseBody
+    public Object salirDelEvento(@PathVariable Integer id) {
+        try {
+            Integer userId = (Integer) SecurityContextHolder
+                    .getContext()
+                    .getAuthentication()
+                    .getPrincipal();
+
+            EventResponseDTO updatedEvent = eventService.leaveEvent(id, userId);
+            return Map.of("status", "success", "message", "Has salido del evento correctamente", "event", updatedEvent);
+        } catch (Exception e) {
+            return Map.of("status", "error", "message", e.getMessage());
+        }
+    }
+
 
     // CALENDARIO
     @GetMapping("/calendario")

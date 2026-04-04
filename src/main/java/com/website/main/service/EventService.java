@@ -156,4 +156,28 @@ public class EventService {
                 .toList();
     }
 
+    public EventResponseDTO leaveEvent(Integer eventId, Integer userId) throws Exception {
+        Event event = eventRepository.findById(eventId)
+            .orElseThrow(() -> new Exception("Evento no encontrado"));
+        
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new Exception("Usuario no encontrado"));
+
+        // Validar que el usuario está en el evento
+        if (!event.getParticipants().stream().anyMatch(p -> p.getId().equals(userId))) {
+            throw new Exception("No estás registrado en este evento");
+        }
+
+        // Validar que el usuario no sea el creador del evento
+        if (event.getUser().getId().equals(userId)) {
+            throw new Exception("El creador no puede abandonar su propio evento");
+        }
+
+        // Remover el usuario de los participantes
+        event.getParticipants().removeIf(p -> p.getId().equals(userId));
+        eventRepository.save(event);
+
+        return eventMapper.toDTO(event);
+    }
+
 }

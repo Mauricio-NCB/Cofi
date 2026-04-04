@@ -60,5 +60,13 @@ public class User {
     )
     private List<Category> preferedCategories;
 
+    @ManyToMany
+    @JoinTable(
+        name = "users_achievements",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "achievement_id")
+    )
+    private List<Achievement> achievements;
+
 }
 

@@ -40,6 +40,13 @@ public class EventMapper {
         }
         dto.setIsUserParticipant(isUserParticipant);
         
+        // Verificar si el usuario actual es el creador del evento
+        Boolean isUserCreator = false;
+        if (userId != null && event.getUser() != null) {
+            isUserCreator = event.getUser().getId().equals(userId);
+        }
+        dto.setIsUserCreator(isUserCreator);
+        
         dto.setPostcode(event.getPostcode());
         dto.setState(event.getState());
         dto.setChatId(event.getChatId());

@@ -84,4 +84,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  /* ====== SALIR DE UN EVENTO ====== */
+  const leaveButtons = document.querySelectorAll('.leave-event-btn');
+  
+  leaveButtons.forEach(button => {
+    button.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      
+      const eventId = button.getAttribute('data-event-id');
+      const originalText = button.textContent;
+      
+      // Confirmar antes de salir
+      if (!confirm('¿Estás seguro de que quieres salir de este evento?')) {
+        return;
+      }
+      
+      try {
+        button.disabled = true;
+        button.textContent = 'Saliendo...';
+        
+        const response = await fetch(`/eventos/${eventId}/salir`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+          alert(result.message);
+          location.reload();
+        } else {
+          alert('Error: ' + result.message);
+          button.disabled = false;
+          button.textContent = originalText;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error al salir del evento');
+        button.disabled = false;
+        button.textContent = originalText;
+      }
+    });
+  });
+
 });
