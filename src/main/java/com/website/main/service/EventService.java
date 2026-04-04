@@ -6,6 +6,8 @@ import com.website.main.model.Event;
 import com.website.main.model.User;
 import com.website.main.model.Achievement.AchievementType;
 import com.website.main.model.Category;
+import com.website.main.model.Chat;
+import com.website.main.repository.ChatRepository;
 import com.website.main.repository.EventRepository;
 import com.website.main.repository.UserRepository;
 import com.website.main.dto.Category.CategoryResponseDTO;
@@ -22,14 +24,17 @@ public class EventService {
     
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final ChatRepository chatRepository;
     private final AchievementService achievementService;
     private final EventMapper eventMapper;
     
 
     public EventService(EventRepository eventRepository, UserRepository userRepository, 
-            AchievementService achievementService, EventMapper eventMapper) {
+            ChatRepository chatRepository, AchievementService achievementService, 
+            EventMapper eventMapper) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.chatRepository = chatRepository;
         this.achievementService = achievementService;
         this.eventMapper = eventMapper;
     }
@@ -83,9 +88,20 @@ public class EventService {
             throw new RuntimeException("Debe seleccionar un código postal");
         }
 
+        Event savedEvent = eventRepository.save(newEvent);
+
+        Chat eventChat = new Chat();
+        eventChat.setType("evento");
+        eventChat.setUsers(List.of(user));
+
+        Chat savedChat = chatRepository.save(eventChat);
+
+        savedEvent.setChatId(savedChat.getId());
+        eventRepository.save(savedEvent);
+
         achievementService.unlockAchievement(idUsuario, AchievementType.FIRST_EVENT);
         
-        return eventMapper.toDTO(eventRepository.save(newEvent));
+        return eventMapper.toDTO(savedEvent);
     }
 
     public EventResponseDTO findById(Integer id) {
@@ -141,6 +157,15 @@ public class EventService {
         event.getParticipants().add(user);
         eventRepository.save(event);
 
+        // Añadir al usuario al chat del evento si existe
+        if (event.getChatId() != null) {
+            Chat chat = chatRepository.findById(event.getChatId())
+                .orElseThrow(() -> new Exception("Chat del evento no encontrado"));
+            
+            chat.getUsers().add(user);
+            chatRepository.save(chat);
+        }
+
         return eventMapper.toDTO(event);
     }
 
@@ -164,18 +189,27 @@ public class EventService {
             .orElseThrow(() -> new Exception("Usuario no encontrado"));
 
         // Validar que el usuario está en el evento
-        if (!event.getParticipants().stream().anyMatch(p -> p.getId().equals(userId))) {
+        if (!event.getParticipants().stream().anyMatch(p -> p.equals(user))) {
             throw new Exception("No estás registrado en este evento");
         }
 
         // Validar que el usuario no sea el creador del evento
-        if (event.getUser().getId().equals(userId)) {
+        if (event.getUser().equals(user)) {
             throw new Exception("El creador no puede abandonar su propio evento");
         }
 
         // Remover el usuario de los participantes
-        event.getParticipants().removeIf(p -> p.getId().equals(userId));
+        event.getParticipants().removeIf(p -> p.equals(user));
         eventRepository.save(event);
+
+        // Remover al usuario del chat del evento si existe
+        if (event.getChatId() != null) {
+            Chat chat = chatRepository.findById(event.getChatId())
+                .orElseThrow(() -> new Exception("Chat del evento no encontrado"));
+            
+            chat.getUsers().removeIf(u -> u.equals(user));
+            chatRepository.save(chat);
+        }
 
         return eventMapper.toDTO(event);
     }

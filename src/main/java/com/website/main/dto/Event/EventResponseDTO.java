@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import com.website.main.dto.User.UserParticipantDTO;
+
 @Getter
 @Setter
 public class EventResponseDTO {
@@ -27,4 +29,5 @@ public class EventResponseDTO {
     private String imageUrl;
     private Boolean isUserParticipant; // true si el usuario actual participa en el evento
     private Boolean isUserCreator;     // true si el usuario actual es el creador
+    private List<UserParticipantDTO> participants;
 }

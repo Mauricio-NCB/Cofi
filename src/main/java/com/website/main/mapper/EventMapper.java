@@ -1,12 +1,14 @@
 package com.website.main.mapper;
 
 import com.website.main.model.Event;
+import com.website.main.model.User;
 import com.website.main.model.Category;
 
 import org.springframework.stereotype.Component;
 
 import com.website.main.dto.Event.EventCalendarDTO;
 import com.website.main.dto.Event.EventResponseDTO;
+import com.website.main.dto.User.UserParticipantDTO;
 
 @Component
 public class EventMapper {
@@ -58,6 +60,21 @@ public class EventMapper {
                 .toList()
         );
         dto.setImageUrl(event.getImageUrl());
+
+        if (event.getParticipants() != null) {
+            dto.setParticipants(
+                event.getParticipants().stream()
+                    .map(p -> {
+                        UserParticipantDTO participantDTO = new UserParticipantDTO();
+                        participantDTO.setName(p.getName());
+                        participantDTO.setLastName(p.getLastname());
+
+                        return participantDTO;
+                    })
+                    .toList()
+            );
+
+        }
 
         return dto;
     }
