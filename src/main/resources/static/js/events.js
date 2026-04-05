@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
       card.getAttribute('data-time');
 
     document.getElementById('modalCapacity').textContent =
-      card.getAttribute('data-capacity');
+      card.getAttribute('data-available-spots');
 
     const eventId = card.getAttribute('data-id');
 
@@ -248,4 +248,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
     eventMessageInput.value = '';
   });
+
+  /* ====== SCROLL HORIZONTAL CON BOTONES ====== */
+  document.querySelectorAll('.scroll-outer').forEach(scrollOuter => {
+    const leftBtn = scrollOuter.querySelector('.scroll-left');
+    const rightBtn = scrollOuter.querySelector('.scroll-right');
+    const container = scrollOuter.querySelector('[data-scroll-container]');
+
+    if (leftBtn && rightBtn && container) {
+      const scrollDistance = 400;
+
+      leftBtn.addEventListener('click', () => {
+        container.scrollBy({ left: -scrollDistance, behavior: 'smooth' });
+      });
+
+      rightBtn.addEventListener('click', () => {
+        container.scrollBy({ left: scrollDistance, behavior: 'smooth' });
+      });
+
+      // Mostrar/ocultar botones según posición del scroll
+      const updateButtonVisibility = () => {
+        leftBtn.style.display = container.scrollLeft > 0 ? 'flex' : 'none';
+        rightBtn.style.display = 
+          container.scrollLeft < container.scrollWidth - container.clientWidth ? 'flex' : 'none';
+      };
+
+      container.addEventListener('scroll', updateButtonVisibility);
+      window.addEventListener('resize', updateButtonVisibility);
+      updateButtonVisibility();
+    }
+  });
+
+  /* ====== FILTRADO POR CÓDIGO POSTAL ====== */
+  const postcodeFilter = document.getElementById('postcodeFilter');
+  if (postcodeFilter) {
+    postcodeFilter.addEventListener('change', function() {
+      const selectedPostcode = this.value;
+      const firstScrollOuter = document.querySelector('.activities-section .scroll-outer');
+      if (firstScrollOuter) {
+        const eventCardsInSection = firstScrollOuter.querySelectorAll('[data-postcode]');
+
+        eventCardsInSection.forEach(cardWrapper => {
+          const cardPostcode = cardWrapper.getAttribute('data-postcode');
+          if (selectedPostcode === '') {
+            // Mostrar todos
+            cardWrapper.style.display = 'block';
+          } else if (cardPostcode === selectedPostcode) {
+            // Mostrar solo los que coinciden
+            cardWrapper.style.display = 'block';
+          } else {
+            // Ocultar los que no coinciden
+            cardWrapper.style.display = 'none';
+          }
+        });
+      }
+    });
+  }
 });

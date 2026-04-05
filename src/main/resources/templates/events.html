@@ -29,8 +29,9 @@
     </div>
 
     <p>
-      Encuentra eventos según tu código postal:
-      <select class="form-select d-inline w-auto ms-2" style="background-color:var(--color-accent); color:white;">
+      Encuentra eventos en este código postal:
+      <select class="form-select d-inline w-auto ms-2" id="postcodeFilter" style="background-color:var(--color-accent); color:white;">
+        <option value="">Ver todos</option>
         <option th:each="cp : ${#numbers.sequence(28001,28055)}"
                 th:value="${cp}"
                 th:text="${cp}">
@@ -67,8 +68,11 @@
 
       <!-- CONTENEDOR DE SCROLL -->
       <div class="scroll-outer mt-3" th:if="${!#lists.isEmpty(events)}">
-      <div class="d-flex flex-nowrap overflow-auto" style="width: 100%;">
-        <div class="flex-shrink-0 me-3" style="width: 400px;" th:each="ev : ${events}">
+        <button class="scroll-btn scroll-left" title="Desplazar izquierda" style="display:none;">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <div class="d-flex flex-nowrap overflow-auto" style="width: 100%;" data-scroll-container>
+          <div class="flex-shrink-0 me-3" style="width: 400px;" th:each="ev : ${events}" th:if="${ev.state != 'terminado' && ev.state != 'en_curso'}" th:attr="data-postcode=${ev.postcode}">
           <div class="card event-card h-100"
                 data-bs-toggle="modal"
                 data-bs-target="#viewEventModal"
@@ -77,7 +81,8 @@
                          data-desc=${ev.description},
                          data-date=${ev.dateEvent},
                          data-time=${ev.timeEvent},
-                         data-capacity=${ev.maxCapacity}">
+                         data-capacity=${ev.maxCapacity},
+                         data-available-spots=${ev.availableSpots}">
 
             <img th:src="${ev.imageUrl}" />
 
@@ -162,6 +167,10 @@
             </div>
           </div>
         </div>
+        </div>
+        <button class="scroll-btn scroll-right" title="Desplazar derecha">
+          <i class="bi bi-chevron-right"></i>
+        </button>
       </div>
     </div>
 
@@ -177,16 +186,21 @@
 
       <!-- CONTENEDOR DE SCROLL -->
       <div class="scroll-outer mt-3" th:if="${!#lists.isEmpty(eventsNearby)}">
-      <div class="d-flex flex-nowrap overflow-auto" style="width: 100%;">
-        <div class="flex-shrink-0 me-3" style="width: 400px;" th:each="ev : ${eventsNearby}">
+        <button class="scroll-btn scroll-left" title="Desplazar izquierda" style="display:none;">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <div class="d-flex flex-nowrap overflow-auto" style="width: 100%;" data-scroll-container>
+          <div class="flex-shrink-0 me-3" style="width: 400px;" th:each="ev : ${eventsNearby}" th:if="${ev.state != 'terminado' && ev.state != 'en_curso'}" th:attr="data-postcode=${ev.postcode}">
           <div class="card event-card h-100"
                 data-bs-toggle="modal"
                 data-bs-target="#viewEventModal"
-                th:attr="data-title=${ev.title},
+                th:attr="data-id=${ev.id},
+                         data-title=${ev.title},
                          data-desc=${ev.description},
                          data-date=${ev.dateEvent},
                          data-time=${ev.timeEvent},
-                         data-capacity=${ev.maxCapacity}">
+                         data-capacity=${ev.maxCapacity},
+                         data-available-spots=${ev.availableSpots}">
 
             <img th:src="${ev.imageUrl}" />
 
@@ -271,6 +285,10 @@
             </div>
           </div>
         </div>
+        </div>
+        <button class="scroll-btn scroll-right" title="Desplazar derecha">
+          <i class="bi bi-chevron-right"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -304,7 +322,7 @@
 
               <p><strong>Fecha: </strong> <span id="modalDate"></span></p>
               <p><strong>Hora: </strong> <span id="modalTime"></span></p>
-              <p><strong>Aforo: </strong> <span id="modalCapacity"></span></p>
+              <p><strong>Plazas Disponibles: </strong> <span id="modalCapacity"></span></p>
 
               <hr>
 
@@ -369,12 +387,13 @@
               <div class="row">
                 <div class="col">
                   <label class="form-label">Fecha del evento</label>
-                  <input type="date" th:field="*{dateEvent}" class="form-control" required>
+                  <input type="date" th:field="*{dateEvent}" class="form-control form-control-lg" id="eventDate" 
+                         th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
                 </div>
 
                 <div class="col">
                   <label class="form-label">Hora del evento</label>
-                  <input type="time" th:field="*{timeEvent}" class="form-control" required>
+                  <input type="time" th:field="*{timeEvent}" class="form-control form-control-lg" required>
                 </div>
               </div>
 

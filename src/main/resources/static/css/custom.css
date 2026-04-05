@@ -48,7 +48,7 @@
 body {
   background-color: var(--color-background);
   color: var(--color-text);
-  padding-bottom: 90px; /* espacio para botón fijo */
+  padding-bottom: 30px; /* espacio para botón fijo */
 }
 
 .navbar {
@@ -96,7 +96,7 @@ body {
 /* Botón crear actividad más grande y responsive */
 .fixed-create-btn {
   position: fixed;
-  bottom: 70px; /* sitúa el botón por encima del footer */
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
@@ -107,6 +107,13 @@ body {
   font-size: 1.25rem;
   border: none;
   box-shadow: 0 6px 16px rgba(0,0,0,.25);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fixed-create-btn:hover {
+  transform: translateX(-50%) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,.3);
 }
 
 /* Ajustes para pantallas pequeñas */
@@ -121,7 +128,7 @@ body {
   .fixed-create-btn {
     padding: 12px 20px;
     font-size: 1rem;
-    bottom: 24px;
+    bottom: 20px;
   }
 }
 .hero-section {
@@ -241,4 +248,56 @@ body {
 .category-card:hover:not(.selected) {
     border-color: #0d6efd;
     color: #0d6efd;
+}
+
+/* Estilos para scroll horizontal con botones */
+.scroll-outer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.scroll-outer [data-scroll-container] {
+  flex: 1;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+}
+
+.scroll-outer [data-scroll-container]::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+.scroll-btn {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--color-accent);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 100;
+}
+
+.scroll-btn:hover {
+  background-color: var(--color-primary);
+  transform: scale(1.1);
+}
+
+.scroll-btn:active {
+  transform: scale(0.95);
+}
+
+.scroll-left {
+  order: -1;
+}
+
+.scroll-right {
+  order: 3;
 }
