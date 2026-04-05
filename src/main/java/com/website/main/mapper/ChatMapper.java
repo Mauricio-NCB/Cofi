@@ -15,7 +15,7 @@ public class ChatMapper {
 
         ChatResponseDTO responseDTO = new ChatResponseDTO();
         responseDTO.setId(chat.getId());
-        responseDTO.setType(chat.getType());
+        responseDTO.setName(chat.getName());
         responseDTO.setParticipantNames(chat.getUsers().stream()
                     .map(User::getName).toList());
 

@@ -124,7 +124,19 @@ public class EventController {
     @GetMapping("/{id}")
     @ResponseBody
     public EventResponseDTO obtenerEvento(@PathVariable Integer id) {
-        return eventService.findById(id);
+
+        Integer userId = null;
+
+        try {
+            userId = (Integer) SecurityContextHolder
+                    .getContext()
+                    .getAuthentication()
+                    .getPrincipal();
+        } catch (Exception e) {
+            // Usuario no autenticado, devolver evento sin info de usuario
+        }
+
+        return eventService.findByIdWithUserInfo(id, userId);
     }
 
     // UNIRSE A UN EVENTO

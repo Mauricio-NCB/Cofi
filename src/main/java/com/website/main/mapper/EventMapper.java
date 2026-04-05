@@ -1,8 +1,10 @@
 package com.website.main.mapper;
 
 import com.website.main.model.Event;
-import com.website.main.model.User;
 import com.website.main.model.Category;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -61,20 +63,29 @@ public class EventMapper {
         );
         dto.setImageUrl(event.getImageUrl());
 
+        // mapear lista de participantes incluyendo al creador
+        List<UserParticipantDTO> participants = new ArrayList<>();
+
+        // añadir el creador primero
+        UserParticipantDTO creatorDTO = new UserParticipantDTO();
+        creatorDTO.setName(event.getUser().getName());
+        creatorDTO.setLastName(event.getUser().getLastname());
+        participants.add(creatorDTO);
+
+        // añadir el resto de participantes evitando duplicar al creador
         if (event.getParticipants() != null) {
-            dto.setParticipants(
-                event.getParticipants().stream()
-                    .map(p -> {
-                        UserParticipantDTO participantDTO = new UserParticipantDTO();
-                        participantDTO.setName(p.getName());
-                        participantDTO.setLastName(p.getLastname());
-
-                        return participantDTO;
-                    })
-                    .toList()
-            );
-
+            event.getParticipants().forEach(p -> {
+                boolean isCreator = p.getId().equals(event.getUser().getId());
+                if (!isCreator) {
+                    UserParticipantDTO pdto = new UserParticipantDTO();
+                    pdto.setName(p.getName());
+                    pdto.setLastName(p.getLastname());
+                    participants.add(pdto);
+                }
+            });
         }
+
+        dto.setParticipants(participants);
 
         return dto;
     }

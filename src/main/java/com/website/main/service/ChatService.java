@@ -57,7 +57,7 @@ public class ChatService {
         }
 
         Chat chat = new Chat();
-        chat.setType(chatDTO.getType()); 
+        chat.setName(chatDTO.getName());
         chat.setUsers(participants);
 
         Chat savedChat = chatRepository.save(chat);

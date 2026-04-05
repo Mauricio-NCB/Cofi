@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
-        type: document.getElementById('chatType').value,
+        name: document.getElementById('chatName').value,
         participants: participants
        })
     });

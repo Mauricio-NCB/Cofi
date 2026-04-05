@@ -47,6 +47,10 @@ public class MessageService {
             .orElseThrow(() -> new RuntimeException("Chat no encontrado"));
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!chat.getUsers().contains(user)) {
+            throw new RuntimeException("Usuario no es participante del chat");
+        }
         
         Message message = new Message();
         message.setContent(messageDTO.getContent());
@@ -64,8 +68,17 @@ public class MessageService {
         return responseDTO;
     }
 
-    public List<MessageResponseDTO> viewMessagesFromChat(Integer chatId) {
+    public List<MessageResponseDTO> viewMessagesFromChat(Integer chatId, Integer userId) {
         // Aquí iría la lógica para obtener los mensajes de un chat específico
+        Chat chat = chatRepository.findById(chatId)
+            .orElseThrow(() -> new RuntimeException("Chat no encontrado"));
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!chat.getUsers().contains(user)) {
+            throw new RuntimeException("Usuario no es participante del chat");
+        }
+
         return messageRepository.findByChatIdOrderByDateSentAsc(chatId).stream()
                 .map(messageMapper::toDTO)
                 .toList();

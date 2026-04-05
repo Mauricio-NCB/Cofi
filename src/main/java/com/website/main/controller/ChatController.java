@@ -10,6 +10,7 @@ import com.website.main.dto.Chat.ChatCreateDTO;
 import com.website.main.dto.Chat.ChatResponseDTO;
 import com.website.main.dto.Message.MessageCreateDTO;
 import com.website.main.dto.Message.MessageResponseDTO;
+import com.website.main.model.User;
 import com.website.main.service.ChatService;
 import com.website.main.service.MessageService;
 
@@ -48,7 +49,18 @@ public class ChatController {
     public String viewChat(@PathVariable Integer chatId, Model model) {
         // Aquí iría la lógica para obtener el chat y sus mensajes
         ChatResponseDTO chat = chatService.findById(chatId);
-        List<MessageResponseDTO> messages = messageService.viewMessagesFromChat(chatId);
+
+        Integer userId = null;
+        try {
+            userId = (Integer) SecurityContextHolder
+                    .getContext()
+                    .getAuthentication()
+                    .getPrincipal();
+        } catch (Exception e) {
+            // no autenticado
+        }
+
+        List<MessageResponseDTO> messages = messageService.viewMessagesFromChat(chatId, userId);
 
         model.addAttribute("chat", chat);
         model.addAttribute("messages", messages);
@@ -62,7 +74,17 @@ public class ChatController {
     @ResponseBody
     public List<MessageResponseDTO> viewMessages(@PathVariable Integer chatId) {
 
-        return messageService.viewMessagesFromChat(chatId);
+        Integer userId = null;
+        try {
+            userId = (Integer) SecurityContextHolder
+                    .getContext()
+                    .getAuthentication()
+                    .getPrincipal();
+        } catch (Exception e) {
+            // no autenticado
+        }
+
+        return messageService.viewMessagesFromChat(chatId, userId);
     }
 
     // Implementacion para enviar mensajes via JS

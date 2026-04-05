@@ -10,6 +10,6 @@ import lombok.Setter;
 public class ChatResponseDTO {
     
     private Integer id;
-    private String type;
+    private String name;
     private List<String> participantNames;
 }

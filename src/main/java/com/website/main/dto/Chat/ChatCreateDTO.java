@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class ChatCreateDTO {
 
-    private String type;
+    private String name;
     private List<UserParticipantDTO> participants;
     private Integer creatorId;
     

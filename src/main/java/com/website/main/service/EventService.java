@@ -17,6 +17,7 @@ import com.website.main.dto.Event.EventResponseDTO;
 import com.website.main.mapper.EventMapper;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -65,6 +66,10 @@ public class EventService {
         newEvent.setPostcode(event.getPostcode());
         newEvent.setUser(user);
 
+        List<User> participants = new ArrayList<>();
+        participants.add(user);  // El creador del evento es el primer participante
+        newEvent.setParticipants(participants);
+
         List<Category> categories = categoriesDTO.stream()
                 .map(dto -> {
                     Category category = new Category();
@@ -91,8 +96,8 @@ public class EventService {
         Event savedEvent = eventRepository.save(newEvent);
 
         Chat eventChat = new Chat();
-        eventChat.setType("evento");
-        eventChat.setUsers(List.of(user));
+        eventChat.setName("evento" + savedEvent.getId());
+        eventChat.setUsers(new ArrayList<>(List.of(user)));
 
         Chat savedChat = chatRepository.save(eventChat);
 
@@ -109,6 +114,13 @@ public class EventService {
             .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
 
         return eventMapper.toDTO(event);
+    }
+
+    public EventResponseDTO findByIdWithUserInfo(Integer id, Integer userId) {
+        Event event = eventRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
+
+        return eventMapper.toDTOWithUserId(event, userId);
     }
     
     public List<EventResponseDTO> findByUserId(Integer userId) {

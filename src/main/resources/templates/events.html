@@ -72,7 +72,8 @@
           <div class="card event-card h-100"
                 data-bs-toggle="modal"
                 data-bs-target="#viewEventModal"
-                th:attr="data-title=${ev.title},
+                th:attr="data-id=${ev.id},
+                         data-title=${ev.title},
                          data-desc=${ev.description},
                          data-date=${ev.dateEvent},
                          data-time=${ev.timeEvent},
@@ -293,19 +294,49 @@
         </div>
 
         <div class="modal-body">
-          <p id="modalEventDesc"></p>
 
-          <p><strong>Fecha:</strong>
-            <span id="modalDate"></span>
-          </p>
+          <div class="row">
 
-          <p><strong>Hora:</strong>
-            <span id="modalTime"></span>
-          </p>
+            <!-- Columna de información del evento -->
 
-          <p><strong>Aforo:</strong>
-            <span id="modalCapacity"></span>
-          </p>
+            <div class="col-md-5 border-end">
+              <p id="modalEventDesc" class="text-muted"></p>
+
+              <p><strong>Fecha: </strong> <span id="modalDate"></span></p>
+              <p><strong>Hora: </strong> <span id="modalTime"></span></p>
+              <p><strong>Aforo: </strong> <span id="modalCapacity"></span></p>
+
+              <hr>
+
+              <h6><i class="bi bi-people me-1"></i> Participantes</h6>
+              <ul id="modalParticipants" class="list-group list-group-flush">
+                <!-- Aquí se cargarán los participantes -->
+              </ul>
+            </div>
+
+
+            <!-- Columna de chat de evento -->
+            <div class="col-md-7 d-flex flex-column">
+
+              <h6><i class="bi bi-chat me-1"></i> Chat del evento</h6>
+
+              <div id="eventChatMessages" class="flex-grow-1 border rounded p-2 mb-3 overflow-auto" style="max-height: 350px;">
+                <!-- Aquí se cargarán los mensajes del chat del evento -->
+              </div>
+
+              <form id="eventMessageForm">
+                <div class="input-group">
+                  <input type="text" id="eventMessageInput" class="form-control" placeholder="Escribe tu mensaje..." required>
+                  <button type="submit" class="btn btn-primary">Enviar
+                    <i class="bi bi-send ms-1"></i>
+                  </button>
+                </div>
+              </form>
+
+            </div>
+
+          </div>
+
         </div>
 
       </div>
@@ -385,6 +416,8 @@
   </div>
 
   <!-- Bootstrap JS & dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script th:src="@{/js/events.js}"></script>
   <script th:src="@{/js/theme.js}"></script>
