@@ -12,6 +12,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.website.main.security.JwtFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -20,6 +24,12 @@ public class SecurityConfig {
 
     public SecurityConfig(JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper().registerModule(new JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
     @Bean
@@ -32,7 +42,7 @@ public class SecurityConfig {
                     "/eventos",
                     "/comunidad",
                     "/about", "/terminos", 
-                    "/auth/login", "/auth/register",
+                    "/auth/login", "/auth/register", "/auth/refresh",
                     "/api/categories",
                     "/css/**", "/js/**", "/images/**")
                 .permitAll()

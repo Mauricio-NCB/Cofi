@@ -57,9 +57,11 @@ public class EventMapper {
         dto.setCreatorId(event.getUser().getId());
         dto.setCreatorName(event.getUser().getName());
         dto.setCategoryNames(
-            event.getCategories().stream()
-                .map(Category::getName)
-                .toList()
+            event.getCategories() != null 
+                ? event.getCategories().stream()
+                    .map(Category::getName)
+                    .toList()
+                : new ArrayList<>()
         );
         dto.setImageUrl(event.getImageUrl());
 
