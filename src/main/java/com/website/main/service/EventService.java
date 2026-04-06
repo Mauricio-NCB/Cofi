@@ -56,6 +56,11 @@ public class EventService {
     }
 
     public EventResponseDTO save(EventCreateDTO event, List<CategoryResponseDTO> categoriesDTO, Integer idUsuario) {
+        
+        if (event.getPostcode() == null || event.getPostcode().isBlank()) {
+            throw new RuntimeException("Debe seleccionar un código postal");
+        }
+
         User user = userRepository.findById(idUsuario)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
@@ -90,10 +95,6 @@ public class EventService {
         if (now.isBefore(eventDateTime)) newEvent.setState("proximo");
         else if (now.isBefore(endDateTime)) newEvent.setState("en_curso");
         else newEvent.setState("terminado");
-
-        if (event.getPostcode() == null || event.getPostcode().isBlank()) {
-            throw new RuntimeException("Debe seleccionar un código postal");
-        }
 
         Event savedEvent = eventRepository.save(newEvent);
 
@@ -155,22 +156,22 @@ public class EventService {
                 .toList();
     }
 
-    public EventResponseDTO joinEvent(Integer eventId, Integer userId) throws Exception {
+    public EventResponseDTO joinEvent(Integer eventId, Integer userId) {
         Event event = eventRepository.findById(eventId)
-            .orElseThrow(() -> new Exception("Evento no encontrado"));
+            .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
         
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new Exception("Usuario no encontrado"));
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         // Validar que hay plazas disponibles
         int participantCount = event.getParticipants() != null ? event.getParticipants().size() : 0;
         if (participantCount >= event.getMaxCapacity()) {
-            throw new Exception("No hay plazas disponibles en este evento");
+            throw new RuntimeException("No hay plazas disponibles en este evento");
         }
 
         // Validar que el usuario no esté ya en el evento
         if (event.getParticipants().stream().anyMatch(p -> p.getId().equals(userId))) {
-            throw new Exception("Ya estás registrado en este evento");
+            throw new RuntimeException("Ya estás registrado en este evento");
         }
 
         // Agregar el usuario a los participantes del evento
@@ -180,7 +181,7 @@ public class EventService {
         // Añadir al usuario al chat del evento si existe
         if (event.getChatId() != null) {
             Chat chat = chatRepository.findById(event.getChatId())
-                .orElseThrow(() -> new Exception("Chat del evento no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Chat del evento no encontrado"));
             
             chat.getUsers().add(user);
             chatRepository.save(chat);
@@ -223,21 +224,21 @@ public class EventService {
                 .toList();
     }
 
-    public EventResponseDTO leaveEvent(Integer eventId, Integer userId) throws Exception {
+    public EventResponseDTO leaveEvent(Integer eventId, Integer userId) {
         Event event = eventRepository.findById(eventId)
-            .orElseThrow(() -> new Exception("Evento no encontrado"));
+            .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
         
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new Exception("Usuario no encontrado"));
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         // Validar que el usuario está en el evento
         if (!event.getParticipants().stream().anyMatch(p -> p.equals(user))) {
-            throw new Exception("No estás registrado en este evento");
+            throw new RuntimeException("No estás registrado en este evento");
         }
 
         // Validar que el usuario no sea el creador del evento
         if (event.getUser().equals(user)) {
-            throw new Exception("El creador no puede abandonar su propio evento");
+            throw new RuntimeException("El creador no puede abandonar su propio evento");
         }
 
         // Remover el usuario de los participantes
@@ -247,7 +248,7 @@ public class EventService {
         // Remover al usuario del chat del evento si existe
         if (event.getChatId() != null) {
             Chat chat = chatRepository.findById(event.getChatId())
-                .orElseThrow(() -> new Exception("Chat del evento no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Chat del evento no encontrado"));
             
             chat.getUsers().removeIf(u -> u.equals(user));
             chatRepository.save(chat);
