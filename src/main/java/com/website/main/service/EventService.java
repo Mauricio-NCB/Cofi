@@ -43,12 +43,14 @@ public class EventService {
     public List<EventResponseDTO> findAll() {
         // Logica de negocio adicional: en este caso, no requiere
         return eventRepository.findAll().stream()
+                .peek(this::updateEventState)  // Actualizar estado dinámicamente
                 .map(event -> eventMapper.toDTOWithUserId(event, null))
                 .toList();
     }
 
     public List<EventResponseDTO> findAllWithUserInfo(Integer userId) {
         return eventRepository.findAll().stream()
+                .peek(this::updateEventState)  // Actualizar estado dinámicamente
                 .map(event -> eventMapper.toDTOWithUserId(event, userId))
                 .toList();
     }
@@ -113,6 +115,7 @@ public class EventService {
         Event event = eventRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
 
+        updateEventState(event);  // Actualizar estado dinámicamente
         return eventMapper.toDTO(event);
     }
 
@@ -120,29 +123,34 @@ public class EventService {
         Event event = eventRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
 
+        updateEventState(event);  // Actualizar estado dinámicamente
         return eventMapper.toDTOWithUserId(event, userId);
     }
     
     public List<EventResponseDTO> findByUserId(Integer userId) {
         return eventRepository.findByUserId(userId).stream()
+                .peek(this::updateEventState)
                 .map(eventMapper::toDTO)
                 .toList();
     }
 
     public List<EventResponseDTO> findByCategoryId(Integer categoryId) {
         return eventRepository.findByCategories_Id(categoryId).stream()
+                .peek(this::updateEventState)
                 .map(event -> eventMapper.toDTOWithUserId(event, null))
                 .toList();
     }
 
     public List<EventResponseDTO> findByCategoryIdWithUserInfo(Integer categoryId, Integer userId) {
         return eventRepository.findByCategories_Id(categoryId).stream()
+                .peek(this::updateEventState)
                 .map(event -> eventMapper.toDTOWithUserId(event, userId))
                 .toList();
     }
 
     public List<EventCalendarDTO> findByUserIdForCalendar(Integer userId) {
         return eventRepository.findByUserId(userId).stream()
+                .peek(this::updateEventState)
                 .map(eventMapper::toCalendarDTO)
                 .toList();
     }
@@ -181,14 +189,36 @@ public class EventService {
         return eventMapper.toDTO(event);
     }
 
+    private void updateEventState(Event event) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime eventDateTime = LocalDateTime.of(event.getDateEvent(), event.getTimeEvent());
+        LocalDateTime endDateTime = eventDateTime.plusHours(2);  // Evento dura 2 horas
+
+        String newState;
+        if (now.isBefore(eventDateTime)) {
+            newState = "proximo";
+        } else if (now.isBefore(endDateTime)) {
+            newState = "en_curso";
+        } else {
+            newState = "terminado";
+        }
+
+        if (!newState.equals(event.getState()) && !"cancelado".equals(event.getState())) {
+            event.setState(newState);
+            eventRepository.save(event);
+        }
+    }
+
     public List<EventResponseDTO> findByPostcode(String postcode) {
         return eventRepository.findByPostcode(postcode).stream()
+                .peek(this::updateEventState)
                 .map(event -> eventMapper.toDTOWithUserId(event, null))
                 .toList();
     }
 
     public List<EventResponseDTO> findByPostcodeWithUserInfo(String postcode, Integer userId) {
         return eventRepository.findByPostcode(postcode).stream()
+                .peek(this::updateEventState)
                 .map(event -> eventMapper.toDTOWithUserId(event, userId))
                 .toList();
     }

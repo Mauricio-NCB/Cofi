@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
     eventMessageInput.value = '';
   });
 
-  /* ====== SCROLL HORIZONTAL CON BOTONES ====== */
+  /* ====== SCROLL HORIZONTAL ====== */
   document.querySelectorAll('.scroll-outer').forEach(scrollOuter => {
     const leftBtn = scrollOuter.querySelector('.scroll-left');
     const rightBtn = scrollOuter.querySelector('.scroll-right');

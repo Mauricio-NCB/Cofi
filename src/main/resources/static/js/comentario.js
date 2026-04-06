@@ -61,7 +61,7 @@ function renderComment(comment, level = 0){
 
     const div = document.createElement("div");
 
-    div.style.marginLeft = (level * 25) + "px";
+    div.style.marginLeft = (level * 15) + "px";
 
     div.className = "border rounded p-2 mb-2";
 
