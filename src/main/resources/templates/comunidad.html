@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Mi Comunidad</title>
-    <link rel="icon" type="image/png" href="cofifavicon.png">
+    <link rel="icon" type="image/png" href="/cofifavicon.png">
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -36,7 +36,11 @@
     </div>
 
     <!-- Crear publicación -->
-    <div class="card shadow-sm mb-5">
+    <button id="createPostBtn" class="btn btn-primary mb-4" style="padding: 12px 24px; font-size: 1.1rem;" onclick="toggleCreatePostForm()">
+        + Crear post
+    </button>
+
+    <div id="createPostForm" class="card shadow-sm mb-5" style="display: none;">
         <div class="card-body">
             <form th:action="@{/comunidad/crear}" method="post">
 
@@ -73,6 +77,9 @@
                 <div class="text-end">
                     <button type="submit" class="btn btn-primary">
                         Publicar
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="toggleCreatePostForm()">
+                        Cancelar
                     </button>
                 </div>
             </form>
@@ -157,6 +164,17 @@
 <script th:src="@{/js/theme.js}"></script>
 <script th:src="@{/js/comunidad.js}"></script>
 <script th:src="@{/js/comentario.js}"></script>
+
+<script>
+function toggleCreatePostForm() {
+    const form = document.getElementById('createPostForm');
+    const btn = document.getElementById('createPostBtn');
+    const isHidden = form.style.display === 'none';
+    
+    form.style.display = isHidden ? 'block' : 'none';
+    btn.textContent = isHidden ? '✕ Cerrar formulario' : '+ Crear post';
+}
+</script>
 
 <!-- Modal publicación -->
 <div class="modal fade" id="postModal" tabindex="-1">

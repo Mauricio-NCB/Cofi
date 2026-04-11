@@ -2,18 +2,18 @@ MEJORAS:
 
 Usuarios: Que si no se acaba el token que te reenvié a la página de login. A veces abro la página sin logear y no me lleva correctamente a la página de login sino que me deja interactuar con todo (no debería).
 Si no especificar Código Postal al registrarte luego no puedes cambiarlo en tu información personal (se debería).
-El color de los botones en personalizar diseño está mal, (Marrón es gris, Morado es blanco) (lo cambio yo).
+El color de los botones en personalizar diseño está mal, (Marrón es gris, Morado es blanco) HECHO
 Se supone que si te unes a un evento en el calendario se muestra pero a mi no me sale (Mauro confirmo que a él si se le muestra así que será cosa de la BD supongo).
 Hay que tocar el modal de los eventos donde el calendario.
-Por algún motivo en el calendario no se muestra ni el favicon ni la imagen del logo a la izquierda del navbar.
+Por algún motivo en el calendario no se muestra ni el favicon ni la imagen del logo a la izquierda del navbar. HECHO
 El simbolito de correo por el de bocadillo de dialogo (Mauro lo cambia).
 En Chats que el nombre del chat sea el que pone el usuario al crear.
 En el formulario de Chats el botón de eliminar debería estar a la derecha del usuario recién introducido para saber que usuario vas a eliminar.
 
-Eventos: Al unirte a un eventos sale un alert diciendo que te has unido correctamente (cambiarlo para que sea mejor en vez de un alert cutre)
+Eventos: Al unirte a un eventos sale un alert diciendo que te has unido correctamente (cambiarlo para que sea mejor en vez de un alert) HECHO
 Sigo sin ser capaz de dejar el botón inmóvil al final de la página (Mauro te toca)
 El chat del evento no va (al menos en mi base de datos).
 
 Posts: Cambiar los tags (Mauro está en ello)
-Hacer un botón de crear post en vez de tener el formulario en la parte de arriba.
-Hay que cambiar base de datos para que posts solo tengan una reacción.
+Hacer un botón de crear post en vez de tener el formulario en la parte de arriba. HECHO
+Hay que cambiar base de datos para que posts solo tengan una reacción bloqueada (yo lo tengo ya pero hay que ponerla en común).

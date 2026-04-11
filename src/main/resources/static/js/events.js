@@ -1,5 +1,105 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  /* ====== NOTIFICACION ENTRAR / SALIR EVENTO ====== */
+  function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed`;
+    notification.style.cssText = `
+      top: 80px;
+      right: 20px;
+      z-index: 2000;
+      min-width: 300px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: slideIn 0.3s ease forwards;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.style.animation = 'slideOut 0.3s ease forwards';
+      setTimeout(() => notification.remove(), 300);
+    }, 3000);
+  }
+
+  if (!document.getElementById('notificationStyles')) {
+    const style = document.createElement('style');
+    style.id = 'notificationStyles';
+    style.textContent = `
+      @keyframes slideIn {
+        from {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideOut {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  /* ====== CONFIRM MODAL ====== */
+  function showConfirmModal(title, message) {
+    return new Promise((resolve) => {
+      // Create modal container
+      const modal = document.createElement('div');
+      modal.className = 'modal fade';
+      modal.style.zIndex = '9999';
+      modal.innerHTML = `
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">${title}</h5>
+              <button type="button" class="btn-close" onclick="this.closest('.modal').remove()"></button>
+            </div>
+            <div class="modal-body">
+              ${message}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">
+                Cancelar
+              </button>
+              <button type="button" class="btn btn-danger" id="confirmBtn">
+                Sí, salir
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      // Show modal using Bootstrap
+      const bsModal = new bootstrap.Modal(modal);
+      bsModal.show();
+      
+      // Handle confirm button
+      document.getElementById('confirmBtn').addEventListener('click', () => {
+        bsModal.hide();
+        setTimeout(() => {
+          modal.remove();
+          resolve(true);
+        }, 300);
+      });
+      
+      // Handle close
+      modal.addEventListener('hidden.bs.modal', () => {
+        modal.remove();
+        resolve(false);
+      });
+    });
+  }
+
   /* ====== BUSCADOR ====== */
   const searchInput = document.getElementById('eventSearch');
   const eventCards = document.querySelectorAll('.event-card');
@@ -143,16 +243,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const result = await response.json();
         
         if (result.status === 'success') {
-          alert(result.message);
-          location.reload();
+          // Mostrar notificación mejorada
+          showNotification('✓ Te has unido al evento correctamente', 'success');
+          setTimeout(() => location.reload(), 1500);
         } else {
-          alert('Error: ' + result.message);
+          showNotification('Error: ' + result.message, 'error');
           button.disabled = false;
           button.textContent = originalText;
         }
       } catch (error) {
         console.error('Error:', error);
-        alert('Error al unirse al evento');
+        showNotification('Error al unirse al evento', 'error');
         button.disabled = false;
         button.textContent = originalText;
       }
@@ -169,8 +270,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const eventId = button.getAttribute('data-event-id');
       const originalText = button.textContent;
       
-      // Confirmar antes de salir
-      if (!confirm('¿Estás seguro de que quieres salir de este evento?')) {
+      // Confirmar antes de salir con modal personalizado
+      const confirmed = await showConfirmModal(
+        'Salir del evento',
+        '¿Estás seguro de que quieres salir de este evento?'
+      );
+      
+      if (!confirmed) {
         return;
       }
       
@@ -188,16 +294,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const result = await response.json();
         
         if (result.status === 'success') {
-          alert(result.message);
-          location.reload();
+          showNotification('✓ ' + result.message, 'success');
+          setTimeout(() => location.reload(), 1500);
         } else {
-          alert('Error: ' + result.message);
+          showNotification('Error: ' + result.message, 'error');
           button.disabled = false;
           button.textContent = originalText;
         }
       } catch (error) {
         console.error('Error:', error);
-        alert('Error al salir del evento');
+        showNotification('Error al salir del evento', 'error');
         button.disabled = false;
         button.textContent = originalText;
       }
