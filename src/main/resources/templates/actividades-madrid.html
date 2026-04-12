@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Actividades Madrid</title>
+  <link rel="icon" type="image/png" href="/cofifavicon.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/custom.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-5 mb-5">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2>Actividades Culturales</h2>
+      <p class="text-muted mb-0">
+        Fuente: Ayuntamiento de Madrid —
+        <a href="https://datos.madrid.es" target="_blank">datos.madrid.es</a>
+      </p>
+    </div>
+    <div class="position-relative search-box">
+      <i class="bi bi-search"></i>
+      <input class="form-control" placeholder="Buscar actividades" id="actividadSearch">
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="d-flex gap-3 mb-4 flex-wrap">
+
+    <form method="get" action="/actividades-madrid" class="d-flex gap-2 flex-wrap">
+
+      <select name="distrito" class="form-select w-auto"
+              style="background-color:var(--color-accent); color:white;"
+              onchange="this.form.submit()">
+        <option value="">Todos los distritos</option>
+        <option th:each="d : ${distritos}"
+                th:value="${d}"
+                th:text="${d}"
+                th:selected="${d == distritoSeleccionado}">
+        </option>
+      </select>
+
+      <select name="precio" class="form-select w-auto"
+              style="background-color:var(--color-accent); color:white;"
+              onchange="this.form.submit()">
+        <option value="">Precio (todos)</option>
+        <option value="gratuita" th:selected="${precioSeleccionado == 'gratuita'}">Solo gratuitas</option>
+        <option value="precio" th:selected="${precioSeleccionado == 'precio'}">Con precio</option>
+      </select>
+
+      <a href="/actividades-madrid" class="btn btn-outline-secondary">
+        <i class="bi bi-x-circle me-1"></i>Limpiar filtros
+      </a>
+
+    </form>
+
+    <span class="text-muted align-self-center ms-auto">
+      <span th:text="${actividades.size()}"></span> actividades
+    </span>
+
+  </div>
+
+  <!-- ACTIVIDADES -->
+  <div class="activities-section mt-4">
+
+    <div class="row mt-3" th:if="${#lists.isEmpty(actividades)}">
+      <div class="col-12">
+        <div class="alert alert-info">No hay actividades disponibles.</div>
+      </div>
+    </div>
+
+    <!-- CONTENEDOR DE SCROLL -->
+    <div class="scroll-outer mt-3" th:if="${!#lists.isEmpty(actividades)}">
+      <button class="scroll-btn scroll-left" title="Desplazar izquierda" style="display:none;">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+
+      <div class="d-flex flex-nowrap overflow-auto" style="width: 100%;" data-scroll-container>
+        <div class="flex-shrink-0 me-3 actividad-card-wrapper"
+             style="width: 400px;"
+             th:each="act : ${actividades}"
+             th:attr="data-titulo=${act.titulo},
+                      data-distrito=${act.distrito}">
+
+          <div class="card event-card h-100">
+            <div class="card-body d-flex flex-column">
+
+              <!-- Cabecera con título y badge de precio -->
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h5 class="card-title" th:text="${act.titulo}">Título</h5>
+                <span class="badge bg-success" th:if="${act.gratuita}">Gratis</span>
+                <span class="badge bg-warning text-dark"
+                      th:if="${!act.gratuita && act.precio != null && !act.precio.isBlank()}"
+                      th:text="${act.precio}">
+                </span>
+              </div>
+
+              <!-- Tipo de actividad -->
+              <p class="mb-2" th:if="${act.tipo != null && !act.tipo.isBlank()}">
+                <span class="badge bg-primary" th:text="${act.tipo}"></span>
+              </p>
+
+              <!-- Descripción -->
+              <div class="description-container mb-2">
+                <p class="card-text text-muted mb-0"
+                   th:text="${act.descripcion != null && act.descripcion.length() > 150}
+                             ? ${act.descripcion.substring(0, 150)} + '...'
+                             : ${act.descripcion}">
+                </p>
+              </div>
+
+              <!-- Fecha -->
+              <p class="mb-1 mt-2" th:if="${act.fechaInicio != null}">
+                <strong><i class="bi bi-calendar3 me-1"></i>Fecha:</strong>
+                <span th:text="${act.fechaInicio}"></span>
+                <span th:if="${act.fechaFin != null && act.fechaFin != act.fechaInicio}">
+                  → <span th:text="${act.fechaFin}"></span>
+                </span>
+              </p>
+
+              <!-- Hora -->
+              <p class="mb-1" th:if="${act.hora != null && !act.hora.isBlank()}">
+                <strong><i class="bi bi-clock me-1"></i>Hora:</strong>
+                <span th:text="${act.hora}"></span> h
+              </p>
+
+              <!-- Lugar -->
+              <p class="mb-1" th:if="${act.lugar != null && !act.lugar.isBlank()}">
+                <strong><i class="bi bi-geo-alt me-1"></i>Lugar:</strong>
+                <span th:text="${act.lugar}"></span>
+              </p>
+
+              <!-- Dirección -->
+              <p class="mb-1" th:if="${act.direccion != null && !act.direccion.isBlank()}">
+                <strong><i class="bi bi-map me-1"></i>Dirección:</strong>
+                <span th:text="${act.direccion}"></span>
+              </p>
+
+              <!-- Distrito -->
+              <p class="mb-0" th:if="${act.distrito != null && !act.distrito.isBlank()}">
+                <strong><i class="bi bi-building me-1"></i>Distrito:</strong>
+                <span th:text="${act.distrito}"></span>
+                <span th:if="${act.barrio != null && !act.barrio.isBlank()}">
+                  · <span th:text="${act.barrio}"></span>
+                </span>
+              </p>
+
+              <!-- Botón más información -->
+              <div class="mt-auto pt-3" th:if="${act.urlInfo != null && !act.urlInfo.isBlank()}">
+                <a th:href="${act.urlInfo}"
+                   target="_blank"
+                   class="btn btn-outline-primary btn-sm w-100">
+                  <i class="bi bi-box-arrow-up-right me-1"></i>
+                  Más información
+                </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="scroll-btn scroll-right" title="Desplazar derecha">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/theme.js}"></script>
+<script th:src="@{/js/auth.js}"></script>
+<script>
+  // Buscador
+  document.getElementById('actividadSearch').addEventListener('input', function() {
+    const query = this.value.toLowerCase();
+    document.querySelectorAll('.actividad-card-wrapper').forEach(wrapper => {
+      const titulo = wrapper.getAttribute('data-titulo').toLowerCase();
+      const distrito = (wrapper.getAttribute('data-distrito') || '').toLowerCase();
+      wrapper.style.display = (titulo.includes(query) || distrito.includes(query))
+          ? 'block' : 'none';
+    });
+  });
+
+  // Scroll horizontal
+  document.querySelectorAll('.scroll-outer').forEach(scrollOuter => {
+    const leftBtn = scrollOuter.querySelector('.scroll-left');
+    const rightBtn = scrollOuter.querySelector('.scroll-right');
+    const container = scrollOuter.querySelector('[data-scroll-container]');
+
+    if (leftBtn && rightBtn && container) {
+      const scrollDistance = 400;
+      leftBtn.addEventListener('click', () =>
+        container.scrollBy({ left: -scrollDistance, behavior: 'smooth' }));
+      rightBtn.addEventListener('click', () =>
+        container.scrollBy({ left: scrollDistance, behavior: 'smooth' }));
+
+      const updateButtons = () => {
+        leftBtn.style.display = container.scrollLeft > 0 ? 'flex' : 'none';
+        rightBtn.style.display =
+          container.scrollLeft < container.scrollWidth - container.clientWidth
+              ? 'flex' : 'none';
+      };
+      container.addEventListener('scroll', updateButtons);
+      window.addEventListener('resize', updateButtons);
+      updateButtons();
+    }
+  });
+</script>
+
+</body>
+</html>
