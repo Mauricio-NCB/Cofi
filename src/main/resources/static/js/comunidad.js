@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
             formData.append('title', document.getElementById('postTitle').value);
             formData.append('imageUrl', document.getElementById('postImageUrl').value);
             formData.append('content', document.getElementById('postContent').value);
-            formData.append('tags', document.getElementById('postTags').value);
+            formData.append('tags', Array.from(selectedTags).join(","));
             
             const submitBtn = document.getElementById('submitPostBtn');
             const originalText = submitBtn.textContent;
@@ -75,6 +75,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (response.ok) {
                     showNotification('✓ Post publicado correctamente', 'success');
                     createPostForm.reset();
+                    selectedTags.clear();
+                    renderTags();
                     toggleCreatePostForm();
                     
                     // Recargar posts después de 1 segundo
@@ -129,7 +131,62 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // listener para añadir tag con Enter
+    const tagInput = document.getElementById("tagInput");
+    if (tagInput) {
+        tagInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                addTag();
+            }
+        });
+    }
+
+
 });
+
+/* ====== GESTIÓN DE TAGS ====== */
+const selectedTags = new Set();
+
+function addTag() {
+    const input = document.getElementById("tagInput");
+    const tag = input.value.trim().toLowerCase();
+
+    if (!tag) return;
+
+    if (selectedTags.size >= 3) {
+        alert("Máximo 3 tags permitidos");
+        return;
+    }
+
+    if (selectedTags.has(tag)) {
+        alert("Este tag ya está añadido");
+        return;
+    }
+
+    selectedTags.add(tag);
+    renderTags();
+    input.value = "";
+}
+
+function removeTag(tag) {
+    selectedTags.delete(tag);
+    renderTags();
+}
+
+function renderTags() {
+    const container = document.getElementById("tagsContainer");
+    container.innerHTML = "";
+    selectedTags.forEach(tag => {
+        const card = document.createElement("div");
+        card.className = "tag-card";
+        card.innerHTML = `
+            <span>${tag}</span>
+            <span class="remove-tag" onclick="removeTag('${tag}')">✕</span>
+        `;
+        container.appendChild(card);
+    });
+}
 
 function openPostModal(card) {
     const title = card.dataset.title || "";
