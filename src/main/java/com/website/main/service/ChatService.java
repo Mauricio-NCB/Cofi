@@ -86,4 +86,8 @@ public class ChatService {
         
         return chats.stream().map(chatMapper::toDTO).toList();
     }
+
+    public boolean userExists(String name, String lastname) {
+        return userRepository.findByNameAndLastname(name, lastname).isPresent();
+    }
 }

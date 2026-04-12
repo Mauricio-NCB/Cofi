@@ -20,15 +20,61 @@
 
     <script>
         async function login() {
+            const name = document.getElementById("name").value.trim();
+            const lastname = document.getElementById("lastname").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const errorDiv = document.getElementById("loginError");
+
+            // Validar campos obligatorios
+            if (!name) {
+                errorDiv.classList.remove("d-none");
+                errorDiv.textContent = "Se requiere nombre";
+                return;
+            }
+
+            if (!lastname) {
+                errorDiv.classList.remove("d-none");
+                errorDiv.textContent = "Se requiere apellido";
+                return;
+            }
+
+            if (!password) {
+                errorDiv.classList.remove("d-none");
+                errorDiv.textContent = "Se requiere contraseña";
+                return;
+            }
+
+            // Verificar si el usuario existe
+            const userExists = await fetch(`/auth/check-user`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: name,
+                    lastName: lastname
+                })
+            }).then(res => res.json())
+              .catch(err => {
+                  console.error('Error checking user:', err);
+                  return false;
+            });
+
+            if (!userExists) {
+                errorDiv.classList.remove("d-none");
+                errorDiv.textContent = "Usuario no existe";
+                return;
+            }
+
+            // Intentar login
             const res = await fetch("/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    name: document.getElementById("name").value,
-                    lastname: document.getElementById("lastname").value,
-                    password: document.getElementById("password").value
+                    name: name,
+                    lastname: lastname,
+                    password: password
                 })
             });
+
             if (res.ok) {
                 const data = await res.json();
 
@@ -41,8 +87,8 @@
                 window.location.href = "/";
   
             } else {
-                document.getElementById("loginError").classList.remove("d-none");
-                document.getElementById("loginError").textContent = "Nombre, apellido o contraseña incorrectos";
+                errorDiv.classList.remove("d-none");
+                errorDiv.textContent = "Contraseña incorrecta";
             }
         }
     </script>

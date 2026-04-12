@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.website.main.dto.User.AuthResponseDTO;
 import com.website.main.dto.User.UserLoginDTO;
+import com.website.main.dto.User.UserParticipantDTO;
 import com.website.main.dto.User.UserRegisterDTO;
 import com.website.main.dto.User.UserResponseDTO;
 import com.website.main.service.UserService;
@@ -53,6 +54,12 @@ public class UserController {
     public AuthResponseDTO login(@RequestBody UserLoginDTO userDTO) {
 
         return userService.login(userDTO);
+    }
+
+    @ResponseBody
+    @PostMapping("/check-user")
+    public boolean checkUser(@RequestBody UserParticipantDTO participantDTO) {
+        return userService.userExists(participantDTO.getName(), participantDTO.getLastName());
     }
 
     @ResponseBody

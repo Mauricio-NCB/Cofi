@@ -10,6 +10,7 @@ import com.website.main.dto.Chat.ChatCreateDTO;
 import com.website.main.dto.Chat.ChatResponseDTO;
 import com.website.main.dto.Message.MessageCreateDTO;
 import com.website.main.dto.Message.MessageResponseDTO;
+import com.website.main.dto.User.UserParticipantDTO;
 import com.website.main.service.ChatService;
 import com.website.main.service.MessageService;
 
@@ -97,6 +98,12 @@ public class ChatController {
                 .getPrincipal();
 
         return messageService.sendMessage(chatId, userId, messageDTO);
+    }
+
+    @PostMapping("/verify-user")
+    @ResponseBody
+    public boolean verifyUser(@RequestBody UserParticipantDTO participantDTO) {
+        return chatService.userExists(participantDTO.getName(), participantDTO.getLastName());
     }
 
     @PostMapping("/crear")

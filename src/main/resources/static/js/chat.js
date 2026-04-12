@@ -121,6 +121,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.createChat = async function() {
+    // Validar nombre del chat
+    const chatName = document.getElementById('chatName').value.trim();
+    if (!chatName) {
+      showNotification('❌ Debes escribir el nombre del chat', 'error');
+      return;
+    }
+
     const rows = document.querySelectorAll('.participant-row');
     const participants = [];
 
@@ -137,11 +144,42 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // Verifica que todos los participantes existen
+    let allExist = true;
+    let notFoundParticipants = [];
+
+    for (const participant of participants) {
+      const exists = await fetch(`/chat/verify-user`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: participant.name,
+          lastName: participant.lastName
+        })
+      })
+        .then(res => res.json())
+        .catch(err => {
+          console.error('Error verificando usuario:', err);
+          return false;
+        });
+
+      if (!exists) {
+        allExist = false;
+        notFoundParticipants.push(`${participant.name} ${participant.lastName}`);
+      }
+    }
+
+    if (!allExist) {
+      const notFound = notFoundParticipants.join(', ');
+      showNotification(`❌ Usuario(s) ${notFound} no existen`, 'error');
+      return;
+    }
+
     const res = await fetch('/chat/crear', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
-        name: document.getElementById('chatName').value,
+        name: chatName,
         participants: participants
        })
     });

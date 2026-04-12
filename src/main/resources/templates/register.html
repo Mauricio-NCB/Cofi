@@ -32,11 +32,34 @@
     </div>
     <script>
         async function register() {
-            const password = document.getElementById("password").value;
+            const name = document.getElementById("name").value.trim();
+            const lastname = document.getElementById("lastname").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const postcode = document.getElementById("postcode").value.trim();
+            const errorDiv = document.getElementById("registerError");
+
+            // Validar campos obligatorios
+            if (!name) {
+                errorDiv.classList.remove("d-none");
+                errorDiv.textContent = "Se requiere Nombre";
+                return;
+            }
+
+            if (!lastname) {
+                errorDiv.classList.remove("d-none");
+                errorDiv.textContent = "Se requiere Apellido";
+                return;
+            }
 
             if (password.length < 3) {
-                document.getElementById("registerError").classList.remove("d-none");
-                document.getElementById("registerError").textContent = "La contraseña debe tener al menos 3 caracteres";
+                errorDiv.classList.remove("d-none");
+                errorDiv.textContent = "La contraseña debe tener al menos 3 caracteres";
+                return;
+            }
+
+            if (!postcode) {
+                errorDiv.classList.remove("d-none");
+                errorDiv.textContent = "Se requiere código postal";
                 return;
             }
 
@@ -44,10 +67,10 @@
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    name: document.getElementById("name").value,
-                    lastname: document.getElementById("lastname").value,
+                    name: name,
+                    lastname: lastname,
                     password: password,
-                    postcode: document.getElementById("postcode").value,
+                    postcode: postcode,
                     categoryNames: Array.from(selectedCategories)
                 })
             });
@@ -55,8 +78,8 @@
             if (res.ok) {
                 window.location.href = "/auth/login";
             } else {
-                document.getElementById("registerError").classList.remove("d-none");
-                document.getElementById("registerError").textContent = "Ese nombre y apellido ya están registrados";
+                errorDiv.classList.remove("d-none");
+                errorDiv.textContent = "Nombre y Apellido ya registrados";
             }
         }
 

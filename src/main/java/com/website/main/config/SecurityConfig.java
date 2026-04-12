@@ -42,7 +42,8 @@ public class SecurityConfig {
                     "/eventos",
                     "/comunidad",
                     "/about", "/terminos", 
-                    "/auth/login", "/auth/register", "/auth/refresh",
+                    "/auth/login", "/auth/register", "/auth/refresh", "/auth/check-user",
+                    "/chat/verify-user",
                     "/api/categories",
                     "/css/**", "/js/**", "/images/**")
                 .permitAll()

@@ -152,4 +152,8 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
+    public boolean userExists(String name, String lastname) {
+        return userRepository.findByNameAndLastname(name, lastname).isPresent();
+    }
+
 }
