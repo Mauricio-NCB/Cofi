@@ -57,18 +57,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const modal = document.createElement('div');
       modal.className = 'modal fade';
       modal.style.zIndex = '9999';
+      modal.id = 'confirmationModal';
       modal.innerHTML = `
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">${title}</h5>
-              <button type="button" class="btn-close" onclick="this.closest('.modal').remove()"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
               ${message}
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                 Cancelar
               </button>
               <button type="button" class="btn btn-danger" id="confirmBtn">
@@ -83,18 +84,19 @@ document.addEventListener('DOMContentLoaded', () => {
       const bsModal = new bootstrap.Modal(modal);
       bsModal.show();
       
-      document.getElementById('confirmBtn').addEventListener('click', () => {
+      const confirmBtn = document.getElementById('confirmBtn');
+      confirmBtn.addEventListener('click', () => {
         resolved = true;
         bsModal.hide();
-        setTimeout(() => {
-          modal.remove();
-          resolve(true);
-        }, 300);
       });
       
       modal.addEventListener('hidden.bs.modal', () => {
+        bsModal.dispose();
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) backdrop.remove();
         modal.remove();
         if (!resolved) resolve(false);
+        if (resolved) resolve(true);
       });
     });
   }
