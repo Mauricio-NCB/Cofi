@@ -49,6 +49,88 @@ document.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(style);
   }
 
+  /* ====== MODAL DE CONFIRMACIÓN ====== */
+  function showConfirmModal(title, message) {
+    return new Promise((resolve) => {
+      let resolved = false;
+
+      const modal = document.createElement('div');
+      modal.className = 'modal fade';
+      modal.style.zIndex = '9999';
+      modal.id = 'confirmationModal';
+      modal.innerHTML = `
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">${title}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              ${message}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancelar
+              </button>
+              <button type="button" class="btn btn-danger" id="confirmBtn">
+                Sí, eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      const bsModal = new bootstrap.Modal(modal);
+      bsModal.show();
+      
+      const confirmBtn = document.getElementById('confirmBtn');
+      confirmBtn.addEventListener('click', () => {
+        resolved = true;
+        bsModal.hide();
+      });
+      
+      modal.addEventListener('hidden.bs.modal', () => {
+        bsModal.dispose();
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) backdrop.remove();
+        modal.remove();
+        if (!resolved) resolve(false);
+        if (resolved) resolve(true);
+      });
+    });
+  }
+
+  /* ====== ELIMINAR CHAT ====== */
+  window.deleteChat = async function(chatId, event) {
+    event.stopPropagation();
+    const confirmed = await showConfirmModal(
+      'Eliminar Chat',
+      '¿Estás seguro de que deseas eliminar este chat?'
+    );
+    
+    if (confirmed) {
+      try {
+        const res = await fetch(`/chat/${chatId}/delete`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (res.ok) {
+          showNotification('✓ Chat eliminado correctamente', 'success');
+          setTimeout(() => {
+            window.location.href = '/chat';
+          }, 1000);
+        } else {
+          showNotification('❌ Error al eliminar el chat', 'error');
+        }
+      } catch (err) {
+        console.error('Error eliminando chat:', err);
+        showNotification('❌ Error al eliminar el chat', 'error');
+      }
+    }
+  }
+
   const socket = new SockJS('/ws');
   const stompClient = Stomp.over(socket);
 
