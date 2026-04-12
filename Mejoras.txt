@@ -7,7 +7,6 @@ Hay que tocar el modal de los eventos donde el calendario.
 
 
 Eventos: 
-Sigo sin ser capaz de dejar el botón inmóvil al final de la página (Mauro te toca)
 
 Posts: 
 Cambiar los tags (Mauro está en ello)
@@ -24,12 +23,13 @@ Se supone que si te unes a un evento en el calendario se muestra pero a mi no me
 En el formulario de Chats el botón de eliminar debería estar a la derecha del usuario recién introducido para saber que usuario vas a eliminar. HECHO
 En Chats que el nombre del chat sea el que pone el usuario al crear. HECHO
 
+
 Eventos:
 Al unirte a un eventos sale un alert diciendo que te has unido correctamente. HECHO
 El color de los botones en personalizar diseño está mal, (Marrón es gris, Morado es blanco). HECHO
 Por algún motivo en el calendario no se muestra ni el favicon ni la imagen del logo a la izquierda del navbar. HECHO
 El chat del evento no va. HECHO
-
+Sigo sin ser capaz de dejar el botón inmóvil al final de la página. HECHO
 
 
 Posts:

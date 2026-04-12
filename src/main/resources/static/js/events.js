@@ -52,6 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ====== CONFIRM MODAL ====== */
   function showConfirmModal(title, message) {
     return new Promise((resolve) => {
+      let resolved = false;
+
       // Create modal container
       const modal = document.createElement('div');
       modal.className = 'modal fade';
@@ -85,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Handle confirm button
       document.getElementById('confirmBtn').addEventListener('click', () => {
+        resolved = true;
         bsModal.hide();
         setTimeout(() => {
           modal.remove();
@@ -95,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Handle close
       modal.addEventListener('hidden.bs.modal', () => {
         modal.remove();
-        resolve(false);
+        if (!resolved) resolve(false);
       });
     });
   }
