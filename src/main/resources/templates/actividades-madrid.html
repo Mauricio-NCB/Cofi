@@ -73,106 +73,152 @@
       </div>
     </div>
 
-    <!-- CONTENEDOR DE SCROLL -->
-    <div class="scroll-outer mt-3" th:if="${!#lists.isEmpty(actividades)}">
-      <button class="scroll-btn scroll-left" title="Desplazar izquierda" style="display:none;">
-        <i class="bi bi-chevron-left"></i>
-      </button>
+    <!-- GRID DE ACTIVIDADES -->
+    <div class="row g-4" th:if="${!#lists.isEmpty(actividades)}">
 
-      <div class="d-flex flex-nowrap overflow-auto" style="width: 100%;" data-scroll-container>
-        <div class="flex-shrink-0 me-3 actividad-card-wrapper"
-             style="width: 400px;"
-             th:each="act : ${actividades}"
+      <div class="col-md-4" th:each="act : ${actividades}">
+
+        <div class="card h-100 shadow-sm actividad-card"
              th:attr="data-titulo=${act.titulo},
-                      data-distrito=${act.distrito}">
+                      data-descripcion=${act.descripcion},
+                      data-tipo=${act.tipo},
+                      data-fecha-inicio=${act.fechaInicio},
+                      data-fecha-fin=${act.fechaFin},
+                      data-hora=${act.hora},
+                      data-lugar=${act.lugar},
+                      data-direccion=${act.direccion},
+                      data-distrito=${act.distrito},
+                      data-barrio=${act.barrio},
+                      data-gratuita=${act.gratuita},
+                      data-precio=${act.precio},
+                      data-url-info=${act.urlInfo}">
+          
+          <div class="card-body d-flex flex-column">
 
-          <div class="card event-card h-100">
-            <div class="card-body d-flex flex-column">
-
-              <!-- Cabecera con título y badge de precio -->
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <h5 class="card-title" th:text="${act.titulo}">Título</h5>
-                <span class="badge bg-success" th:if="${act.gratuita}">Gratis</span>
-                <span class="badge bg-warning text-dark"
-                      th:if="${!act.gratuita && act.precio != null && !act.precio.isBlank()}"
-                      th:text="${act.precio}">
-                </span>
-              </div>
-
-              <!-- Tipo de actividad -->
-              <p class="mb-2" th:if="${act.tipo != null && !act.tipo.isBlank()}">
-                <span class="badge bg-primary" th:text="${act.tipo}"></span>
-              </p>
-
-              <!-- Descripción -->
-              <div class="description-container mb-2">
-                <p class="card-text text-muted mb-0"
-                   th:text="${act.descripcion != null && act.descripcion.length() > 150}
-                             ? ${act.descripcion.substring(0, 150)} + '...'
-                             : ${act.descripcion}">
-                </p>
-              </div>
-
-              <!-- Fecha -->
-              <p class="mb-1 mt-2" th:if="${act.fechaInicio != null}">
-                <strong><i class="bi bi-calendar3 me-1"></i>Fecha:</strong>
-                <span th:text="${act.fechaInicio}"></span>
-                <span th:if="${act.fechaFin != null && act.fechaFin != act.fechaInicio}">
-                  → <span th:text="${act.fechaFin}"></span>
-                </span>
-              </p>
-
-              <!-- Hora -->
-              <p class="mb-1" th:if="${act.hora != null && !act.hora.isBlank()}">
-                <strong><i class="bi bi-clock me-1"></i>Hora:</strong>
-                <span th:text="${act.hora}"></span> h
-              </p>
-
-              <!-- Lugar -->
-              <p class="mb-1" th:if="${act.lugar != null && !act.lugar.isBlank()}">
-                <strong><i class="bi bi-geo-alt me-1"></i>Lugar:</strong>
-                <span th:text="${act.lugar}"></span>
-              </p>
-
-              <!-- Dirección -->
-              <p class="mb-1" th:if="${act.direccion != null && !act.direccion.isBlank()}">
-                <strong><i class="bi bi-map me-1"></i>Dirección:</strong>
-                <span th:text="${act.direccion}"></span>
-              </p>
-
-              <!-- Distrito -->
-              <p class="mb-0" th:if="${act.distrito != null && !act.distrito.isBlank()}">
-                <strong><i class="bi bi-building me-1"></i>Distrito:</strong>
-                <span th:text="${act.distrito}"></span>
-                <span th:if="${act.barrio != null && !act.barrio.isBlank()}">
-                  · <span th:text="${act.barrio}"></span>
-                </span>
-              </p>
-
-              <!-- Botón más información -->
-              <div class="mt-auto pt-3" th:if="${act.urlInfo != null && !act.urlInfo.isBlank()}">
-                <a th:href="${act.urlInfo}"
-                   target="_blank"
-                   class="btn btn-outline-primary btn-sm w-100">
-                  <i class="bi bi-box-arrow-up-right me-1"></i>
-                  Más información
-                </a>
-              </div>
-
+            <!-- Cabecera con título y badge de precio -->
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="card-title" th:text="${act.titulo}">Título</h5>
+              <span class="badge bg-success" th:if="${act.gratuita}">Gratis</span>
+              <span class="badge bg-warning text-dark"
+                    th:if="${!act.gratuita && act.precio != null && !act.precio.isBlank()}"
+                    th:text="${act.precio}">
+              </span>
             </div>
+
+            <!-- Tipo de actividad -->
+            <p class="mb-2" th:if="${act.tipo != null && !act.tipo.isBlank()}">
+              <span class="badge bg-primary" th:text="${act.tipo}"></span>
+            </p>
+
+            <!-- Descripción -->
+            <div class="description-container mb-2">
+              <p class="card-text text-muted mb-0"
+                 th:text="${act.descripcion != null && act.descripcion.length() > 150}
+                           ? ${act.descripcion.substring(0, 150)} + '...'
+                           : ${act.descripcion}">
+              </p>
+            </div>
+
+            <!-- Fecha -->
+            <p class="mb-1 mt-2" th:if="${act.fechaInicio != null}">
+              <strong><i class="bi bi-calendar3 me-1"></i>Fecha:</strong>
+              <span th:text="${act.fechaInicio}"></span>
+              <span th:if="${act.fechaFin != null && act.fechaFin != act.fechaInicio}">
+                → <span th:text="${act.fechaFin}"></span>
+              </span>
+            </p>
+
+            <!-- Hora -->
+            <p class="mb-1" th:if="${act.hora != null && !act.hora.isBlank()}">
+              <strong><i class="bi bi-clock me-1"></i>Hora:</strong>
+              <span th:text="${act.hora}"></span> h
+            </p>
+
+            <!-- Lugar -->
+            <p class="mb-1" th:if="${act.lugar != null && !act.lugar.isBlank()}">
+              <strong><i class="bi bi-geo-alt me-1"></i>Lugar:</strong>
+              <span th:text="${act.lugar}"></span>
+            </p>
+
+            <!-- Dirección -->
+            <p class="mb-1" th:if="${act.direccion != null && !act.direccion.isBlank()}">
+              <strong><i class="bi bi-map me-1"></i>Dirección:</strong>
+              <span th:text="${act.direccion}"></span>
+            </p>
+
+            <!-- Distrito -->
+            <p class="mb-0" th:if="${act.distrito != null && !act.distrito.isBlank()}">
+              <strong><i class="bi bi-building me-1"></i>Distrito:</strong>
+              <span th:text="${act.distrito}"></span>
+              <span th:if="${act.barrio != null && !act.barrio.isBlank()}">
+                · <span th:text="${act.barrio}"></span>
+              </span>
+            </p>
+
           </div>
+
         </div>
+
       </div>
 
-      <button class="scroll-btn scroll-right" title="Desplazar derecha">
-        <i class="bi bi-chevron-right"></i>
-      </button>
     </div>
 
   </div>
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Modal para ver actividad completa -->
+<div class="modal fade" id="actividadModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitulo"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Tipo -->
+        <div id="modalTipo" class="mb-2"></div>
+
+        <!-- Badges de precio -->
+        <div id="modalPrecio" class="mb-3"></div>
+
+        <!-- Descripción -->
+        <p id="modalDescripcion" class="text-muted mb-3"></p>
+
+        <!-- Información de fechas y hora -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <p><strong><i class="bi bi-calendar3 me-1"></i>Fecha:</strong></p>
+            <p id="modalFecha" class="text-muted"></p>
+          </div>
+          <div class="col-md-6">
+            <p><strong><i class="bi bi-clock me-1"></i>Hora:</strong></p>
+            <p id="modalHora" class="text-muted"></p>
+          </div>
+        </div>
+
+        <!-- Ubicación -->
+        <p><strong><i class="bi bi-geo-alt me-1"></i>Lugar:</strong></p>
+        <p id="modalLugar" class="text-muted mb-2"></p>
+
+        <p><strong><i class="bi bi-map me-1"></i>Dirección:</strong></p>
+        <p id="modalDireccion" class="text-muted mb-2"></p>
+
+        <p><strong><i class="bi bi-building me-1"></i>Distrito:</strong></p>
+        <p id="modalDistrito" class="text-muted"></p>
+
+        <!-- Botón de más información -->
+        <div id="modalBotonInfo" class="mt-3"></div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/theme.js}"></script>
@@ -181,38 +227,93 @@
   // Buscador
   document.getElementById('actividadSearch').addEventListener('input', function() {
     const query = this.value.toLowerCase();
-    document.querySelectorAll('.actividad-card-wrapper').forEach(wrapper => {
-      const titulo = wrapper.getAttribute('data-titulo').toLowerCase();
-      const distrito = (wrapper.getAttribute('data-distrito') || '').toLowerCase();
-      wrapper.style.display = (titulo.includes(query) || distrito.includes(query))
-          ? 'block' : 'none';
+    document.querySelectorAll('.row .col-md-4').forEach(col => {
+      const card = col.querySelector('.actividad-card');
+      const titulo = (card.getAttribute('data-titulo') || '').toLowerCase();
+      const distrito = (card.getAttribute('data-distrito') || '').toLowerCase();
+      const descripcion = (card.getAttribute('data-descripcion') || '').toLowerCase();
+      
+      const matches = titulo.includes(query) || distrito.includes(query) || descripcion.includes(query);
+      col.style.display = matches ? 'block' : 'none';
     });
   });
 
-  // Scroll horizontal
-  document.querySelectorAll('.scroll-outer').forEach(scrollOuter => {
-    const leftBtn = scrollOuter.querySelector('.scroll-left');
-    const rightBtn = scrollOuter.querySelector('.scroll-right');
-    const container = scrollOuter.querySelector('[data-scroll-container]');
-
-    if (leftBtn && rightBtn && container) {
-      const scrollDistance = 400;
-      leftBtn.addEventListener('click', () =>
-        container.scrollBy({ left: -scrollDistance, behavior: 'smooth' }));
-      rightBtn.addEventListener('click', () =>
-        container.scrollBy({ left: scrollDistance, behavior: 'smooth' }));
-
-      const updateButtons = () => {
-        leftBtn.style.display = container.scrollLeft > 0 ? 'flex' : 'none';
-        rightBtn.style.display =
-          container.scrollLeft < container.scrollWidth - container.clientWidth
-              ? 'flex' : 'none';
-      };
-      container.addEventListener('scroll', updateButtons);
-      window.addEventListener('resize', updateButtons);
-      updateButtons();
-    }
+  // Click en tarjeta de actividad
+  document.querySelectorAll('.actividad-card').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', function(e) {
+      openActividadModal(this);
+    });
   });
+
+  function openActividadModal(card) {
+    const titulo = card.dataset.titulo || '';
+    const descripcion = card.dataset.descripcion || '';
+    const tipo = card.dataset.tipo || '';
+    const fechaInicio = card.dataset.fechaInicio || '';
+    const fechaFin = card.dataset.fechaFin || '';
+    const hora = card.dataset.hora || '';
+    const lugar = card.dataset.lugar || '';
+    const direccion = card.dataset.direccion || '';
+    const distrito = card.dataset.distrito || '';
+    const barrio = card.dataset.barrio || '';
+    const gratuita = card.dataset.gratuita === 'true';
+    const precio = card.dataset.precio || '';
+    const urlInfo = card.dataset.urlInfo || '';
+
+    // Asignar datos al modal
+    document.getElementById('modalTitulo').textContent = titulo;
+    document.getElementById('modalDescripcion').textContent = descripcion;
+
+    // Tipo
+    if (tipo) {
+      document.getElementById('modalTipo').innerHTML = `<span class="badge bg-primary">${tipo}</span>`;
+    }
+
+    // Precio
+    let precioHtml = '';
+    if (gratuita) {
+      precioHtml = '<span class="badge bg-success">Gratis</span>';
+    } else if (precio) {
+      precioHtml = `<span class="badge bg-warning text-dark">${precio}</span>`;
+    }
+    document.getElementById('modalPrecio').innerHTML = precioHtml;
+
+    // Fechas
+    let fechaText = fechaInicio;
+    if (fechaFin && fechaFin !== fechaInicio) {
+      fechaText += ` → ${fechaFin}`;
+    }
+    document.getElementById('modalFecha').textContent = fechaText || 'No especificada';
+
+    // Hora
+    document.getElementById('modalHora').textContent = hora ? `${hora} h` : 'No especificada';
+
+    // Ubicación
+    document.getElementById('modalLugar').textContent = lugar || 'No especificado';
+    document.getElementById('modalDireccion').textContent = direccion || 'No especificada';
+
+    // Distrito
+    let distritoText = distrito || '';
+    if (barrio) {
+      distritoText += ` · ${barrio}`;
+    }
+    document.getElementById('modalDistrito').textContent = distritoText || 'No especificado';
+
+    // Botón de más información
+    let botonHtml = '';
+    if (urlInfo) {
+      botonHtml = `<a href="${urlInfo}" target="_blank" class="btn btn-outline-primary">
+        <i class="bi bi-box-arrow-up-right me-1"></i>
+        Ver más información
+      </a>`;
+    }
+    document.getElementById('modalBotonInfo').innerHTML = botonHtml;
+
+    // Abrir modal
+    const modal = new bootstrap.Modal(document.getElementById('actividadModal'));
+    modal.show();
+  }
 </script>
 
 </body>
