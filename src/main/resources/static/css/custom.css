@@ -94,9 +94,9 @@ body {
 }
 
 /* Botón crear actividad más grande y responsive */
-.fixed-create-btn {
-  position: fixed;
-  bottom: 30px;
+.create-btn {
+  position: relative;
+  bottom: -30px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
