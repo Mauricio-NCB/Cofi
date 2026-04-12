@@ -111,6 +111,16 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public UserResponseDTO updatePostCode(Integer userId, String postCode) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        user.setPostcode(postCode);
+        User savedUser = userRepository.save(user);
+
+        return userMapper.toDTO(savedUser);
+    }
+
     public AuthResponseDTO refreshToken(String refreshToken) {
         User user = userRepository.findByRefreshToken(refreshToken)
                     .orElseThrow(() -> new RuntimeException("Refresh token inválido"));

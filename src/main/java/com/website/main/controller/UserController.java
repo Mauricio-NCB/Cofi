@@ -11,9 +11,11 @@ import com.website.main.dto.User.UserResponseDTO;
 import com.website.main.service.UserService;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -70,6 +72,18 @@ public class UserController {
             .getPrincipal();
 
         userService.updateUserCategories(userId, categoryNames);
+    }
+
+    @ResponseBody
+    @PutMapping("/update-postcode")
+    public UserResponseDTO updatePostCode(@RequestBody Map<String, String> body) {
+
+        Integer userId = (Integer) SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal();
+
+        return userService.updatePostCode(userId, body.get("postcode"));
     }
 
     @ResponseBody
