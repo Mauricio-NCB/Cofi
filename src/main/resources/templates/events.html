@@ -416,16 +416,13 @@
 
               <div class="mb-3">
                   <label class="form-label">Categoría</label>
-                  <select class="form-select" name="categories" multiple required>
+                  
+                  <div id="categoriesContainer" class="d-flex flex-warp gap-2 mb-4">
+                  </div>
 
-                      <option th:each="cat : ${categorias}"
-                              th:value="${cat.id}"
-                              th:text="${cat.name}">
-                      </option>
-
-                  </select>
+                  <div id="categoriesInputs"></div>
+              
               </div>
-
 
               <button type="submit" class="btn btn-primary">Crear evento</button>
           </form>

@@ -421,3 +421,48 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+const selectedCategories = new Set();
+
+async function loadCategories() {
+    const res = await fetch("/api/categories");
+    const categories = await res.json();
+    const container = document.getElementById("categoriesContainer");
+    const inputsContainer = document.getElementById("categoriesInputs");
+
+    categories.forEach(category => {
+        const card = document.createElement("div");
+        card.className = "category-card";
+        card.textContent = category.name;
+        card.dataset.id = category.id;
+
+        card.addEventListener("click", () => {
+            const id = category.id;
+
+            if (selectedCategories.has(id)) {
+                selectedCategories.delete(id);
+                card.classList.remove("selected");
+
+                // eliminar input
+                const input = document.querySelector(`input[value="${id}"]`);
+                if (input) input.remove();
+
+            } else {
+                selectedCategories.add(id);
+                card.classList.add("selected");
+
+                // crear input oculto
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "categories";
+                input.value = id;
+
+                inputsContainer.appendChild(input);
+            }
+        });
+
+        container.appendChild(card);
+    });
+}
+
+loadCategories();
