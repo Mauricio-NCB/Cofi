@@ -54,13 +54,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addParticipant = function() {
     const div = document.createElement('div');
-    div.className = 'participant-row mb-2';
+    div.className = 'participant-field d-flex flex-column mb-2';
     div.innerHTML = `
-      <input type="text" class="form-control participant-name" placeholder="Nombre" required>
-      <input type="text" class="form-control participant-lastname mt-1" placeholder="Apellido" required>
-      <button type="button" class="btn btn-danger mt-1 remove-participant">Eliminar</button>
+      <div class="participant-row d-flex mb-2">
+        <input type="text" class="form-control me-2 participant-name" placeholder="Nombre" required>
+        <input type="text" class="form-control participant-lastname" placeholder="Apellido" required>
+      </div>
+        <button type="button" class="btn btn-danger remove-participant mt-2 align-self-end">Eliminar</button>
     `;
     document.getElementById('participantsList').appendChild(div);
+    
+    // Agregar evento al botón eliminar
+    const removeBtn = div.querySelector('.remove-participant');
+    removeBtn.addEventListener('click', function() {
+      div.remove();
+    });
   }
 
   window.createChat = async function() {
@@ -99,8 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   chatModal.addEventListener('show.bs.modal', (event) => {
     const trigger = event.relatedTarget;
+    
     currentChatId = trigger.getAttribute('data-id');
-    document.getElementById('chatModalLabel').textContent = 'Chat Nº ' + currentChatId;
+    
+    const chatName = trigger.getAttribute('data-name')
+    document.getElementById('chatModalLabel').textContent = chatName;
     loadMessages(currentChatId);
     suscribeToChat(currentChatId);
   });

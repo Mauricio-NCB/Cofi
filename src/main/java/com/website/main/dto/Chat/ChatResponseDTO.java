@@ -12,4 +12,5 @@ public class ChatResponseDTO {
     private Integer id;
     private String name;
     private List<String> participantNames;
+    private Integer eventId;
 }

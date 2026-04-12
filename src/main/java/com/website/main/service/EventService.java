@@ -99,7 +99,7 @@ public class EventService {
         Event savedEvent = eventRepository.save(newEvent);
 
         Chat eventChat = new Chat();
-        eventChat.setName("evento" + savedEvent.getId());
+        eventChat.setName("Chat del evento '" + savedEvent.getTitle() + "'");
         eventChat.setUsers(new ArrayList<>(List.of(user)));
 
         Chat savedChat = chatRepository.save(eventChat);
@@ -127,13 +127,6 @@ public class EventService {
         updateEventState(event);  // Actualizar estado dinámicamente
         return eventMapper.toDTOWithUserId(event, userId);
     }
-    
-    public List<EventResponseDTO> findByUserId(Integer userId) {
-        return eventRepository.findByUserId(userId).stream()
-                .peek(this::updateEventState)
-                .map(eventMapper::toDTO)
-                .toList();
-    }
 
     public List<EventResponseDTO> findByCategoryId(Integer categoryId) {
         return eventRepository.findByCategories_Id(categoryId).stream()
@@ -150,7 +143,7 @@ public class EventService {
     }
 
     public List<EventCalendarDTO> findByUserIdForCalendar(Integer userId) {
-        return eventRepository.findByUserId(userId).stream()
+        return eventRepository.findByParticipants_Id(userId).stream()
                 .peek(this::updateEventState)
                 .map(eventMapper::toCalendarDTO)
                 .toList();

@@ -3,7 +3,6 @@ package com.website.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -392,7 +391,7 @@ public class EventServiceTest {
             calendarDTO.setId(1);
             calendarDTO.setTitle("Test Event");
 
-            when(eventRepository.findByUserId(1)).thenReturn(List.of(event));
+            when(eventRepository.findByParticipants_Id(1)).thenReturn(List.of(event));
             when(eventMapper.toCalendarDTO(any(Event.class))).thenReturn(calendarDTO);
 
             List<EventCalendarDTO> result = eventService.findByUserIdForCalendar(1);

@@ -23,18 +23,21 @@
   <div class="container mt-4">
     <h1 class="mb-4">Chats disponibles</h1>
 
+    <!-- Chats del usuario-->
+    <h2 class="mb-3">Chats del usuario</h2>
     <div class="list-chat-group" 
-      th:each="chat : ${chats}">
+      th:each="chat : ${chats}" th:if="${chat.eventId == null}">  
 
       <div class="card h-100 mb-3 chat-card"
           data-bs-toggle="modal"
           data-bs-target="#chatModal"
-          th:attr="data-id=${chat.id}">
+          th:attr="data-id=${chat.id},
+                   data-name=${chat.name}">
 
           <div class="chat-card-body d-flex align-items-center">
 
-            <h5 class="chat-id"
-              th:text="'Chat Nº ' + ${chat.id}"></h5>
+            <h5 class="chat-name"
+              th:text="${chat.name}"></h5>
 
             <!-- Botón para eliminar -->
             <form th:action="@{'/chat/' + ${chat.id} + '/delete'}" method="post" style="display: inline;">
@@ -45,6 +48,33 @@
       </div>
 
     </div>
+
+    <!-- Chats de sus eventos -->
+    <h2 class="mb-3">Chats de eventos</h2>
+    <div class="list-chat-events"
+      th:each="chat : ${chats}" th:if="${chat.eventId != null}">
+      
+      <div class="card h-100 mb-3 chat-card"
+          data-bs-toggle="modal"
+          data-bs-target="#chatModal"
+          th:attr="data-id=${chat.id},
+                   data-name=${chat.name}">
+
+          <div class="chat-card-body d-flex align-items-center">
+
+            <h5 class="chat-name"
+              th:text="${chat.name}"></h5>
+
+            <!-- Botón para eliminar -->
+            <form th:action="@{'/chat/' + ${chat.id} + '/delete'}" method="post" style="display: inline;">
+              <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este chat?')">Eliminar</button>
+            </form>
+
+          </div>
+
+      </div>
+    </div>
+
 
     <!-- Botón para crear un nuevo chat -->
     <div class="d-grid">

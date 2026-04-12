@@ -41,6 +41,7 @@ public class Event {
     private String postcode;
 
     // valores posibles: 'cancelado','terminado','proximo','en_curso'
+    @Column(name = "state", nullable = false)
     private String state;
 
     @Column(name = "chat_id")
