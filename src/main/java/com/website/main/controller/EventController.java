@@ -72,9 +72,13 @@ public class EventController {
         
         // Si el usuario tiene postcode, obtener eventos cercanos
         if (userPostcode != null && !userPostcode.isEmpty()) {
-            eventsNearby = userId != null ? 
-                eventService.findByPostcodeWithUserInfo(userPostcode, userId) :
-                eventService.findByPostcode(userPostcode);
+            if (userId != null) {
+                // Si el usuario tiene categorías, mostrar eventos cercanos que coincidan con sus categorías
+                eventsNearby = eventService.findByPostcodeAndUserCategories(userPostcode, userId);
+            } else {
+                // Si el usuario no tiene categorías, mostrar todos los eventos cercanos
+                eventsNearby = eventService.findByPostcode(userPostcode);
+            }
         }
         
         model.addAttribute("categoriaSeleccionada", categoria);

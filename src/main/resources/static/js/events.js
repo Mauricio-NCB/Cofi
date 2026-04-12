@@ -108,28 +108,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     eventCards.forEach(card => {
       const title = card.querySelector('.card-title').textContent.toLowerCase();
-      const description = card.querySelector('.description-container p')
-        .textContent.toLowerCase();
 
       const wrapper = card.closest('.flex-shrink-0');
 
-      if (title.includes(query) || description.includes(query)) {
+      if (title.includes(query)) {
         wrapper.style.display = 'block';
       } else {
         wrapper.style.display = 'none';
       }
     });
-  });
-
-  // Limitar descripción a 50 caracteres en la portada (rompe la card si es muy larga)
-  document.querySelectorAll('.description-container p').forEach(descElement => {
-    const fullText = descElement.textContent;
-    
-    if (fullText.length > 50) {
-      const truncated = fullText.substring(0, 50) + '...';
-      descElement.textContent = truncated;
-      descElement.title = fullText; // Mostrar completo al pasar el ratón
-    }
   });
 
   /* ====== VER EVENTO ====== */
