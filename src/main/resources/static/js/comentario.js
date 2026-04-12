@@ -1,5 +1,54 @@
 document.addEventListener("DOMContentLoaded", function(){
 
+    /* ====== NOTIFICACIONES ====== */
+    function showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed`;
+        notification.style.cssText = `
+          top: 80px;
+          right: 20px;
+          z-index: 2000;
+          min-width: 300px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          animation: slideIn 0.3s ease forwards;
+        `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease forwards';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    if (!document.getElementById('notificationStyles')) {
+        const style = document.createElement('style');
+        style.id = 'notificationStyles';
+        style.textContent = `
+          @keyframes slideIn {
+            from {
+              transform: translateX(400px);
+              opacity: 0;
+            }
+            to {
+              transform: translateX(0);
+              opacity: 1;
+            }
+          }
+          @keyframes slideOut {
+            from {
+              transform: translateX(0);
+              opacity: 1;
+            }
+            to {
+              transform: translateX(400px);
+              opacity: 0;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+    }
+
     const form = document.getElementById("commentForm");
 
     if(!form) return;
@@ -10,15 +59,29 @@ document.addEventListener("DOMContentLoaded", function(){
 
         const postId = document.getElementById("modalPostId").value;
         const content = document.getElementById("commentContent").value;
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
 
-        await fetch("/comunidad/comentario", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ postId: parseInt(postId), content: content, parentId: null })
-        });
+        try {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
 
-        form.reset();
-        cargarComentarios(postId);
+            await fetch("/comunidad/comentario", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ postId: parseInt(postId), content: content, parentId: null })
+            });
+
+            form.reset();
+            cargarComentarios(postId);
+            showNotification('✓ Comentario publicado correctamente', 'success');
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('❌ Error al publicar comentario', 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
     });
 
 });

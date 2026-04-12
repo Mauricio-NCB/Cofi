@@ -3,15 +3,11 @@ MEJORAS SIN HACER:
 Usuarios: 
 
 Si no especificar Código Postal al registrarte luego no puedes cambiarlo en tu información personal (se debería).  
-Hay que tocar el modal de los eventos donde el calendario.
-
 
 Eventos: 
 
 Posts: 
 Cambiar los tags (Mauro está en ello)
-
-
 
 
 MEJORAS YA HECHAS:
@@ -30,6 +26,7 @@ El color de los botones en personalizar diseño está mal, (Marrón es gris, Mor
 Por algún motivo en el calendario no se muestra ni el favicon ni la imagen del logo a la izquierda del navbar. HECHO
 El chat del evento no va. HECHO
 Sigo sin ser capaz de dejar el botón inmóvil al final de la página. HECHO
+Hay que tocar el modal de los eventos donde el calendario. HECHO
 
 
 Posts:

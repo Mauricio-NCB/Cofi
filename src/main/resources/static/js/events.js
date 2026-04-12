@@ -49,12 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(style);
   }
 
-  /* ====== CONFIRM MODAL ====== */
+  /* ====== MODAL DE CONFIRMACIÓN ====== */
   function showConfirmModal(title, message) {
     return new Promise((resolve) => {
       let resolved = false;
 
-      // Create modal container
       const modal = document.createElement('div');
       modal.className = 'modal fade';
       modal.style.zIndex = '9999';
@@ -81,11 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       document.body.appendChild(modal);
       
-      // Show modal using Bootstrap
       const bsModal = new bootstrap.Modal(modal);
       bsModal.show();
       
-      // Handle confirm button
       document.getElementById('confirmBtn').addEventListener('click', () => {
         resolved = true;
         bsModal.hide();
@@ -95,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300);
       });
       
-      // Handle close
       modal.addEventListener('hidden.bs.modal', () => {
         modal.remove();
         if (!resolved) resolve(false);
@@ -123,6 +119,17 @@ document.addEventListener('DOMContentLoaded', () => {
         wrapper.style.display = 'none';
       }
     });
+  });
+
+  // Limitar descripción a 50 caracteres en la portada (rompe la card si es muy larga)
+  document.querySelectorAll('.description-container p').forEach(descElement => {
+    const fullText = descElement.textContent;
+    
+    if (fullText.length > 50) {
+      const truncated = fullText.substring(0, 50) + '...';
+      descElement.textContent = truncated;
+      descElement.title = fullText; // Mostrar completo al pasar el ratón
+    }
   });
 
   /* ====== VER EVENTO ====== */

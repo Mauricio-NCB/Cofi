@@ -1,5 +1,105 @@
 document.addEventListener("DOMContentLoaded", function () {
 
+    /* ====== NOTIFICACIONES ====== */
+    function showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed`;
+        notification.style.cssText = `
+          top: 80px;
+          right: 20px;
+          z-index: 2000;
+          min-width: 300px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          animation: slideIn 0.3s ease forwards;
+        `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease forwards';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    if (!document.getElementById('notificationStyles')) {
+        const style = document.createElement('style');
+        style.id = 'notificationStyles';
+        style.textContent = `
+          @keyframes slideIn {
+            from {
+              transform: translateX(400px);
+              opacity: 0;
+            }
+            to {
+              transform: translateX(0);
+              opacity: 1;
+            }
+          }
+          @keyframes slideOut {
+            from {
+              transform: translateX(0);
+              opacity: 1;
+            }
+            to {
+              transform: translateX(400px);
+              opacity: 0;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+    }
+
+    /* ====== FORMULARIO DE CREACIÓN DE POST ====== */
+    const createPostForm = document.getElementById('createPostFormElement');
+    if (createPostForm) {
+        createPostForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('title', document.getElementById('postTitle').value);
+            formData.append('imageUrl', document.getElementById('postImageUrl').value);
+            formData.append('content', document.getElementById('postContent').value);
+            formData.append('tags', document.getElementById('postTags').value);
+            
+            const submitBtn = document.getElementById('submitPostBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Publicando...';
+            
+            try {
+                const response = await fetch('/comunidad/crear', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    showNotification('✓ Post publicado correctamente', 'success');
+                    createPostForm.reset();
+                    toggleCreatePostForm();
+                    
+                    // Recargar posts después de 1 segundo
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    const text = await response.text();
+                    if (text.includes('url')) {
+                        showNotification('❌ La URL debe comenzar con http:// o https://', 'error');
+                    } else if (text.includes('url_long')) {
+                        showNotification('❌ La URL es muy larga (máx 100 caracteres)', 'error');
+                    } else {
+                        showNotification('❌ Error al publicar el post', 'error');
+                    }
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('❌ Error de conexión', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+    }
+
     document.querySelectorAll('.post-card').forEach(card => {
         const postId = card.dataset.id;
         loadPostReactions(postId);

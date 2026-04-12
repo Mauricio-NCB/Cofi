@@ -1,5 +1,54 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  /* ====== NOTIFICACIONES ====== */
+  function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed`;
+    notification.style.cssText = `
+      top: 80px;
+      right: 20px;
+      z-index: 2000;
+      min-width: 300px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: slideIn 0.3s ease forwards;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.style.animation = 'slideOut 0.3s ease forwards';
+      setTimeout(() => notification.remove(), 300);
+    }, 3000);
+  }
+
+  if (!document.getElementById('notificationStyles')) {
+    const style = document.createElement('style');
+    style.id = 'notificationStyles';
+    style.textContent = `
+      @keyframes slideIn {
+        from {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideOut {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
   const socket = new SockJS('/ws');
   const stompClient = Stomp.over(socket);
 
@@ -84,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (participants.length == 0) {
-      alert('Agrega al menos un participante');
+      showNotification('❌ Debes agregar al menos un participante', 'error');
       return;
     }
 
@@ -98,9 +147,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (res.ok) {
-      window.location.href = '/chat';
+      showNotification('✓ Chat creado correctamente', 'success');
+      setTimeout(() => {
+        window.location.href = '/chat';
+      }, 1000);
     } else {
-      alert('Error al crear el chat');    
+      showNotification('❌ Error al crear el chat', 'error');    
     }
 
   }

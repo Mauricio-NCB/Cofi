@@ -42,40 +42,39 @@
 
     <div id="createPostForm" class="card shadow-sm mb-5" style="display: none;">
         <div class="card-body">
-            <form th:action="@{/comunidad/crear}" method="post">
+            <form id="createPostFormElement">
 
-                <div th:if="${param.error} == 'url'" class="alert alert-danger">
-                    La URL de la imagen debe comenzar con <code>http://</code> o <code>https://</code>.
-                </div>
-                <div th:if="${param.error} == 'url_long'" class="alert alert-danger">
-                    La URL de la imagen es demasiado larga (máx 100 caracteres).
-                </div>
+                <div id="formErrors"></div>
 
                 <input type="text"
+                       id="postTitle"
                        name="title"
                        class="form-control mb-2"
                        placeholder="Título del post"
                        required>
 
                 <input type="text"
+                       id="postImageUrl"
                        name="imageUrl"
                        class="form-control mb-2"
                        placeholder="(OPCIONAL) URL de la imagen"
                        maxlength="100">
 
-                <textarea name="content"
+                <textarea id="postContent"
+                          name="content"
                           class="form-control mb-3"
                           rows="3"
                           placeholder="¿Qué quieres compartir?"
                           required></textarea>
 
                 <input type="text"
+                       id="postTags"
                        name="tags"
                        class="form-control mb-2"
                        placeholder="Tags (máx 3) separados por coma">
 
                 <div class="text-end">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" id="submitPostBtn">
                         Publicar
                     </button>
                     <button type="button" class="btn btn-secondary" onclick="toggleCreatePostForm()">
