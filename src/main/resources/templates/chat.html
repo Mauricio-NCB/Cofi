@@ -32,8 +32,6 @@
           <div class="col-md-6" th:each="chat : ${chats}" th:if="${chat.eventId == null}">
             <div class="card h-100 chat-card border-0 shadow-sm" 
                  style="cursor: pointer; transition: transform 0.2s ease;"
-                 data-bs-toggle="modal"
-                 data-bs-target="#chatModal"
                  th:attr="data-id=${chat.id},
                           data-name=${chat.name}">
 
@@ -45,7 +43,8 @@
 
                 <!-- Botón para eliminar -->
                 <button class="btn btn-danger btn-sm" 
-                        th:onclick="|deleteChat(${chat.id}, event)|">
+                        th:onclick="|deleteChat(${chat.id}, event)|"
+                        onclick="event.stopPropagation()">
                   <i class="bi bi-trash"></i>
                 </button>
               </div>
@@ -64,8 +63,6 @@
           <div class="col-md-6" th:each="chat : ${chats}" th:if="${chat.eventId != null}">
             <div class="card h-100 chat-card border-0 shadow-sm" 
                  style="cursor: pointer; transition: transform 0.2s ease;"
-                 data-bs-toggle="modal"
-                 data-bs-target="#chatModal"
                  th:attr="data-id=${chat.id},
                           data-name=${chat.name}">
 
@@ -75,11 +72,6 @@
                   <small class="text-muted">Pulsa para abrir</small>
                 </div>
 
-                <!-- Botón para eliminar -->
-                <button class="btn btn-danger btn-sm" 
-                        th:onclick="|deleteChat(${chat.id}, event)|">
-                  <i class="bi bi-trash"></i>
-                </button>
               </div>
             </div>
           </div>
