@@ -165,6 +165,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const messageForm = document.getElementById('messageForm');
   const messageInput = document.getElementById('messageInput');
 
+  /* ====== MANEJAR CLICS EN TARJETAS DE CHAT ====== */
+  document.addEventListener('click', (e) => {
+    // Verificar si el clic fue en una tarjeta de chat
+    const chatCard = e.target.closest('.chat-card');
+    if (!chatCard) return;
+
+    // Si el clic fue en un botón o dentro de un botón, ignorar
+    if (e.target.closest('button')) return;
+
+    // Si el clic fue en el área segura, abrir el modal
+    const chatId = chatCard.getAttribute('data-id');
+    const chatName = chatCard.getAttribute('data-name');
+    
+    document.getElementById('chatModalLabel').textContent = chatName;
+    loadMessages(chatId);
+    suscribeToChat(chatId);
+    
+    const bsModal = new bootstrap.Modal(chatModal);
+    bsModal.show();
+  });
+
   async function loadMessages(chatId) {
     chatMessages.innerHTML = '';
     const res = await fetch(`/chat/${chatId}/messages`);

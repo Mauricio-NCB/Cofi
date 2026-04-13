@@ -291,6 +291,23 @@ body {
   transform: scale(1.1);
 }
 
+/* Estilos para tags */
+.tag-card {
+  border-radius: 20px;
+}
+
+.remove-tag {
+  cursor: pointer;
+  margin-left: 6px;
+  font-weight: bold;
+  transition: opacity 0.2s ease;
+  display: inline-block;
+}
+
+.remove-tag:hover {
+  opacity: 0.8;
+}
+
 .scroll-btn:active {
   transform: scale(0.95);
 }

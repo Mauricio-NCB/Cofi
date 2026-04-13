@@ -179,13 +179,16 @@ function renderTags() {
     container.innerHTML = "";
     selectedTags.forEach(tag => {
         const card = document.createElement("div");
-        card.className = "badge bg-primary me-1";
+        card.className = "badge bg-primary me-1 tag-card";
         card.innerHTML = `
             <span>${tag}</span>
-            <span class="remove-tag" onclick="removeTag('${tag}')">✕</span>
+            <span class="remove-tag" onclick="removeTag('${tag}')" style="cursor: pointer; margin-left: 6px; font-weight: bold;">✕</span>
         `;
         container.appendChild(card);
     });
+    
+    // Actualizar el input oculto con los tags
+    document.getElementById('tagsInput').value = Array.from(selectedTags).join(',');
 }
 
 function openPostModal(card) {

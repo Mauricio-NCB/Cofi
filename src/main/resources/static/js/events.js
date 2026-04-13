@@ -121,6 +121,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Limitar descripción a 50 caracteres en la portada (rompe la card si es muy larga)
+  document.querySelectorAll('.description-container p').forEach(descElement => {
+    const fullText = descElement.textContent;
+    
+    if (fullText.length > 50) {
+      const truncated = fullText.substring(0, 50) + '...';
+      descElement.textContent = truncated;
+      descElement.title = fullText; // Mostrar completo al pasar el ratón
+    }
+  });
+
+  /* ====== MANEJAR CLICS EN TARJETAS DE EVENTOS ====== */
+  document.addEventListener('click', (e) => {
+    // Verificar si el clic fue en una tarjeta de evento
+    const eventCard = e.target.closest('.event-card');
+    if (!eventCard) return;
+
+    // Si el clic fue en un botón o dentro de un botón, ignorar
+    if (e.target.closest('button')) return;
+
+    // Si el clic fue en el área segura, simular el evento para Bootstrap
+    const viewModal = document.getElementById('viewEventModal');
+    
+    // Crear un evento personalizado que simule lo que Bootstrap haría
+    const bsModal = new bootstrap.Modal(viewModal);
+    
+    // Dispatchear un evento personalizado para que el listener de Bootstrap se ejecute
+    const showEvent = new Event('show.bs.modal', { bubbles: true });
+    showEvent.relatedTarget = eventCard;
+    viewModal.dispatchEvent(showEvent);
+    
+    bsModal.show();
+  });
+
   /* ====== VER EVENTO ====== */
   const viewModal = document.getElementById('viewEventModal');
   const eventChatMessages = document.getElementById('eventChatMessages');

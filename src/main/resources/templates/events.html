@@ -75,15 +75,14 @@
         <div class="d-flex flex-nowrap overflow-auto" style="width: 100%;" data-scroll-container>
           <div class="flex-shrink-0 me-3" style="width: 400px;" th:each="ev : ${events}" th:if="${ev.state != 'terminado' && ev.state != 'en_curso'}" th:attr="data-postcode=${ev.postcode}">
           <div class="card event-card h-100"
-                data-bs-toggle="modal"
-                data-bs-target="#viewEventModal"
                 th:attr="data-id=${ev.id},
                          data-title=${ev.title},
                          data-desc=${ev.description},
                          data-date=${ev.dateEvent},
                          data-time=${ev.timeEvent},
                          data-capacity=${ev.maxCapacity},
-                         data-available-spots=${ev.availableSpots}">
+                         data-available-spots=${ev.availableSpots},
+                         data-creatorname=${ev.creatorName}">
 
             <img th:src="${ev.imageUrl}" />
 
@@ -142,7 +141,8 @@
                 <button class="btn btn-success btn-sm join-event-btn"
                         th:data-event-id="${ev.id}"
                         data-bs-toggle="tooltip"
-                        title="Únete a este evento">
+                        title="Únet e a este evento"
+                        onclick="event.stopPropagation()">
                   Unirse al evento
                 </button>
               </div>
@@ -152,7 +152,8 @@
                 <button class="btn btn-danger btn-sm leave-event-btn"
                         th:data-event-id="${ev.id}"
                         data-bs-toggle="tooltip"
-                        title="Salir de este evento">
+                        title="Salir de este evento"
+                        onclick="event.stopPropagation()">
                   Salir del evento
                 </button>
               </div>
@@ -185,15 +186,14 @@
         <div class="d-flex flex-nowrap overflow-auto" style="width: 100%;" data-scroll-container>
           <div class="flex-shrink-0 me-3" style="width: 400px;" th:each="ev : ${eventsNearby}" th:if="${ev.state != 'terminado' && ev.state != 'en_curso'}" th:attr="data-postcode=${ev.postcode}">
           <div class="card event-card h-100"
-                data-bs-toggle="modal"
-                data-bs-target="#viewEventModal"
                 th:attr="data-id=${ev.id},
                          data-title=${ev.title},
                          data-desc=${ev.description},
                          data-date=${ev.dateEvent},
                          data-time=${ev.timeEvent},
                          data-capacity=${ev.maxCapacity},
-                         data-available-spots=${ev.availableSpots}">
+                         data-available-spots=${ev.availableSpots},
+                         data-creatorname=${ev.creatorName}">
 
             <img th:src="${ev.imageUrl}" />
 
@@ -252,7 +252,8 @@
                 <button class="btn btn-success btn-sm join-event-btn"
                         th:data-event-id="${ev.id}"
                         data-bs-toggle="tooltip"
-                        title="Únete a este evento">
+                        title="Únete a este evento"
+                        onclick="event.stopPropagation()">
                   Unirse al evento
                 </button>
               </div>
@@ -262,7 +263,8 @@
                 <button class="btn btn-danger btn-sm leave-event-btn"
                         th:data-event-id="${ev.id}"
                         data-bs-toggle="tooltip"
-                        title="Salir de este evento">
+                        title="Salir de este evento"
+                        onclick="event.stopPropagation()">
                   Salir del evento
                 </button>
               </div>
