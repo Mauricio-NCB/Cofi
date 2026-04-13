@@ -110,12 +110,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     eventCards.forEach(card => {
       const title = card.querySelector('.card-title').textContent.toLowerCase();
-      const description = card.querySelector('.description-container p')
-        .textContent.toLowerCase();
 
       const wrapper = card.closest('.flex-shrink-0');
 
-      if (title.includes(query) || description.includes(query)) {
+      if (title.includes(query)) {
         wrapper.style.display = 'block';
       } else {
         wrapper.style.display = 'none';

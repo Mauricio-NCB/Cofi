@@ -107,14 +107,6 @@
                 <span th:text="${ev.creatorName}">Nombre</span>
               </p>
 
-              <!-- Contenedor de descripción -->
-              <div class="description-container mb-2">
-                <p class="card-text text-muted mb-0" th:text="${ev.description}">
-                  Descripción completa
-                </p>
-              </div>
-              <button class="btn btn-link p-0 mt-auto view-more-btn" style="display:none;">Ver más</button>
-
               <p class="mb-1 mt-2">
                 <strong>Fecha:</strong>
                 <span th:text="${#temporals.format(ev.dateEvent, 'dd/MM/yyyy')}"></span>
@@ -225,14 +217,6 @@
                 <strong>Creador:</strong>
                 <span th:text="${ev.creatorName}">Nombre</span>
               </p>
-
-              <!-- Contenedor de descripción -->
-              <div class="description-container mb-2">
-                <p class="card-text text-muted mb-0" th:text="${ev.description}">
-                  Descripción completa
-                </p>
-              </div>
-              <button class="btn btn-link p-0 mt-auto view-more-btn" style="display:none;">Ver más</button>
 
               <p class="mb-1 mt-2">
                 <strong>Fecha:</strong>
@@ -379,7 +363,7 @@
           <form th:action="@{/eventos/crear}" method="post" th:object="${event}">
               <div class="mb-3">
                 <label class="form-label">Título</label>
-                <input type="text" th:field="*{title}" class="form-control" required>
+                <input type="text" th:field="*{title}" class="form-control" maxlength="50" required>
               </div>
 
               <div class="mb-3">

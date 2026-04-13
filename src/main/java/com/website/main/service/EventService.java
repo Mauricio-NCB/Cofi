@@ -217,6 +217,34 @@ public class EventService {
                 .toList();
     }
 
+    public List<EventResponseDTO> findByPostcodeAndUserCategories(String postcode, Integer userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
+        List<Event> eventsByPostcode = eventRepository.findByPostcode(postcode).stream()
+                .peek(this::updateEventState)
+                .toList();
+        
+        // Si el usuario no tiene categorías preferidas, mostrar todos los eventos del postcode
+        if (user.getPreferedCategories() == null || user.getPreferedCategories().isEmpty()) {
+            return eventsByPostcode.stream()
+                .map(event -> eventMapper.toDTOWithUserId(event, userId))
+                .toList();
+        }
+        
+        // Si el usuario tiene categorías preferidas, filtrar eventos que coincidan
+        List<Integer> userCategoryIds = user.getPreferedCategories().stream()
+            .map(Category::getId)
+            .toList();
+        
+        return eventsByPostcode.stream()
+            .filter(event -> event.getCategories() != null &&
+                    event.getCategories().stream()
+                        .anyMatch(cat -> userCategoryIds.contains(cat.getId())))
+            .map(event -> eventMapper.toDTOWithUserId(event, userId))
+            .toList();
+    }
+
     public EventResponseDTO leaveEvent(Integer eventId, Integer userId) {
         Event event = eventRepository.findById(eventId)
             .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
