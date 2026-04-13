@@ -11,14 +11,21 @@
     <div class="card p-4 shadow" style="width: 400px">
         <h4 class="mb-4 text-center">Iniciar sesión</h4>
         <div id="loginError" class="alert alert-danger d-none"></div>
-        <input type="text" id="name" class="form-control mb-3" placeholder="Nombre">
-        <input type="text" id="lastname" class="form-control mb-3" placeholder="Apellido">
-        <input type="password" id="password" class="form-control mb-3" placeholder="Contraseña">
+        <input type="text" id="name" class="form-control mb-3" placeholder="Nombre" onkeypress="handleLoginKeypress(event)">
+        <input type="text" id="lastname" class="form-control mb-3" placeholder="Apellido" onkeypress="handleLoginKeypress(event)">
+        <input type="password" id="password" class="form-control mb-3" placeholder="Contraseña" onkeypress="handleLoginKeypress(event)">
         <button class="btn btn-primary w-100" onclick="login()">Entrar</button>
         <p class="text-center mt-3">¿No tienes cuenta? <a th:href="@{/auth/register}">Regístrate</a></p>
     </div>
 
     <script>
+        function handleLoginKeypress(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                login();
+            }
+        }
+
         async function login() {
             const name = document.getElementById("name").value.trim();
             const lastname = document.getElementById("lastname").value.trim();
