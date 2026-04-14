@@ -37,7 +37,6 @@ public class ChatController {
                 .getAuthentication()
                 .getPrincipal();
 
-        model.addAttribute("username", "Mauricio");
         model.addAttribute("currentPage", "chat");
         model.addAttribute("chats", chatService.viewChatsFromUser(userId));
 
@@ -64,7 +63,6 @@ public class ChatController {
 
         model.addAttribute("chat", chat);
         model.addAttribute("messages", messages);
-        model.addAttribute("username", "Mauricio");
         model.addAttribute("currentPage", "chat");
 
         return "chat";

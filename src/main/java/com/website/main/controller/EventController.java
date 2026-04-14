@@ -42,6 +42,7 @@ public class EventController {
         // Obtener usuario autenticado
         Integer userId = null;
         String userPostcode = null;
+        String userName = null;
         try {
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (principal instanceof Integer) {
@@ -49,12 +50,13 @@ public class EventController {
                 // Obtener el user para acceder a su postcode
                 var user = userService.findById(userId);
                 userPostcode = user.getPostcode();
+                userName = user.getName() + " " + user.getLastname();
             }
         } catch (Exception e) {
             // Usuario no autenticado
         }
 
-        model.addAttribute("userName", "Mauricio");
+        model.addAttribute("userName", userName);
         model.addAttribute("userId", userId);
         model.addAttribute("userPostcode", userPostcode);
         model.addAttribute("isAuthenticated", userId != null);
