@@ -53,6 +53,22 @@ document.addEventListener("DOMContentLoaded", function(){
 
     if(!form) return;
 
+    // Comprobar la sesión
+    const userStr = localStorage.getItem("user");
+    const isLoggedIn = !!userStr && !!localStorage.getItem("accessToken");
+
+    if (!isLoggedIn) {
+      // Ocultar form de mensaje
+      commentForm.style.display = 'none';
+      // Mostrar mensaje de login
+      const info = document.createElement('p');
+      info.className = 'text-muted small text-center';
+      info.innerHTML = '<a href="/auth/login">Inicia sesión</a> para participar en el chat';
+      commentForm.parentElement.appendChild(info);
+
+      return;
+    }
+
     form.addEventListener("submit", async function(e){
 
         e.preventDefault();

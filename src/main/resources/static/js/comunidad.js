@@ -216,6 +216,18 @@ async function loadPostReactions(postId){
     const container = document.getElementById(`reactions-post-${postId}`);
     container.innerHTML = '';
 
+    const userStr = localStorage.getItem("user");
+    const isLoggedIn = !!userStr && !!localStorage.getItem("accessToken");
+
+    // Si no está logueado mostrar mensaje en lugar de botones
+    if (!isLoggedIn) {
+        container.innerHTML = `
+            <small class="text-muted">
+                <a href="/auth/login">Inicia sesión</a> para reaccionar
+            </small>`;
+        return;
+    }
+
     const allReactions = await fetch('/comunidad/reacciones/disponibles').then(r => r.json());
     const postReactionsData = await fetch(`/comunidad/reacciones/${postId}`).then(r => r.json());
 

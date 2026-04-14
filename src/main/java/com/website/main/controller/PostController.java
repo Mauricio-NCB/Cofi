@@ -65,6 +65,19 @@ public class PostController {
             posts = postService.findAllVisible();
         }
 
+        // detectar si hay usuario autenticado
+        boolean isAuthenticated = false;
+        try {
+            Object principal = SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal();
+            if (principal instanceof Integer) {
+                isAuthenticated = true;
+            }
+        } catch (Exception e) {
+            // no autenticado
+        }
+
+        model.addAttribute("isAuthenticated", isAuthenticated);
         model.addAttribute("posts", posts);
         model.addAttribute("popularTags", tagService.findPopularTags());
         model.addAttribute("currentPage", "comunidad");

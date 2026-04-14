@@ -172,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
 
   viewModal.addEventListener('show.bs.modal', async (event) => {
+
     const card = event.relatedTarget;
 
     document.getElementById('modalEventTitle').textContent =
@@ -190,6 +191,22 @@ document.addEventListener('DOMContentLoaded', () => {
       card.getAttribute('data-available-spots');
 
     const eventId = card.getAttribute('data-id');
+
+    // Comprobar la sesión
+    const userStr = localStorage.getItem("user");
+    const isLoggedIn = !!userStr && !!localStorage.getItem("accessToken");
+
+    if (!isLoggedIn) {
+      // Ocultar form de mensaje
+      eventMessageForm.style.display = 'none';
+      // Mostrar mensaje de login
+      const info = document.createElement('p');
+      info.className = 'text-muted small text-center';
+      info.innerHTML = '<a href="/auth/login">Inicia sesión</a> para participar en el chat';
+      eventMessageForm.parentElement.appendChild(info);
+
+      return;
+    }
 
     // Carga participantes y chatId
     const response = await fetch(`/eventos/${eventId}`);
@@ -211,12 +228,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Cargar chat si existe
     if (eventDetails.chatId) {
+
       currentEventChatId = eventDetails.chatId;
 
       // mostrar u ocultar el formulario según si el usuario es participante
       const isParticipant = eventDetails.isUserParticipant || eventDetails.isUserCreator;
       const messageForm = document.getElementById('eventMessageForm');
-      
+
       if (isParticipant) {
         await loadEventChatMessages(currentEventChatId);
         subscriteToEventChat(currentEventChatId);
@@ -232,6 +250,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       eventChatMessages.innerHTML = '<p class="text-muted">No hay chat para este evento</p>';
     }
+
+
   });
 
   viewModal.addEventListener('hidden.bs.modal', () => {
