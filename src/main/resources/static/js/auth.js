@@ -37,6 +37,7 @@ async function checkAndRefreshToken(requireAuth = false) {
                 localStorage.setItem("accessToken", data.accessToken);
                 localStorage.setItem("refreshToken", data.refreshToken);
                 localStorage.setItem("user", JSON.stringify(data.user));
+                
                 document.cookie = `accessToken=${data.accessToken}; path=/; SameSite=Strict`;
                 window.location.reload();
             } else {

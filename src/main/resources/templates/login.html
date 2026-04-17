@@ -89,8 +89,18 @@
                 localStorage.setItem("refreshToken", data.refreshToken);
                 localStorage.setItem("user", JSON.stringify(data.user));
 
+                // cargar y guardar preferencias inmediatamente después del login
+                const prefsRes = await fetch("/api/preferences", {
+                    headers: {
+                        "Authorization": `Bearer ${data.accessToken}`
+                    }
+                });
+                if (prefsRes.ok) {
+                    const prefs = await prefsRes.json();
+                    localStorage.setItem("prefs", JSON.stringify(prefs));
+                }
+
                 document.cookie = `accessToken=${data.accessToken}; path=/; SameSite=Strict`;
-                
                 window.location.href = "/";
   
             } else {

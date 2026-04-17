@@ -48,6 +48,7 @@ public class SecurityConfig {
                     "/api/categories",
                     "/css/**", "/js/**", "/images/**")
                 .permitAll()
+                .requestMatchers("/api/preferences").authenticated()
                 .requestMatchers("/chat", "/chat/**").authenticated()
                 .requestMatchers("/panel", "/panel/**").authenticated()
                 .anyRequest().authenticated())
