@@ -108,6 +108,11 @@
               </p>
 
               <p class="mb-1 mt-2">
+                <strong>Código Postal:</strong>
+                <span th:text="${ev.postcode}"></span>
+              </p>
+
+              <p class="mb-1">
                 <strong>Fecha:</strong>
                 <span th:text="${#temporals.format(ev.dateEvent, 'dd/MM/yyyy')}"></span>
               </p>
@@ -141,7 +146,7 @@
                 <button class="btn btn-success btn-sm join-event-btn"
                         th:data-event-id="${ev.id}"
                         data-bs-toggle="tooltip"
-                        title="Únet e a este evento"
+                        title="Únete a este evento"
                         onclick="event.stopPropagation()">
                   Unirse al evento
                 </button>
@@ -169,7 +174,7 @@
     </div>
 
     <!-- EVENTOS EN TU ÁREA (solo si usuario tiene postcode que debería tener) -->
-    <div class="activities-section mt-5" th:if="${isAuthenticated && userPostcode != null && !#lists.isEmpty(eventsNearby)}">
+    <div class="activities-section mt-5" th:if="${isAuthenticated && userPostcode != null}">
       <h3>Eventos en tu área (<span th:text="${userPostcode}"></span>)</h3>
 
       <div class="row mt-3" th:if="${#lists.isEmpty(eventsNearby)}">
@@ -219,6 +224,11 @@
               </p>
 
               <p class="mb-1 mt-2">
+                <strong>Código Postal:</strong>
+                <span th:text="${ev.postcode}"></span>
+              </p>
+
+              <p class="mb-1">
                 <strong>Fecha:</strong>
                 <span th:text="${#temporals.format(ev.dateEvent, 'dd/MM/yyyy')}"></span>
               </p>
