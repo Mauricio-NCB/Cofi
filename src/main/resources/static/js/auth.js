@@ -10,16 +10,20 @@ function isTokenExpired(token) {
 }
 
 // Intentar renovar el token si ha expirado
-async function checkAndRefreshToken() {
+async function checkAndRefreshToken(requireAuth = false) {
     const token = localStorage.getItem("accessToken");
 
     if (isTokenExpired(token)) {
         const refreshToken = localStorage.getItem("refreshToken");
 
         if (!refreshToken) {
-            localStorage.clear();
-            document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            window.location.href = "/auth/login";
+
+            if(requireAuth) {
+                localStorage.clear();
+                document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                window.location.href = "/auth/login";
+            }
+            
             return;
         }
 
@@ -87,8 +91,6 @@ window.fetch = async function(url, options = {}) {
     }
     return response;
 };
-
-checkAndRefreshToken();
 
 // Cargar nombre del usuario en el dashboard
 const userStr = localStorage.getItem("user");

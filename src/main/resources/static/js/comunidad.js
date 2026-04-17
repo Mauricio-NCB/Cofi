@@ -179,7 +179,7 @@ function renderTags() {
     container.innerHTML = "";
     selectedTags.forEach(tag => {
         const card = document.createElement("div");
-        card.className = "badge bg-primary me-1 tag-card";
+        card.className = "badge bg-primary me-1 d-inline-flex align-items-center";
         card.innerHTML = `
             <span>${tag}</span>
             <span class="remove-tag" onclick="removeTag('${tag}')" style="cursor: pointer; margin-left: 6px; font-weight: bold;">✕</span>

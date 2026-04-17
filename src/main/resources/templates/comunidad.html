@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Mi Comunidad</title>
-    <link rel="icon" type="image/png" href="/cofifavicon.png">
+    <link rel="icon" type="image/png" href="/images/cofifavicon.png">
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -15,7 +15,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
           rel="stylesheet">
 
-    <!-- CSS personalizado -->
     <link rel="stylesheet" th:href="@{/css/custom.css}">
 </head>
 
@@ -82,7 +81,7 @@
                             Añadir
                         </button>
                     </div>
-                    <div id="tagsContainer" class="d-flex flex-wrap gap-2">
+                    <div id="tagsContainer" class="d-flex flex-wrap gap-1 align-items-center">
                         <!-- las cards de tags aparecen aquí -->
                     </div>
                     <input type="hidden" id="tagsInput" name="tags">
@@ -116,9 +115,10 @@
     <div class="card p-3 mb-4">
     <h5>Tags populares</h5>
 
-    <div th:each="tag : ${popularTags}">
-            <a th:href="@{/comunidad(tag=${tag[0]})}"
-            class="badge bg-primary me-1">
+        <div class="d-flex flex-wrap gap-1">
+            <a th:each="tag : ${popularTags}"
+            th:href="@{/comunidad(tag=${tag[0]})}"
+            class="badge bg-primary text-decoration-none">
                 <span th:text="${tag[0]}"></span>
                 (<span th:text="${tag[1]}"></span>)
             </a>
@@ -179,6 +179,12 @@
 <script th:src="@{/js/theme.js}"></script>
 <script th:src="@{/js/comunidad.js}"></script>
 <script th:src="@{/js/comentario.js}"></script>
+<script th:src="@{/js/auth.js}"></script>
+
+<script>
+    checkAndRefreshToken(false)
+</script>
+
 
 <script>
 function toggleCreatePostForm() {
