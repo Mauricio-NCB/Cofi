@@ -99,9 +99,10 @@
             <div class="d-flex justify-content-between align-items-start mb-2">
               <h5 class="card-title" th:text="${act.titulo}">Título</h5>
               <span class="badge bg-success" th:if="${act.gratuita}">Gratis</span>
-              <span class="badge bg-warning text-dark"
+              <span class="badge bg-warning text-dark" style="display: inline-block;"
                     th:if="${!act.gratuita && act.precio != null && !act.precio.isBlank()}"
-                    th:text="${act.precio}">
+                    th:text="${act.precio.length() > 8 ? act.precio.substring(0, 8) + '...' : act.precio}"
+                    th:title="${act.precio}">
               </span>
             </div>
 
@@ -113,9 +114,7 @@
             <!-- Descripción -->
             <div class="description-container mb-2">
               <p class="card-text text-muted mb-0"
-                 th:text="${act.descripcion != null && act.descripcion.length() > 150}
-                           ? ${act.descripcion.substring(0, 150)} + '...'
-                           : ${act.descripcion}">
+                 th:text="${act.descripcion != null ? (act.descripcion.length() > 150 ? act.descripcion.substring(0, 150) + '...' : act.descripcion) : ''}">
               </p>
             </div>
 
@@ -184,7 +183,7 @@
         <div id="modalTipo" class="mb-2"></div>
 
         <!-- Badges de precio -->
-        <div id="modalPrecio" class="mb-3"></div>
+        <div id="modalPrecio" class="mb-3" style="word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; max-width: 100%; display: flex; flex-wrap: wrap;"></div>
 
         <!-- Descripción -->
         <p id="modalDescripcion" class="text-muted mb-3"></p>
@@ -278,7 +277,7 @@
     if (gratuita) {
       precioHtml = '<span class="badge bg-success">Gratis</span>';
     } else if (precio) {
-      precioHtml = `<span class="badge bg-warning text-dark">${precio}</span>`;
+      precioHtml = `<span class="badge bg-warning text-dark" style="display: inline-block; max-width: 100%; word-break: break-word; word-wrap: break-word; overflow-wrap: break-word; white-space: normal; padding: 0.5rem 0.75rem;">${precio}</span>`;
     }
     document.getElementById('modalPrecio').innerHTML = precioHtml;
 
