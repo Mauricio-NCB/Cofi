@@ -14,7 +14,7 @@ En caso de que esta URL no esté activa, hay que correr la aplicación en local 
 
 Para ejecutar el proyecto en local es necesario tener instalado:
 
-- Java 21
+- Java (17 mínimo)
 - Maven
 - MySQL Server
 - Git
@@ -26,7 +26,7 @@ Para ejecutar el proyecto en local es necesario tener instalado:
 ## 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/Mauricio-NCB/main.git
+git clone https://github.com/Mauricio-NCB/Cofi.git
 ```
 
 ---
