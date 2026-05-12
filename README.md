@@ -8,7 +8,7 @@ Cofi es una aplicación web orientada a personas mayores cuyo objetivo es facili
 
 Para utilizar la aplicación sin descargar nada en local: Ir a la URL http://34.175.159.154
 
-En caso de que esta URL no esté activa, hay que correr la aplicación en local con los siguientes pasos:
+En caso de que esta URL no esté activa, es posible correr la aplicación en local con los siguientes pasos:
 
 # Requisitos previos
 
